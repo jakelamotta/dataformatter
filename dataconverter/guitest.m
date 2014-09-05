@@ -1,35 +1,35 @@
-function varargout = mainWindow(varargin)
-% MAINWINDOW MATLAB code for mainWindow.fig
-%      MAINWINDOW, by itself, creates a new MAINWINDOW or raises the existing
+function varargout = guitest(varargin)
+% GUITEST MATLAB code for guitest.fig
+%      GUITEST, by itself, creates a new GUITEST or raises the existing
 %      singleton*.
 %
-%      H = MAINWINDOW returns the handle to a new MAINWINDOW or the handle to
+%      H = GUITEST returns the handle to a new GUITEST or the handle to
 %      the existing singleton*.
 %
-%      MAINWINDOW('CALLBACK',hObject,eventData,handles,...) calls the local
-%      function named CALLBACK in MAINWINDOW.M with the given input arguments.
+%      GUITEST('CALLBACK',hObject,eventData,handles,...) calls the local
+%      function named CALLBACK in GUITEST.M with the given input arguments.
 %
-%      MAINWINDOW('Property','Value',...) creates a new MAINWINDOW or raises the
+%      GUITEST('Property','Value',...) creates a new GUITEST or raises the
 %      existing singleton*.  Starting from the left, property value pairs are
-%      applied to the GUI before mainWindow_OpeningFcn gets called.  An
+%      applied to the GUI before guitest_OpeningFcn gets called.  An
 %      unrecognized property name or invalid value makes property application
-%      stop.  All inputs are passed to mainWindow_OpeningFcn via varargin.
+%      stop.  All inputs are passed to guitest_OpeningFcn via varargin.
 %
 %      *See GUI Options on GUIDE's Tools menu.  Choose "GUI allows only one
 %      instance to run (singleton)".
 %
 % See also: GUIDE, GUIDATA, GUIHANDLES
 
-% Edit the above text to modify the response to help mainWindow
+% Edit the above text to modify the response to help guitest
 
-% Last Modified by GUIDE v2.5 03-Sep-2014 15:58:04
+% Last Modified by GUIDE v2.5 04-Sep-2014 10:36:38
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
 gui_State = struct('gui_Name',       mfilename, ...
                    'gui_Singleton',  gui_Singleton, ...
-                   'gui_OpeningFcn', @mainWindow_OpeningFcn, ...
-                   'gui_OutputFcn',  @mainWindow_OutputFcn, ...
+                   'gui_OpeningFcn', @guitest_OpeningFcn, ...
+                   'gui_OutputFcn',  @guitest_OutputFcn, ...
                    'gui_LayoutFcn',  [] , ...
                    'gui_Callback',   []);
 if nargin && ischar(varargin{1})
@@ -44,27 +44,27 @@ end
 % End initialization code - DO NOT EDIT
 
 
-% --- Executes just before mainWindow is made visible.
-function mainWindow_OpeningFcn(hObject, eventdata, handles, varargin)
+% --- Executes just before guitest is made visible.
+function guitest_OpeningFcn(hObject, eventdata, handles, varargin)
 % This function has no output args, see OutputFcn.
 % hObject    handle to figure
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-% varargin   command line arguments to mainWindow (see VARARGIN)
+% varargin   command line arguments to guitest (see VARARGIN)
 
-% Choose default command line output for mainWindow
-
+% Choose default command line output for guitest
 handles.output = hObject;
 
 % Update handles structure
 guidata(hObject, handles);
-
-% UIWAIT makes mainWindow wait for user response (see UIRESUME)
+v = 0;
+setappdata(0,'v',v);
+% UIWAIT makes guitest wait for user response (see UIRESUME)
 % uiwait(handles.figure1);
 
 
 % --- Outputs from this function are returned to the command line.
-function varargout = mainWindow_OutputFcn(hObject, eventdata, handles) 
+function varargout = guitest_OutputFcn(hObject, eventdata, handles) 
 % varargout  cell array for returning output args (see VARARGOUT);
 % hObject    handle to figure
 % eventdata  reserved - to be defined in a future version of MATLAB
@@ -72,3 +72,14 @@ function varargout = mainWindow_OutputFcn(hObject, eventdata, handles)
 
 % Get default command line output from handles structure
 varargout{1} = handles.output;
+
+
+% --- Executes on button press in pushbutton1.
+function pushbutton1_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+    v = getappdata(0,'v');
+    v = v+1;
+    set(handles.text1,'String',v);
+    setappdata(0,'v',v);
