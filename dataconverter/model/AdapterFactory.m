@@ -10,11 +10,13 @@ classdef AdapterFactory
         
         function this = AdapterFactory()
             this.adapters = containers.Map;
-            this.adapters('1') = 'AbioticDataAdapter';
+            this.adapters('1') = @() AbioticDataAdapter();
         end
         
         function adapter = createAdapter(this,id)
-            adapter = this.adapters(id);
+            if strcmp(this.adapters(id),'AbioticDataAdapter')
+                adapter = AbioticDataAdapter();
+            end
         end
     end
     

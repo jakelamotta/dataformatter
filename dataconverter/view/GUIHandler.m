@@ -10,17 +10,11 @@ classdef GUIHandler
     methods (Access = public)
         function this = GUIHandler(mng)
             this.manager = mng;
-            this.updater = updater();
-            
-            this.launchGUI();
+            this.updater = WindowUpdater();
         end
     end
     
     methods (Access = private)
-        
-        function launchGUI(this)
-            
-        end
         
         function controlCallback(args)
         
