@@ -11,14 +11,19 @@ classdef AdapterFactory
         function this = AdapterFactory()
             this.adapters = containers.Map;
             this.adapters('1') = @() AbioticDataAdapter();
+            this.adapters('2') = @() SpectroDataAdapter();
+            this.adapters('3') = @() WeatherDataAdapter();
+            this.adapters('4') = @() ImageDataAdapter();
         end
         
         function adapter = createAdapter(this,id)
-            if strcmp(this.adapters(id),'AbioticDataAdapter')
-                adapter = AbioticDataAdapter();
+            if this.adapters.isKey(id)
+                adapter = this.adapters(id);
+                adapter = adapter();
+            else
+                adapter = '';
             end
         end
-    end
-    
+    end    
 end
 

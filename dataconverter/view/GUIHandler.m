@@ -18,10 +18,8 @@ classdef GUIHandler
         
         function controlCallback(args)
         
-        end
+        end      
         
-        
-    end
-    
+    end    
 end
 
