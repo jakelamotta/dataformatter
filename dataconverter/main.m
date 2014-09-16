@@ -5,7 +5,7 @@ handler = GUIHandler;
 mnger = DataManager;
 
 handler.manager = mnger;
-handler.launchGUI('mainwindow');
+handler.run();
 
 while true
 

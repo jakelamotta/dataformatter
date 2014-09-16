@@ -3,7 +3,7 @@ classdef DataObject
     %   Detailed explanation goes here
     
     properties
-        xlsMatrix;
+        xlsMatrix
     end
     
     methods (Access=Public)
@@ -11,6 +11,10 @@ classdef DataObject
         function this = DataObject(x,y)
             this.xlsMatrix = cell(x,y);
         end
-    end    
+        
+        
+        
+    end
+    
 end
 

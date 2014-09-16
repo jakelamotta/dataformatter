@@ -1,4 +1,4 @@
-classdef AbioticDataAdapter
+classdef AbioticDataAdapter < AbstractDataAdapter
     %ABIOTICDATAADAPTER Summary of this class goes here
     %   Detailed explanation goes here
     

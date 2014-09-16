@@ -1,4 +1,4 @@
-classdef XLSWriter < AbstractWriter
+classdef XLSWriter
     %XLSWRITER Class responsible for writing dataobjects to a xls-file
     %(excel)
     
@@ -6,11 +6,25 @@ classdef XLSWriter < AbstractWriter
         dataObject
     end
     
-    methods (Access = private)
+    methods (Static)
         
-        function success = writeToXLS(this)
-            xlswrite(fileName,this.dataObject);
+        
+        function success = writeToXLS(fileName)
+            xlswrite(fileName,obj.xlsMatrix);
             success = exist(fileName,'file');
+        end
+        
+        
+        function success = appendXLS(fname,obj)
+            
+            if exist(fname,'file');
+                [~,old,~] = xlsread(fname);
+                toSave = [old;obj.xlsMatrix];
+            else
+                toSave = obj.xlsMatrix;
+            end
+            
+            success = writeToXLS(fname,toSave);            
         end
         
     end
