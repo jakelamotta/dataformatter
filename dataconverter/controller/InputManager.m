@@ -29,11 +29,8 @@ classdef InputManager
         
     end
     
-    methods (Access = private)
-        
-        
+    methods (Access = private)   
             
-    end
-    
+    end    
 end
 

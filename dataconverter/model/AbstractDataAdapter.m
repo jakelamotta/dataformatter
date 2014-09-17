@@ -8,8 +8,7 @@ classdef AbstractDataAdapter
     
     methods (Abstract)
         
-        function obj = getDataObject(this)
-            
+        function obj = getDataObject()            
         end
         
         function this = setFileName(this,f)
