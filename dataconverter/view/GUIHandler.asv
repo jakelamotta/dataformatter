@@ -11,9 +11,9 @@ classdef GUIHandler
     methods (Access = public)
         function this = GUIHandler(mng)
             this.manager = mng;
+            this.updater = WindowUpdater();
+            thisupdater.
             initGUI();
-            this.updater = WindowUpdater(this.mainWindow);
-            
         end
         
         function run(this)

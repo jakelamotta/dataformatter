@@ -1,6 +1,6 @@
 classdef DataManager
     %DATAMANAGER Summary of this class goes here
-    %   Detailed explanation goes here
+    %Detailed explanation goes here
     
     properties (SetAccess = private)
         xlsWriter;
@@ -9,8 +9,7 @@ classdef DataManager
         dataObject;
     end
     
-    methods (Access=public)
-        
+    methods (Access=public)        
         function this = DataManager()
             manager = InputManager();
             xlsWriter = XLSWriter();        

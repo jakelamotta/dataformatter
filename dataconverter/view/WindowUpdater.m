@@ -8,11 +8,13 @@ classdef WindowUpdater < handles
         sourceBtn;
         targetBtn;
         expBtn;
+        main;
     end
     
     methods (Access=public)
         
-        function this = WindowsUpdater(controls)
+        function this = WindowsUpdater(m)
+            this.main = m;
         end
         
         function updateView(this,str)
