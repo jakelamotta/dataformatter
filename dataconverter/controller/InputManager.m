@@ -25,12 +25,11 @@ classdef InputManager
             [s,~,~] = mkdir(path);
             success = s & success;
             copyfile(sourcePath,path);
-        end
-        
+        end        
     end
     
     methods (Access = private)   
-            
+    
     end    
 end
 

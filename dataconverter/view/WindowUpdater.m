@@ -18,8 +18,8 @@ classdef WindowUpdater < handles
         end
         
         function updateView(this,str)
+            
         end
-        
     end    
 end
 
