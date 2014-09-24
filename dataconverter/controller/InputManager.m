@@ -18,6 +18,23 @@ classdef InputManager
             this.dataObject = adapter.getDataObject(path);
         end
         
+        function this = organize(this,sources,targets)
+            
+            types = fieldnames(sources);
+            
+            for i=1:numel(types)
+                type = char(types(i));
+                files = fieldnames(sources.(type));
+                for j=1:numel(files)
+                    file = char(files(j));
+                    this.saveToDir(sources.(type).(file));
+                end
+            end
+            
+        end
+    end
+    
+    methods (Access = private)   
         function success = saveToDir(this,sourcePath, targetPath)
             success = true;
             parent = '';
@@ -25,11 +42,7 @@ classdef InputManager
             [s,~,~] = mkdir(path);
             success = s & success;
             copyfile(sourcePath,path);
-        end        
-    end
-    
-    methods (Access = private)   
-    
+        end
     end    
 end
 

@@ -3,17 +3,20 @@ classdef GUIHandler
     %   Detailed explanation goes here
     
     properties (Access = public)
-        manager;
+        dataManager;
+        inputManager;
         updater;
         mainWindow;
         menuBar;
+        organizer;
     end
     
     methods (Access = public)
         function this = GUIHandler(mng)
-            this.manager = mng;
-
+            this.dataManager = mng;
+            this.inputManager = InputManager();    
             this.initGUI();
+            this.organizer = Organizer();
             %this.updater = WindowUpdater(this.mainWindow);
             %updater.update();
         end
@@ -40,14 +43,13 @@ classdef GUIHandler
     
     methods (Access = private)
         
-        function this = controlCallback(varargin)%this,hObj,event,~)
-            this = varargin(1);
-            
-            
+        function this = controlCallback(this,varargin)%this,hObj,event,~)
+            %            this = varargin(1);           
+            this.organizer = this.organizer.launchGUI();
+            this.inputManager.organize(this.organizer);
         end
         
         function this = initGUI(this)
-            
             scrsz = get(0,'ScreenSize');            
             this.mainWindow = figure('Position',[scrsz(3)/8 scrsz(4)/8 scrsz(3)/1.5 scrsz(4)/1.5],'MenuBar','None','ToolBar','None');
             %this.mainWindow = figure('Position',[240 135 1280 720],'MenuBar','None','ToolBar','None');
