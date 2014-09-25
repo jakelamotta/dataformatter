@@ -1,19 +1,9 @@
-classdef AbstractDataAdapter
+classdef (Abstract) AbstractDataAdapter
     %ABSTRACTDATAADAPTER Summary of this class goes here
     %   Detailed explanation goes here
     
-    properties
-        fileName
-    end
-    
     methods (Abstract)
-        
-        function obj = getDataObject()            
-        end
-        
-        function this = setFileName(this,f)
-            this.fileName = f;
-        end
+        obj = getDataObject(this,paths)
     end
     
 end

@@ -3,13 +3,12 @@ classdef XLSWriter
     %(excel)
     
     properties
-        dataObject
     end
     
     methods (Static)
         
         
-        function success = writeToXLS(fileName)
+        function success = writeToXLS(fileName,obj)
             xlswrite(fileName,obj.xlsMatrix);
             success = exist(fileName,'file');
         end

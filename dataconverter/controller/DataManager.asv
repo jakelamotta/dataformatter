@@ -7,7 +7,6 @@ classdef DataManager
         adapter;
         manager;
         dataObject;
-        objList;
     end
     
     methods (Access=public)        
@@ -20,7 +19,8 @@ classdef DataManager
             
             this.dataObject = InputManager.dataObject;
             
-            XLSWriter.writeToXLS('C:\Users\Kristian\test2.xls',this.dataObject);            
+            
+            
             
         end
     end

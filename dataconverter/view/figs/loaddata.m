@@ -82,21 +82,14 @@ if get(handles.okBtn,'UserData')
     pos = get(handles.posRdbtn,'value');
     negOrPos = 'negative';
 
-    stringsExist = ~isempty(date_) & ~isempty(flower) & ~isempty(id);
-
-    if ~isempty(fieldnames(varargout{1}.sources)) && stringsExist
-        if pos
-            negOrPos = 'positive';
-        end
-
-        target = [date_,'\',flower,'\',negOrPos,'\',id_,'\'];
-
-        varargout{1}.sources = get(handles.output,'UserData');
-        varargout{1}.target = target;
-    else
-        errordlg('All fields are not entered correctly or no file is selected for loading','Error!');
+    if pos
+        negOrPos = 'positive';
     end
-    
+
+    target = [date_,'\',flower,'\',negOrPos,'\',id_,'\'];
+
+    varargout{1}.sources = get(handles.output,'UserData');
+    varargout{1}.target = target;
 else
     varargout = cell(1,1);
 end
@@ -107,8 +100,19 @@ function okBtn_Callback(hObject, eventdata, handles)
 % hObject    handle to okBtn (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-    set(hObject,'UserData',true);
-    close;
+    varargout{1}.sources = get(handles.output,'UserData');
+    date_ = get(handles.editDate,'String');
+    flower = get(handles.editFlower,'String');
+    id_ = get(handles.editID,'String');
+    
+    stringsExist = ~isempty(date_) & ~isempty(flower) & ~isempty(id_);
+
+    if ~iscell(varargout{1}.sources) && stringsExist
+        set(hObject,'UserData',true);
+        close;
+    else
+        errordlg('All fields are not entered correctly or no file is selected for loading','Error!');
+    end
     
 % --- Executes on button press in cancelBtn.
 function cancelBtn_Callback(hObject, eventdata, handles)
@@ -289,15 +293,7 @@ function updateSource(handles,type)
 % hObject    handle to figure1 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-%     path = struct;
-%     
-%     path.abiotic = get(handles.abioText,'String');
-%     path.weather = get(handles.weatherText,'String');
-%     path.image = get(handles.imageText,'String');
-%     path.spectro = get(handles.spectroText,'String');
-%     path.behave = get(handles.behaveText,'String');
-%     handles.output.paths = path;
-%     varargout{1,1} = handles.output.paths;
+
 
 
 % --- Executes when user attempts to close figure1.

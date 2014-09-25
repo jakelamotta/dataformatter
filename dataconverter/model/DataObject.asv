@@ -7,16 +7,11 @@ classdef DataObject
     end
     
     methods (Access = public)
-        
         function this = DataObject(x,y)
             this.xlsMatrix = cell(x,y);
-            this.objectList = cell(1);
         end
         
-        function this = setObservation(this,matrix)
-            this.xlsMatrix = matrix;
-            size_ = size(this.objectList);
-        end
+        function this = setObservation(thi
     end    
 end
 

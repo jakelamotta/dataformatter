@@ -4,14 +4,13 @@ classdef WeatherDataAdapter < AbstractDataAdapter
     
     properties (Access = private)
         dobj;
-        tempMatrix;
     end
     
     methods (Access = public)
         
         function this = WeatherDataAdapter()
             this.dobj = DataObject(1,1);
-            this.tempMatrix = {'Year','month','day','hour','min','wind speed (m/s)','direction(degrees)','temperature(c)','rel moist','pressure'};
+            this.dobj.xlsMatrix = {'Year','month','day','hour','min','wind speed (m/s)','direction(degrees)','temperature(c)','rel moist','pressure'};
             this.objList = cell(1);
         end
         
@@ -22,8 +21,9 @@ classdef WeatherDataAdapter < AbstractDataAdapter
             for i=1:size_(2)                
                 rawData = this.fileReader(paths{1,i});
                 rawData = strrep(rawData,'  ',' ');
-                this.tempMatrix = cellfun(@this.createDob,rawData,'UniformOutput',false);
-                this.dobj = this.dobj.setObservation(this.tempMatrix);% = this.addObject();
+                obj = cellfun(@this.createDob,rawData,'UniformOutput',false);
+                this.dobj.xlsMatrix = obj;
+                this = this.addObject();
             end
             
             obj = this.dobj;
@@ -37,7 +37,7 @@ classdef WeatherDataAdapter < AbstractDataAdapter
         function obj = createDob(this, inRow)
             
             row = regexp(inRow,' ','split');
-            obj = [this.tempMatrix;cellfun(@str2num,row,'UniformOutput',false)];
+            obj = [this.dobj.xlsMatrix;cellfun(@str2num,row,'UniformOutput',false)];
             
         end
         
