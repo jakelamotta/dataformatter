@@ -73,29 +73,23 @@ function varargout = loaddata_OutputFcn(hObject, eventdata, handles)
 
 % Get default command line output from handles structure
 
-if get(handles.okBtn,'UserData') 
-    
-    varargout{1}.sources = get(handles.output,'UserData');
+varargout{1}.sources = get(handles.output,'UserData');
+
+if get(handles.okBtn,'UserData') && ~isempty(fieldnames(
     date_ = get(handles.editDate,'String');
     flower = get(handles.editFlower,'String');
     id_ = get(handles.editID,'String');
     pos = get(handles.posRdbtn,'value');
     negOrPos = 'negative';
-
-    stringsExist = ~isempty(date_) & ~isempty(flower) & ~isempty(id);
-
-    if ~isempty(fieldnames(varargout{1}.sources)) && stringsExist
-        if pos
-            negOrPos = 'positive';
-        end
-
-        target = [date_,'\',flower,'\',negOrPos,'\',id_,'\'];
-
-        varargout{1}.sources = get(handles.output,'UserData');
-        varargout{1}.target = target;
-    else
-        errordlg('All fields are not entered correctly or no file is selected for loading','Error!');
+    
+    if pos
+        negOrPos = 'positive';
     end
+    
+    target = [date_,'\',flower,'\',negOrPos,'\',id_,'\'];
+    
+    varargout{1}.sources = get(handles.output,'UserData');
+    varargout{1}.target = target;
     
 else
     varargout = cell(1,1);

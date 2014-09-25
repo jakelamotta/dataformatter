@@ -22,7 +22,7 @@ classdef Organizer
             
             out_ = loaddata(this.sources);
             
-            if isstruct(out_)
+            if isempty(out_)
                 this.sources = out_.sources;
                 this.target = out_.target;
             end

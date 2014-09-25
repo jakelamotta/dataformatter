@@ -12,11 +12,12 @@ classdef GUIHandler
     end
     
     methods (Access = public)
+        
         function this = GUIHandler(mng)
             this.dataManager = mng;
-            this.inputManager = InputManager();    
+            this.inputManager = InputManager();
+            this.organizer = Organizer();    
             this.initGUI();
-            this.organizer = Organizer();
             %this.updater = WindowUpdater(this.mainWindow);
             %updater.update();
         end
@@ -43,10 +44,11 @@ classdef GUIHandler
     
     methods (Access = private)
         
-        function this = controlCallback(this,varargin)%this,hObj,event,~)
-            %            this = varargin(1);           
+        function this = loadCallback(this,varargin)           
             this.organizer = this.organizer.launchGUI();
-            this.inputManager.organize(this.organizer);
+            if ~strcmp(this.organizer.target,'')
+                success = this.inputManager.organize(this.organizer.sources,this.organizer.target);
+            end
         end
         
         function this = initGUI(this)
@@ -57,11 +59,9 @@ classdef GUIHandler
             
             %panel1 = uipanel('Parent',this.mainWindow,'Controls','My Panel1','Position',[.25 .1 .5 .8]);
             %panel2 = uipanel('Parent',this.mainWindow,'Data','My Panel2','Position',[.25 .1 .5 .8]);
-            loadBtn = uicontrol(this.mainWindow,'Style','pushbutton','String','Load Data','Position',[100 630 120 50],'Callback',@this.controlCallback);
+            loadBtn = uicontrol(this.mainWindow,'Style','pushbutton','String','Load Data','Position',[100 630 120 50],'Callback',@this.loadCallback);
             %file_ = uimenu(this.menuBar,'Label','File');
             %help_ = uimenu(this.menuBar,'Label','Help');           
-            
-            
         end
         
     end    
