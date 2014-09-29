@@ -63,7 +63,8 @@ classdef GUIHandler
             %exportWindow();            
             this.dataManager = this.dataManager.addObject('Weather',{'C:\Users\Kristian\testdata.txt'});
             %this.dataTable = [this.dataTable,cell2table(this.dataManager.objList('1').getMatrix())];
-            this.dataManager.store();
+            set(this.dataTable,'data',this.dataManager.objList('1').getMatrix());
+            %this.dataManager.store();
         end
         
         function this = manageCallback(this, varargin)
