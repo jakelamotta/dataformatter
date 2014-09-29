@@ -28,6 +28,9 @@ classdef DataObject
                     end
                 end                
             end
+                       
+            
+            %this.xlsMatrix = matrix;
         end
         
         function s = getWidth(this)

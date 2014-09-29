@@ -13,6 +13,8 @@ classdef GUIHandler
         importBtn;
         manageBtn;
         exportBtn;
+        file_;
+        output;
         dataTable;
     end
     
@@ -60,11 +62,16 @@ classdef GUIHandler
             
             %exportWindow();            
             this.dataManager = this.dataManager.addObject('Weather',{'C:\Users\Kristian\testdata.txt'});
-            this.dataTable = [this.dataTable,cell2table(this.dataManager.objList('1').getMatrix())];
-            %this.dataManager.store();
+            %this.dataTable = [this.dataTable,cell2table(this.dataManager.objList('1').getMatrix())];
+            this.dataManager.store();
         end
         
         function this = manageCallback(this, varargin)
+        
+        end
+                
+        function this = importCallback(this,varargin)
+            selectDataType()
         end
         
         function this = initGUI(this)
@@ -74,15 +81,14 @@ classdef GUIHandler
             %panel1 = uipanel('Parent',this.mainWindow,'Controls','My Panel1','Position',[.25 .1 .5 .8]);
             %panel2 = uipanel('Parent',this.mainWindow,'Data','My Panel2','Position',[.25 .1 .5 .8]);
             this.loadBtn = uicontrol(this.mainWindow,'Style','pushbutton','String','Load Data','Position',[100 450 120 50],'Callback',@this.loadCallback);
-            this.importBtn = uicontrol(this.mainWindow,'Style','pushbutton','String','Import data', 'Position',[250 450 120 50]);
+            this.importBtn = uicontrol(this.mainWindow,'Style','pushbutton','String','Import data', 'Position',[250 450 120 50],'Callback',@this.importCallback);
             this.manageBtn = uicontrol(this.mainWindow,'Style','pushbutton','String','Manage data','Position',[400 450 120 50],'Callback',@this.manageCallback);
             this.exportBtn = uicontrol(this.mainWindow,'Style','pushbutton','String','Export','Position',[650 438 150 75],'Callback',@this.exportCallback);
             
             this.dataTable = uitable(this.mainWindow,'Position',[70 250 850 150]);%,'Callback',@this.tableCallback);
-            output = uicontrol(this.mainWindow,'Position',[70 100 850 150]);
+            this.output = uicontrol(this.mainWindow,'Position',[70 100 850 150]);
             
-            file_ = uimenu(this.mainWindow,'Label','File');
-            help_ = uimenu(this.mainWindow,'Label','Help');           
+            this.file_ = uimenu(this.mainWindow,'Label','File');
         end
         
     end    

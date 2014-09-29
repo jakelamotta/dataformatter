@@ -7,7 +7,7 @@ classdef XLSWriter
     
     methods (Access = public)
         
-        function success = writeToXLS(fileName,obj)
+        function success = writeToXLS(this,fileName,obj)
             xlswrite(fileName,obj.getMatrix());
             success = exist(fileName,'file');
         end
