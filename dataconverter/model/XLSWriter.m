@@ -5,16 +5,15 @@ classdef XLSWriter
     properties
     end
     
-    methods (Static)
-        
+    methods (Access = public)
         
         function success = writeToXLS(fileName,obj)
-            xlswrite(fileName,obj.xlsMatrix);
+            xlswrite(fileName,obj.getMatrix());
             success = exist(fileName,'file');
         end
         
         
-        function success = appendXLS(fname,obj)
+        function success = appendXLS(this,fname,obj)
             
             if exist(fname,'file');
                 [~,old,~] = xlsread(fname);

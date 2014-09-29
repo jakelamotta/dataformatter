@@ -11,22 +11,64 @@ classdef DataManager
     end
     
     methods (Access=public)        
-        function this = DataManager()
-            manager = InputManager();
-            xlsWriter = XLSWriter();        
+        
+        function this = DataManager(inM)
+            this.manager = inM;
+            this.xlsWriter = XLSWriter();    
+            this.objList = containers.Map();
+        end
+        
+        function this = addObject(this,id,path)
+            
+            obj = this.manager.getDataObject(id,path);
+            
+            objID = obj.getObjectID();
+            
+            if this.objList.isKey(objID)
+                this.objList(objID) = this.combine(obj);                
+            else
+                this.objList(objID) = obj;
+            end       
         end
         
         function store(this)
             
-            this.dataObject = InputManager.dataObject;
-            
-            XLSWriter.writeToXLS('C:\Users\Kristian\test2.xls',this.dataObject);            
-            
+            obj = this.merge();
+            this.xlsWriter.writeToXLS('C:\Users\Kristian\Documents\GitHub\dataformatter\dataconverter\data\test2.xls',obj);            
         end
     end
     
     methods (Access = private)
         
+        function obj = combine(this,obj)
+            %Not implemented yet, function that combines two objects
+            %corresponding to the same observation
+        end
+        
+        function obj = merge(this)
+            obj = cell(1,1);
+            keys_ = this.objList.keys();
+            for i=1:length(keys_)
+                key = keys_{1,i};
+                obs = this.objList(key);
+                
+                if length(obj) == 1
+                    obj = obs;
+                else
+                    
+                    s = size(obs);
+                    s = s(1);
+                    rows = [];
+                    
+                    for i=2:s
+                        rows(end+1) = i;
+                    end
+                    
+                    obj = [obj;obs(rows,:)];
+                end
+            end
+        end        
+                
         function this = addComment(this,row,comment)
             d = this.dataObject;
             size_ = size(d);
@@ -36,7 +78,9 @@ classdef DataManager
                     break;
                 end
             end
-        end
+            
+            this.dataObject = d;
+        end        
         
         function this = removeColumn(this,col)
         end

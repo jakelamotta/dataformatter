@@ -9,13 +9,18 @@ classdef GUIHandler
         mainWindow;
         menuBar;
         organizer;
+        loadBtn;
+        importBtn;
+        manageBtn;
+        exportBtn;
+        dataTable;
     end
     
     methods (Access = public)
         
         function this = GUIHandler()
-            this.dataManager = DataManager();
             this.inputManager = InputManager();
+            this.dataManager = DataManager(this.inputManager);
             this.organizer = Organizer();    
             this.initGUI();
             %this.updater = WindowUpdater(this.mainWindow);
@@ -52,7 +57,11 @@ classdef GUIHandler
         end
         
         function this = exportCallback(this,varargin)
-        
+            
+            %exportWindow();            
+            this.dataManager = this.dataManager.addObject('Weather',{'C:\Users\Kristian\testdata.txt'});
+            this.dataTable = [this.dataTable,cell2table(this.dataManager.objList('1').getMatrix())];
+            %this.dataManager.store();
         end
         
         function this = manageCallback(this, varargin)
@@ -64,16 +73,16 @@ classdef GUIHandler
             
             %panel1 = uipanel('Parent',this.mainWindow,'Controls','My Panel1','Position',[.25 .1 .5 .8]);
             %panel2 = uipanel('Parent',this.mainWindow,'Data','My Panel2','Position',[.25 .1 .5 .8]);
-            loadBtn = uicontrol(this.mainWindow,'Style','pushbutton','String','Load Data','Position',[100 450 120 50],'Callback',@this.loadCallback);
-            importBtn = uicontrol(this.mainWindow,'Style','pushbutton','String','Import data', 'Position',[250 450 120 50]);
-            manageBtn = uicontrol(this.mainWindow,'Style','pushbutton','String','Manage data','Position',[400 450 120 50],'Callback',@this.manageCallback);
-            exportBtn = uicontrol(this.mainWindow,'Style','pushbutton','String','Export','Position',[650 438 150 75],'Callback',@this.exportCallback);
+            this.loadBtn = uicontrol(this.mainWindow,'Style','pushbutton','String','Load Data','Position',[100 450 120 50],'Callback',@this.loadCallback);
+            this.importBtn = uicontrol(this.mainWindow,'Style','pushbutton','String','Import data', 'Position',[250 450 120 50]);
+            this.manageBtn = uicontrol(this.mainWindow,'Style','pushbutton','String','Manage data','Position',[400 450 120 50],'Callback',@this.manageCallback);
+            this.exportBtn = uicontrol(this.mainWindow,'Style','pushbutton','String','Export','Position',[650 438 150 75],'Callback',@this.exportCallback);
             
-            dataTable = uitable(this.mainWindow,'Position',[70 250 850 150]);%,'Callback',@this.tableCallback);
+            this.dataTable = uitable(this.mainWindow,'Position',[70 250 850 150]);%,'Callback',@this.tableCallback);
             output = uicontrol(this.mainWindow,'Position',[70 100 850 150]);
             
             file_ = uimenu(this.mainWindow,'Label','File');
-            help_ = uimenu(this.menuWindow,'Label','Help');           
+            help_ = uimenu(this.mainWindow,'Label','Help');           
         end
         
     end    

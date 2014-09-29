@@ -13,9 +13,9 @@ classdef InputManager
             this.adapterFactory = AdapterFactory();
         end
         
-        function this = setDataObject(this,adapterId,path)
-            adapter = this.adapterFactory.createDataAdapter(adapterId);
-            this.dataObject = adapter.getDataObject(path);
+        function obj = getDataObject(this,adapterId,path)
+            adapter = this.adapterFactory.createAdapter(adapterId);
+            obj = adapter.getDataObject(path);
         end
         
         function success = organize(this,sources,target)
