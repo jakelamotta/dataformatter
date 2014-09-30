@@ -5,6 +5,7 @@ classdef InputManager
     properties
         adapterFactory;
         dataObject;
+        objList;
     end
     
     methods (Access = public)

@@ -29,7 +29,7 @@ classdef GUIHandler
             %updater.update();
         end
         
-        function run(this)
+        function this = run(this)
             
             while true
                
@@ -52,7 +52,9 @@ classdef GUIHandler
     methods (Access = private)
         
         function this = loadCallback(this,varargin)           
+            
             this.organizer = this.organizer.launchGUI();
+            
             if ~strcmp(this.organizer.target,'')
                 success = this.inputManager.organize(this.organizer.sources,this.organizer.target);
             end
@@ -63,16 +65,22 @@ classdef GUIHandler
             %exportWindow();            
             this.dataManager = this.dataManager.addObject('Weather',{'C:\Users\Kristian\testdata.txt'});
             %this.dataTable = [this.dataTable,cell2table(this.dataManager.objList('1').getMatrix())];
-            set(this.dataTable,'data',this.dataManager.objList('1').getMatrix());
-            %this.dataManager.store();
+            %set(this.dataTable,'data',this.dataManager.objList('1').getMatrix());
+            %this.dataManager.store('C:\Users\Kristian\Documents\GitHub\dataformatter\dataconverter\data\test2.xls');
+            this.dataTable = uitable(this.mainWindow,'data',this.dataManager.getObject().getMatrix(),'Position',[70 250 850 150]);
         end
         
         function this = manageCallback(this, varargin)
+            this.dataManager = this.dataManager.addObject('Weather',{'C:\Users\Kristian\testdata2.txt'});
+            %this.dataTable = [this.dataTable,cell2table(this.dataManager.objList('1').getMatrix())];
+            %set(this.dataTable,'data',this.dataManager.objList('1').getMatrix());
+            %this.dataManager.store('C:\Users\Kristian\Documents\GitHub\dataformatter\dataconverter\data\test2.xls');
+            this.dataTable = uitable(this.mainWindow,'data',this.dataManager.getObject().getMatrix(),'Position',[70 250 850 150]);
         
         end
                 
         function this = importCallback(this,varargin)
-            selectDataType()
+            selectDataType();
         end
         
         function this = initGUI(this)
@@ -87,8 +95,8 @@ classdef GUIHandler
             this.exportBtn = uicontrol(this.mainWindow,'Style','pushbutton','String','Export','Position',[650 438 150 75],'Callback',@this.exportCallback);
             
             this.dataTable = uitable(this.mainWindow,'Position',[70 250 850 150]);%,'Callback',@this.tableCallback);
-            this.output = uicontrol(this.mainWindow,'Position',[70 100 850 150]);
-            
+            %this.output = uicontrol(this.mainWindow,'Position',[70 100 850 150]);
+           
             this.file_ = uimenu(this.mainWindow,'Label','File');
         end
         

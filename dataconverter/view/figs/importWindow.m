@@ -162,6 +162,7 @@ function updateRadio(handles,hObject)
     set(handles.radiobutton6,'value',false);
     set(hObject,'value',true);
     
+    
     % --- Executes when user attempts to close figure1.
 function figure1_CloseRequestFcn(hObject, eventdata, handles)
 % hObject    handle to figure1 (see GCBO)
@@ -169,10 +170,10 @@ function figure1_CloseRequestFcn(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 % Hint: delete(hObject) closes the figure
-if isequal(get(hObject, 'waitstatus'), 'waiting')
-    % The GUI is still in UIWAIT, us UIRESUME
-    uiresume(hObject);
-else
-    % The GUI is no longer waiting, just close it
-    delete(hObject);
-end
+    if isequal(get(hObject, 'waitstatus'), 'waiting')
+        % The GUI is still in UIWAIT, us UIRESUME
+        uiresume(hObject);
+    else
+        % The GUI is no longer waiting, just close it
+        delete(hObject);
+    end

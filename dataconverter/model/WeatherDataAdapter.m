@@ -10,7 +10,7 @@ classdef WeatherDataAdapter < AbstractDataAdapter
     methods (Access = public)
         
         function this = WeatherDataAdapter()
-            this.dobj = DataObject(1,1);
+            this.dobj = DataObject();
             this.tempMatrix = {'Year','month','day','hour','min','wind speed (m/s)','direction(degrees)','temperature(c)','rel moist','pressure'};
         end
         
@@ -36,7 +36,6 @@ classdef WeatherDataAdapter < AbstractDataAdapter
     end    
     
     methods (Access = private)
-        
         
         function temp = createDob(this, inRow)
             

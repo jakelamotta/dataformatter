@@ -2,72 +2,111 @@ classdef DataManager
     %DATAMANAGER Summary of this class goes here
     %Detailed explanation goes here
     
-    properties (SetAccess = private)
+    properties (Access = private)
         xlsWriter;
         adapter;
         manager;
         dataObject;
         objList;
+        filterFactory;
     end
     
     methods (Access=public)        
         
         function this = DataManager(inM)
+            this.filterFactory = FilterFactory();
             this.manager = inM;
             this.xlsWriter = XLSWriter();    
             this.objList = containers.Map();
+            this.dataObject = {};
         end
         
         function this = addObject(this,id,path)
+            row = this.manager.getDataObject(id,path);
             
-            obj = this.manager.getDataObject(id,path);
+            filter = this.filterFactory.createFilter(id);
+            row = row.setMatrix(filter.filter(row));%,this.dataObject));
             
-            objID = obj.getObjectID();
+            objID = row.getObjectID();
             
             if this.objList.isKey(objID)
-                this.objList(objID) = this.combine(obj);                
+                this.objList(objID) = this.combine(row);                
             else
-                this.objList(objID) = obj;
-            end       
+                this.objList(objID) = row;
+            end
+            
+            this.dataObject = this.merge();       
         end
         
-        function store(this)
-            
-            obj = this.merge();
-            this.xlsWriter.writeToXLS('C:\Users\Kristian\Documents\GitHub\dataformatter\dataconverter\data\test2.xls',obj);            
+        function obj = getObject(this)
+%             obs = this.objList(id);
+%             
+%             s = size(obs);
+%             
+%             if s(1) > 2
+%                 obs = this.filterWeather(obs);
+%             end           
+            obj = this.dataObject;            
         end
+        
+        function list = getObjectList(this)
+            list = this.objList;
+        end
+        
+        function store(this,path)
+            this.xlsWriter.writeToXLS(path,obj);            
+        end
+        
     end
     
     methods (Access = private)
         
+        function obs = filter(this,rows)
+            rows = rows.getMatrix();
+            obs = rows([1 2],:);            
+        end
+                
         function obj = combine(this,obj)
             %Not implemented yet, function that combines two objects
             %corresponding to the same observation
         end
         
         function obj = merge(this)
-            obj = cell(1,1);
             keys_ = this.objList.keys();
-            for i=1:length(keys_)
-                key = keys_{1,i};
-                obs = this.objList(key);
-                
-                if length(obj) == 1
+            obj = this.dataObject;
+            
+            
+%            check = obj;
+            
+             for i=1:length(keys_)
+                 key = keys_{1,i};
+                 obs = this.objList(key);
+%                 
+%                 if ~exist(check,'var')
+%                     obj = obs;
+%                 else
+%                     
+%                     s = size(obs);
+%                     s = s(1);
+%                     rows = [];
+%                     
+%                     for i=2:s
+%                         rows(end+1) = i;
+%                     end
+%                     
+%                     obj = [obj;obs(rows,:)];
+%                 end
+                if isempty(obj)
                     obj = obs;
                 else
-                    
-                    s = size(obs);
-                    s = s(1);
-                    rows = [];
-                    
-                    for i=2:s
-                        rows(end+1) = i;
-                    end
-                    
-                    obj = [obj;obs(rows,:)];
+                    obs = obs.getMatrix();
+                    matrix = obj.getMatrix();
+                    obj.setMatrix([matrix;obs(2,:)]);
                 end
-            end
-        end        
+             end
+             
+             obj
+       end        
                 
         function this = addComment(this,row,comment)
             d = this.dataObject;

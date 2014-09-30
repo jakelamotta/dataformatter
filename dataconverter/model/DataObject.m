@@ -9,8 +9,7 @@ classdef DataObject
     
     methods (Access = public)
         
-        function this = DataObject(x,y)
-            %this.xlsMatrix = cell(x,y);
+        function this = DataObject()
             this.xlsMatrix = {'Date','ID','Flower','Year','month','day','hour','min','wind speed (m/s)','direction(degrees)','temperature(c)','relative humidity','pressure'};
             this.xlsMatrix = [this.xlsMatrix;{'','','',0,0,0,0,0,0,0,0,0,0}];
         end
@@ -43,13 +42,17 @@ classdef DataObject
                 end
             end
             
-            id = '1';
+            %id = '1';
+            id = num2str(round(rand*100));
         end
         
         function matrix = getMatrix(this)
             matrix = this.xlsMatrix;
         end
         
+        function this = setMatrix(this,m)
+            this.xlsMatrix = m;
+        end
         
         
     end    
