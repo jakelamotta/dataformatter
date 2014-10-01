@@ -18,14 +18,15 @@ classdef DataManager
             this.manager = inM;
             this.xlsWriter = XLSWriter();
             this.objList = containers.Map();
-            this.dataObject = containers.Map();
+            this.dataObject = DataObject();
+            this.dataObject = this.dataObject.setMatrix({})
         end
         
         function this = addObject(this,id,path)
             row = this.manager.getDataObject(id,path);
             
             filter = this.filterFactory.createFilter(id);
-            row = row.setMatrix(filter.filter(row));%,this.dataObject));
+            row = row.setMatrix(filter.filter(row));
             
             objID = row.getObjectID();
             
@@ -35,7 +36,7 @@ classdef DataManager
                 this.objList(objID) = row;
             end
             
-            if this.dataObject.isKey('obj')
+            if ~isempty(this.dataObject.getMatrix())
                 this = this.setObject(this.merge());
             else
                 this = this.setObject(row);
@@ -45,11 +46,11 @@ classdef DataManager
         end
         
         function obj = getObject(this)
-            obj = this.dataObject('obj');
+            obj = this.dataObject;
         end
         
         function this = setObject(this,obj)
-            this.dataObject('obj') = obj;
+            this.dataObject = obj;
         end
         
         function list = getObjectList(this)
@@ -118,4 +119,5 @@ classdef DataManager
         end
     end
 end
+
 

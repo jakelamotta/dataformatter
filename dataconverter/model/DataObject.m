@@ -1,4 +1,4 @@
-classdef DataObject
+classdef DataObject < handle
     %DATAOBJECT Summary of this class goes here
     %   Detailed explanation goes here
     
