@@ -22,7 +22,7 @@ function varargout = exportWindow(varargin)
 
 % Edit the above text to modify the response to help exportWindow
 
-% Last Modified by GUIDE v2.5 29-Sep-2014 14:33:21
+% Last Modified by GUIDE v2.5 01-Oct-2014 11:08:16
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -70,22 +70,28 @@ function varargout = exportWindow_OutputFcn(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 % Get default command line output from handles structure
-varargout{1} = handles.output;
-
+    %varargout{1} = handles.output;
+    varargout{1} = get(handles.text1,'string');
+    delete(handles.figure1);   
 
 % --- Executes on button press in okBtn.
 function okBtn_Callback(hObject, eventdata, handles)
 % hObject    handle to okBtn (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
+    if ~strcmp(get(handles.text1,'string'),'File: -')
+        set(hObject,'UserData',true);
+        close;
+    else
+        errordlg('All fields are not entered correctly or no file is selected for loading','Error!');
+    end
 
 % --- Executes on button press in cancelBtn.
 function cancelBtn_Callback(hObject, eventdata, handles)
 % hObject    handle to cancelBtn (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
+    close();
 
 % --- Executes on button press in radiobutton1.
 function radiobutton1_Callback(hObject, eventdata, handles)
@@ -94,6 +100,7 @@ function radiobutton1_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 % Hint: get(hObject,'Value') returns toggle state of radiobutton1
+    set(handles.radiobutton2,'value',~get(hObject,'value'));
 
 
 % --- Executes on button press in radiobutton2.
@@ -103,7 +110,8 @@ function radiobutton2_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 % Hint: get(hObject,'Value') returns toggle state of radiobutton2
-
+    set(handles.radiobutton1,'value',~get(hObject,'value'));
+    
 % --- Executes when user attempts to close figure1.
 function figure1_CloseRequestFcn(hObject, eventdata, handles)
 % hObject    handle to figure1 (see GCBO)
@@ -114,7 +122,27 @@ function figure1_CloseRequestFcn(hObject, eventdata, handles)
 if isequal(get(hObject, 'waitstatus'), 'waiting')
     % The GUI is still in UIWAIT, us UIRESUME
     uiresume(hObject);
+    guidata(hObject,handles);
 else
     % The GUI is no longer waiting, just close it
     delete(hObject);
 end
+
+
+% --- Executes on button press in browseBtn.
+function browseBtn_Callback(hObject, eventdata, handles)
+% hObject    handle to browseBtn (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+    fname = get(handles.text1,'string');
+    pname = '';
+    
+    if get(handles.radiobutton1,'value')
+        [fname,pname] = uigetfile('*.xls');
+    elseif get(handles.radiobutton2,'value')
+        [fname,pname] = uiputfile('*.xls');
+    elseif ~get(handles.radiobutton1,'value') && ~get(handles.radiobutton2,'value')
+        errordlg('You need to select one of the alternatives above!','Error!');
+    end
+    
+    set(handles.text1,'string',[pname,fname]);

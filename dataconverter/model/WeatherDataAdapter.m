@@ -33,7 +33,7 @@ classdef WeatherDataAdapter < AbstractDataAdapter
             obj = this.dobj;
             
         end        
-    end    
+    end
     
     methods (Access = private)
         

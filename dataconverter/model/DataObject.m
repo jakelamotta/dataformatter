@@ -42,7 +42,6 @@ classdef DataObject
                 end
             end
             
-            %id = '1';
             id = num2str(round(rand*100));
         end
         
