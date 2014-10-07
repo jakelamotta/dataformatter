@@ -11,7 +11,7 @@ classdef DataObject < handle
         
         function this = DataObject()
             this.xlsMatrix = {'Date','ID','Flower','Year','month','day','hour','min','wind speed (m/s)','direction(degrees)','temperature(c)','relative humidity','pressure'};
-            this.xlsMatrix = [this.xlsMatrix;{'','','',0,0,0,0,0,0,0,0,0,0}];
+            %this.xlsMatrix = [this.xlsMatrix;{'','','',0,0,0,0,0,0,0,0,0,0}];
         end
         
         function this = setObservation(this,matrix)
@@ -42,6 +42,7 @@ classdef DataObject < handle
                 end
             end
             
+            %Temporary id generator
             id = num2str(round(rand*100));
         end
         

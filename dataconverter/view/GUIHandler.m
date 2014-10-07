@@ -31,9 +31,6 @@ classdef GUIHandler
         function this = run(this)
             
             while true
-               
-                
-                
                 if somethingsomething
                     break;
                 end
@@ -61,25 +58,38 @@ classdef GUIHandler
         
         function this = exportCallback(this,varargin)
             
-            fp = exportWindow();            
-            if this.dataManager.store(fp)
-                this.dataTable = uitable(this.mainWindow,'Position',[70 90 850 220]);
-                this.dataManager = this.dataManager.clearObj();
-            else
-                errordlg('Exporting could not be performed, please try again','Error!');
+            fp = exportWindow();         
+            
+            if ~strcmp(fp(6:end),' -')
+                if this.dataManager.store(fp)
+                    this.dataTable = uitable(this.mainWindow,'Position',[70 90 850 220]);
+                    this.dataManager = this.dataManager.clearObj();
+                else
+                    errordlg('Exporting could not be performed, please try again','Error!');
+                    end
             end
         end
         
         function this = manageCallback(this, varargin)
-            this.dataManager = this.dataManager.addObject('Weather',{'C:\Users\Kristian\testdata2.txt'});
+            %this.dataManager = this.dataManager.addObject('Weather',{'C:\Users\Kristian\testdata2.txt'});
             %this.dataTable = [this.dataTable,cell2table(this.dataManager.objList('1').getMatrix())];
             %set(this.dataTable,'data',this.dataManager.objList('1').getMatrix());
             %this.dataManager.store('C:\Users\Kristian\Documents\GitHub\dataformatter\dataconverter\data\test2.xls');
-            this.dataTable = uitable(this.mainWindow,'data',this.dataManager.getObject().getMatrix(),'Position',[70 90 850 220]);
+            %this.dataTable = uitable(this.mainWindow,'data',this.dataManager.getObject().getMatrix(),'Position',[70 90 850 220]);
         end
                 
         function this = importCallback(this,varargin)
-            selectDataType();
+            importInfo = importWindow();
+            type = importInfo{1,1}; 
+            p = importInfo{1,2};
+            this.inputManager = this.inputManager.splitPaths(p,type);
+            paths_ = this.inputManager.getPaths();
+            
+            for i=1:length(paths_)
+                this.dataManager.addObject(type,{paths_{i}});
+            end
+            
+            this.dataTable = uitable(this.mainWindow,'data',this.dataManager.getObject().getMatrix(),'Position',[70 90 850 220]);
         end
         
         function this = initGUI(this)
@@ -87,7 +97,7 @@ classdef GUIHandler
             this.mainWindow = figure('Name','Title','DockControls','off','NumberTitle','off','Position',[scrsz(3)/8 scrsz(4)/8 scrsz(3)/1.9 scrsz(4)/2.3],'MenuBar','None','ToolBar','None');
             
             %this.panel1 = uibuttongroup('position',[0 0.6 1 .4]);
-%             %panel2 = uipanel('Parent',this.mainWindow,'Data','My Panel2','Position',[.25 .1 .5 .8]);
+            %panel2 = uipanel('Parent',this.mainWindow,'Data','My Panel2','Position',[.25 .1 .5 .8]);
             this.loadBtn = uicontrol(this.mainWindow,'Style','pushbutton','String','Load Data','Position',[100 380 120 50],'Callback',@this.loadCallback);
             this.importBtn = uicontrol(this.mainWindow,'Style','pushbutton','String','Import data', 'Position',[250 380 120 50],'Callback',@this.importCallback);
             this.manageBtn = uicontrol(this.mainWindow,'Style','pushbutton','String','Manage data','Position',[400 380 120 50],'Callback',@this.manageCallback);
@@ -98,7 +108,6 @@ classdef GUIHandler
            
             this.file_ = uimenu(this.mainWindow,'Label','File');
         end
-        
     end    
 end
 

@@ -11,7 +11,7 @@ classdef WeatherDataAdapter < AbstractDataAdapter
         
         function this = WeatherDataAdapter()
             this.dobj = DataObject();
-            this.tempMatrix = {'Year','month','day','hour','min','wind speed (m/s)','direction(degrees)','temperature(c)','rel moist','pressure'};
+            this.tempMatrix = {'Year','month','day','hour','min','wind speed (m/s)','direction(degrees)','temperature(c)'};
         end
         
         function obj = getDataObject(this,paths)
@@ -20,6 +20,7 @@ classdef WeatherDataAdapter < AbstractDataAdapter
             
             for i=1:size_(2)                
                 rawData = this.fileReader(paths{1,i});
+                rawData = strrep(rawData,'   ',' ');
                 rawData = strrep(rawData,'  ',' ');
                 temp = cellfun(@this.createDob,rawData,'UniformOutput',false);
                 

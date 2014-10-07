@@ -22,7 +22,7 @@ function varargout = importWindow(varargin)
 
 % Edit the above text to modify the response to help importWindow
 
-% Last Modified by GUIDE v2.5 29-Sep-2014 16:37:06
+% Last Modified by GUIDE v2.5 07-Oct-2014 14:35:12
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -58,6 +58,7 @@ handles.output = hObject;
 % Update handles structure
 guidata(hObject, handles);
 
+set(handles.okBtn,'UserData',NaN);
 % UIWAIT makes importWindow wait for user response (see UIRESUME)
 uiwait(handles.figure1);
 
@@ -70,7 +71,10 @@ function varargout = importWindow_OutputFcn(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 % Get default command line output from handles structure
-varargout{1} = handles.output;
+%varargout{1} = handles.output;
+
+    varargout{1} = get(handles.okBtn,'UserData');    
+    delete(handles.figure1);
 
 
 % --- Executes on button press in okBtn.
@@ -78,14 +82,39 @@ function okBtn_Callback(hObject, eventdata, handles)
 % hObject    handle to okBtn (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
+    data = cell(1,2);
+    
+    if get(handles.radiobutton1,'value')
+        type = 'Weather';
+    elseif get(handles.radiobutton2,'value')
+        type = 'Weather';
+    elseif get(handles.radiobutton3,'value')
+        type = 'Weather';
+    elseif get(handles.radiobutton4,'value')
+        type = 'Weather';
+    elseif get(handles.radiobutton5,'value')
+        type = 'Weather';
+    elseif get(handles.radiobutton6,'value')
+        type = 'Weather';
+    else
+        type = NaN;
+    end
+    
+    path_ = uigetdir('C:\Users\Kristian\Documents\GitHub\dataformatter\dataconverter\data');
+    
+    data{1,1} = type;
+    data{1,2} = path_;    
+    
+    set(hObject,'UserData',data);
+    close;
+    
 
 % --- Executes on button press in cancelBtn.
 function cancelBtn_Callback(hObject, eventdata, handles)
 % hObject    handle to cancelBtn (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
+    close();
 
 % --- Executes on button press in radiobutton1.
 function radiobutton1_Callback(hObject, eventdata, handles)
@@ -173,6 +202,7 @@ function figure1_CloseRequestFcn(hObject, eventdata, handles)
     if isequal(get(hObject, 'waitstatus'), 'waiting')
         % The GUI is still in UIWAIT, us UIRESUME
         uiresume(hObject);
+        guidata(hObject,handles);
     else
         % The GUI is no longer waiting, just close it
         delete(hObject);

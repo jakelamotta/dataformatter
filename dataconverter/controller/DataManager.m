@@ -19,7 +19,6 @@ classdef DataManager
             this.xlsWriter = XLSWriter();
             this.objList = containers.Map();
             this.dataObject = DataObject();
-            this.dataObject = this.dataObject.setMatrix({})
         end
         
         function this = addObject(this,id,path)
