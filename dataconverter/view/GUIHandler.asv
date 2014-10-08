@@ -75,7 +75,11 @@ classdef GUIHandler
         end
         
         function this = manageCallback(this, varargin)
-            
+            %this.dataManager = this.dataManager.addObject('Weather',{'C:\Users\Kristian\testdata2.txt'});
+            %this.dataTable = [this.dataTable,cell2table(this.dataManager.objList('1').getMatrix())];
+            %set(this.dataTable,'data',this.dataManager.objList('1').getMatrix());
+            %this.dataManager.store('C:\Users\Kristian\Documents\GitHub\dataformatter\dataconverter\data\test2.xls');
+            %this.dataTable = uitable(this.mainWindow,'data',this.dataManager.getObject().getMatrix(),'Position',[70 90 850 220]);
         end
                 
         function this = importCallback(this,varargin)
@@ -89,19 +93,19 @@ classdef GUIHandler
                 this.dataManager = this.dataManager.addObject(type,{paths_{i}});
                 s = size(this.dataManager.getObject().getMatrix());
                 
-                if s(1) > 2
+                if s(1) == 2
                     this = this.launchDialogue(type);
                 end
                 
                 this.dataManager = this.dataManager.finalize();
             end
             
-            this = this.updateGUI();
+            this.dataTable = uitable(this.mainWindow,'data',this.dataManager.getObject().getMatrix(),'Position',[70 90 850 220]);
         end
         
         function this = clearCallback(this,varargin)
-            this.dataManager = this.dataManager.clearAll();
-            this = this.updateGUI();
+            this.dataManager = DataManager(this.inputManager);
+            
         end
         
         function this = initGUI(this)
@@ -121,10 +125,6 @@ classdef GUIHandler
             this.file_ = uimenu(this.mainWindow,'Label','File');
             this.clear_ = uimenu(this.file_,'Label','Clear data','Callback',@this.clearCallback);
             this.exit_ = uimenu(this.file_,'Label','Exit');
-        end
-        
-        function this = updateGUI(this)
-            this.dataTable = uitable(this.mainWindow,'data',this.dataManager.getObject().getMatrix(),'Position',[70 90 850 220]);
         end
         
         function this = launchDialogue(this,id)

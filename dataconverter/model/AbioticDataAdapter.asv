@@ -1,0 +1,38 @@
+classdef AbioticDataAdapter < AbstractDataAdapter
+    %ABIOTICDATAADAPTER Summary of this class goes here
+    %   Detailed explanation goes here
+    
+    properties
+        dobj;
+        tempMatrix;
+    end
+    
+    methods (Access = public)
+        
+        function this = AbioticDataAdapter()
+            this.dobj = DataObject();
+            this.tempMatrix = {'Date','Pressure','temperature(c)','Humidity'};
+        end
+        
+        function obj = getDataObject(this,paths)
+            
+            s = size(paths);
+            
+            for i=1:s(2)
+                
+                fid = fopen(paths{1,i},'r');
+                line = fgets(fid);
+                
+                while line ~= -1
+                    
+                end
+            end
+                
+            
+        
+        end
+        
+    end
+    
+end
+

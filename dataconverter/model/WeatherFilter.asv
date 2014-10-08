@@ -18,20 +18,25 @@ classdef WeatherFilter
                     filtered = rows([1 2 ],:);
                     
                 case 'average'
-                      
+                    
                     rows = unfiltered.getMatrix();
+                    %filtered = rows;
+                    %filtered = rows([1 2 ],:);
+                   
                     s = size(rows);
                     
                     for i=9:11
                         
-                        tempSum = 0;
-                        for j=2:s(1)
-                            tempSum = tempSum + rows{j,i};
-                        end
-                        rows{2,i} = tempSum/(s(1)-1);                       
+                        tempSum_ = 0;
                         
-                    end                    
-                    filtered = rows([1 2],:);
+                        for j=2:s(1)
+                            
+                            tempSum_ = tempSum + rows
+                        
+                        end
+                    end
+                    
+                    
                     
                 case 'specific'
                     

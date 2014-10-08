@@ -16,9 +16,9 @@ classdef InputManager
             this.paths = {};
         end
         
-        function obj = getDataObject(this,adapterId,path)
+        function obj = getDataObject(this,adapterId,paths)
             adapter = this.adapterFactory.createAdapter(adapterId);
-            obj = adapter.getDataObject(path);
+            obj = adapter.getDataObject(paths);
         end
         
         function this = splitPaths(this,p,type)

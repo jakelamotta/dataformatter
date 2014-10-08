@@ -21,12 +21,41 @@ classdef DataManager
             this.dataObject = DataObject();
         end
         
+        function this = clearAll(this)
+            this.dataObject = DataObject();            
+        end
+        
         function this = addObject(this,id,path)
             row = this.manager.getDataObject(id,path);
+            this = this.setObject(row);
             
+%             objID = row.getObjectID();
+%             
+%             if this.objList.isKey(objID)
+%                 this.objList(objID) = this.combine(row);
+%             else
+%                 this.objList(objID) = row;
+%             end
+%             
+%             if ~isempty(this.dataObject.getMatrix())
+%                 this = this.setObject(this.merge());
+%             else
+%                 this = this.setObject(row);
+%                 this.objList.remove(objID);
+%             end
+            
+        end
+        
+        function this = applyFilter(this,id,type)
+            row = this.getObject();
             filter = this.filterFactory.createFilter(id);
-            row = row.setMatrix(filter.filter(row));
+            row = row.setMatrix(filter.filter(row,type));
+            this = this.setObject(row);
+        end
+        
+        function this = finalize(this)
             
+            row = this.getObject();
             objID = row.getObjectID();
             
             if this.objList.isKey(objID)
@@ -41,7 +70,7 @@ classdef DataManager
                 this = this.setObject(row);
                 this.objList.remove(objID);
             end
-            
+        
         end
         
         function obj = getObject(this)
@@ -92,7 +121,7 @@ classdef DataManager
                 else
                     obs = obs.getMatrix();
                     matrix = obj.getMatrix();
-                    obj = obj.setMatrix([matrix;obs(2,:)]);
+                    obj = obj.setMatrix([matrix;obs(2:end,:)]);
                 end
                 this.objList.remove(key);
             end
