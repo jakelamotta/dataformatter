@@ -17,7 +17,6 @@ classdef AbioticDataAdapter < AbstractDataAdapter
         function obj = getDataObject(this,paths)
             
             s = size(paths);
-            
             for i=1:s(2)
                 path = paths{1,i};
                 rawData = this.fileReader(this,path);
@@ -26,13 +25,10 @@ classdef AbioticDataAdapter < AbstractDataAdapter
                 
                 
             end
-                
-            
-        
         end
         
         function temp = createDob(this, inRow)
-            row = regexp(inRow,' ','split');
+            row = regexp(inRow,[char(9),';',char(9)],'split');
             temp = cellfun(@str2num,row,'UniformOutput',false);%[this.tempMatrix;cellfun(@str2num,row,'UniformOutput',false)];
         end
         
