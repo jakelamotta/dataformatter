@@ -51,7 +51,7 @@ classdef InputManager
         end
     end
     
-    methods (Access = private)   
+    methods (Access = private)
         
         function this = recSearch(this,p,t)
             temp = dir(p);
@@ -72,7 +72,6 @@ classdef InputManager
                     this = this.recSearch([p,'\',temp(i).name],t);
                 end
             end
-                
         end
         
         function success = saveToDir(this,sourcePath, targetPath)

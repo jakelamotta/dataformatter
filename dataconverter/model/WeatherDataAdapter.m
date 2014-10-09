@@ -18,7 +18,10 @@ classdef WeatherDataAdapter < AbstractDataAdapter
             
             size_ = size(paths);
             
-            for i=1:size_(2)                
+            for i=1:size_(2)              
+                idx = strfind(paths{1,i},'\');
+                id_ = paths{1,i}(idx(end-2)+1:idx(end-1)-1);
+                
                 rawData = this.fileReader(paths{1,i});
                 rawData = strrep(rawData,'   ',' ');
                 rawData = strrep(rawData,'  ',' ');
@@ -28,7 +31,7 @@ classdef WeatherDataAdapter < AbstractDataAdapter
                     this.tempMatrix = [this.tempMatrix;temp{1,j}];
                 end
                 
-                this.dobj = this.dobj.setObservation(this.tempMatrix);
+                this.dobj = this.dobj.setObservation(this.tempMatrix,id_);
             end
             
             obj = this.dobj;

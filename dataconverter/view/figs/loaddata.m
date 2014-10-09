@@ -245,6 +245,7 @@ function pushbutton7_Callback(hObject, eventdata, handles)
 
 function initGuiElements(handles,varargin)
     set(handles.editDate,'String',date);
+    set(handles.editID,'String',[date,'_',num2str(randi(10000,1))])
     set(handles.posRdbtn,'value',1);   
     if ~isempty(varargin)
         set(handles.output,'UserData',varargin{1});

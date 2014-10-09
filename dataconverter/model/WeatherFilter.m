@@ -22,7 +22,7 @@ classdef WeatherFilter
                     rows = unfiltered.getMatrix();
                     s = size(rows);
                     
-                    for i=9:11
+                    for i=9:10
                         
                         tempSum = 0;
                         for j=2:s(1)

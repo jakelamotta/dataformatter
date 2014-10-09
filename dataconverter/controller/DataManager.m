@@ -1,4 +1,4 @@
-classdef DataManager
+classdef DataManager < handle
     %DATAMANAGER Summary of this class goes here
     %Detailed explanation goes here
     
@@ -28,22 +28,6 @@ classdef DataManager
         function this = addObject(this,id,path)
             row = this.manager.getDataObject(id,path);
             this = this.setObject(row);
-            
-%             objID = row.getObjectID();
-%             
-%             if this.objList.isKey(objID)
-%                 this.objList(objID) = this.combine(row);
-%             else
-%                 this.objList(objID) = row;
-%             end
-%             
-%             if ~isempty(this.dataObject.getMatrix())
-%                 this = this.setObject(this.merge());
-%             else
-%                 this = this.setObject(row);
-%                 this.objList.remove(objID);
-%             end
-            
         end
         
         function this = applyFilter(this,id,type)
@@ -58,18 +42,19 @@ classdef DataManager
             row = this.getObject();
             objID = row.getObjectID();
             
-            if this.objList.isKey(objID)
-                this.objList(objID) = this.combine(row);
-            else
-                this.objList(objID) = row;
+            if this.objList.isKey(objID);
+                row = this.combine(row);
+                this = this.setObject(row);
             end
             
-            if ~isempty(this.dataObject.getMatrix())
+            this.objList(objID) = row;
+            
+            %if ~isempty(this.dataObject.getMatrix())% && (numRows(1) > 2 || append )
                 this = this.setObject(this.merge());
-            else
-                this = this.setObject(row);
-                this.objList.remove(objID);
-            end
+            %else
+            %    this = this.setObject(row);
+                %this.objList.remove(objID);
+            %end
         
         end
         
@@ -91,7 +76,7 @@ classdef DataManager
         end
         
         function this = clearObj(this)
-            this.dataObject = containers.Map();
+            this.dataObject = DataObject();
             this.objList = containers.Map();
         end
     end
@@ -103,9 +88,23 @@ classdef DataManager
             obs = rows([1 2],:);
         end
         
-        function obj = combine(this,obj)
-            %Not implemented yet, function that combines two objects
-            %corresponding to the same observation
+        function combined = combine(this,obj)
+            combinee = this.objList(obj.getObjectID());
+            combineeMat = combinee.getMatrix();
+            objMat = obj.getMatrix();
+            combined = DataObject();
+            s = size(combineeMat);
+            
+            temp = combined.getMatrix();
+            for i=1:s(2)
+                if isempty(objMat{2,i})
+                    temp{2,i} = combineeMat{2,i};
+                else
+                    temp{2,i} = objMat{2,i};
+                end
+            end
+            
+            combined = combined.setMatrix(temp);
         end
         
         function obj = merge(this)
@@ -116,14 +115,16 @@ classdef DataManager
                 key = keys_{1,i};
                 obs = this.objList(key);
                 
-                if isempty(obj)
-                    obj = obs;
-                else
-                    obs = obs.getMatrix();
-                    matrix = obj.getMatrix();
-                    obj = obj.setMatrix([matrix;obs(2:end,:)]);
+                if ~strcmp(key,obj.getObjectID())
+                    if isempty(obj)
+                        obj = obs;
+                    else
+                        obs = obs.getMatrix();
+                        matrix = obj.getMatrix();
+                        obj = obj.setMatrix([matrix;obs(2:end,:)]);
+                    end
                 end
-                this.objList.remove(key);
+                %this.objList.remove(key);
             end
         end
         

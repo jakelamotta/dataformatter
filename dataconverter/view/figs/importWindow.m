@@ -85,7 +85,7 @@ function okBtn_Callback(hObject, eventdata, handles)
     data = cell(1,2);
     
     if get(handles.radiobutton1,'value')
-        type = 'Weather';
+        type = 'Abiotic';
     elseif get(handles.radiobutton2,'value')
         type = 'Weather';
     elseif get(handles.radiobutton3,'value')
