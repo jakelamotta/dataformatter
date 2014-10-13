@@ -22,7 +22,7 @@ function varargout = selectData(varargin)
 
 % Edit the above text to modify the response to help selectData
 
-% Last Modified by GUIDE v2.5 08-Oct-2014 11:09:07
+% Last Modified by GUIDE v2.5 13-Oct-2014 11:33:50
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -51,7 +51,7 @@ function selectData_OpeningFcn(hObject, eventdata, handles, varargin)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 % varargin   command line arguments to selectData (see VARARGIN)
-
+data = varargin{1};
 % Choose default command line output for selectData
 handles.output = hObject;
 
@@ -59,7 +59,8 @@ handles.output = hObject;
 guidata(hObject, handles);
 
 set(handles.okBtn,'UserData',false);
-
+data = myTable(handles.figure1,data);
+set(handles.figure1,'UserData',data);
 % UIWAIT makes selectData wait for user response (see UIRESUME)
  uiwait(handles.figure1);
 
@@ -83,6 +84,7 @@ else
 end
 
 varargout{1} = type;
+%varargout{2} = get(handles.figure1,'UserData');
 delete(hObject);
 
 % --- Executes when user attempts to close figure1.

@@ -85,6 +85,8 @@ classdef GUIHandler
             this.inputManager = this.inputManager.splitPaths(p,type);
             paths_ = this.inputManager.getPaths();
             
+            disp(paths_{1,1});                
+            
             for i=1:length(paths_)
                 this.dataManager = this.dataManager.addObject(type,{paths_{i}});
                 s = size(this.dataManager.getObject().getMatrix());
@@ -128,7 +130,9 @@ classdef GUIHandler
         end
         
         function this = launchDialogue(this,id)
-            type = selectData();
+            type = selectData(this.dataManager.getObject().getMatrix());
+%            type = out_{1};
+%            this.dataManager.getObject.setMatrix(out_{2});
             this.dataManager = this.dataManager.applyFilter(id,type);
         end
     end    

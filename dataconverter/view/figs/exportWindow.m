@@ -22,7 +22,7 @@ function varargout = exportWindow(varargin)
 
 % Edit the above text to modify the response to help exportWindow
 
-% Last Modified by GUIDE v2.5 01-Oct-2014 11:08:16
+% Last Modified by GUIDE v2.5 13-Oct-2014 10:46:00
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -134,15 +134,15 @@ function browseBtn_Callback(hObject, eventdata, handles)
 % hObject    handle to browseBtn (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-    fname = get(handles.text1,'string');
-    pname = '';
+%    fname = get(handles.text1,'string');
+%    pname = '';
     
-    if get(handles.radiobutton1,'value')
-        [fname,pname] = uigetfile('*.xls');
-    elseif get(handles.radiobutton2,'value')
+%    if get(handles.radiobutton1,'value')
+%        [fname,pname] = uigetfile('*.xls');
+%    elseif get(handles.radiobutton2,'value')
         [fname,pname] = uiputfile('*.xls');
-    elseif ~get(handles.radiobutton1,'value') && ~get(handles.radiobutton2,'value')
-        errordlg('You need to select one of the alternatives above!','Error!');
-    end
+%    elseif ~get(handles.radiobutton1,'value') && ~get(handles.radiobutton2,'value')
+%        errordlg('You need to select one of the alternatives above!','Error!');
+%    end
     
     set(handles.text1,'string',[pname,fname]);
