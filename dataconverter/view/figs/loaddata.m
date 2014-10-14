@@ -78,7 +78,7 @@ if get(handles.okBtn,'UserData')
     varargout{1}.sources = get(handles.output,'UserData');
     date_ = get(handles.editDate,'String');
     flower = get(handles.editFlower,'String');
-    id_ = get(handles.editID,'String');
+    %id_ = get(handles.editID,'String');
     pos = get(handles.posRdbtn,'value');
     negOrPos = 'negative';
 
@@ -86,9 +86,9 @@ if get(handles.okBtn,'UserData')
         negOrPos = 'positive';
     end
 
-    target = [date_,'\',flower,'\',negOrPos,'\',id_,'\'];
+    target = [date_,'\',flower,'\',negOrPos,'\'];
 
-    varargout{1}.sources = get(handles.output,'UserData');
+    %varargout{1}.sources = get(handles.output,'UserData');
     varargout{1}.target = target;
 else
     varargout = cell(1,1);
@@ -103,11 +103,10 @@ function okBtn_Callback(hObject, eventdata, handles)
     varargout{1}.sources = get(handles.output,'UserData');
     date_ = get(handles.editDate,'String');
     flower = get(handles.editFlower,'String');
-    id_ = get(handles.editID,'String');
     
-    stringsExist = ~isempty(date_) & ~isempty(flower) & ~isempty(id_);
+    stringsExist = ~isempty(date_) & ~isempty(flower);
 
-    if ~iscell(varargout{1}.sources) && stringsExist
+    if stringsExist%~iscell(varargout{1}.sources) && stringsExist
         set(hObject,'UserData',true);
         close;
     else
@@ -207,33 +206,33 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
 end
 
 
-% --- Executes on button press in abioticBtn.
-function abioticBtn_Callback(hObject, eventdata, handles)
-% hObject    handle to abioticBtn (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-    updateSource(handles,'Abiotic');
-    
-% --- Executes on button press in weatherBtn.
-function weatherBtn_Callback(hObject, eventdata, handles)
-% hObject    handle to weatherBtn (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-    updateSource(handles,'Weather');
-    
-% --- Executes on button press in imageBtn.
-function imageBtn_Callback(hObject, eventdata, handles)
-% hObject    handle to imageBtn (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-    updateSource(handles,'Image');
-
-% --- Executes on button press in spectroBtn.
-function spectroBtn_Callback(hObject, eventdata, handles)
-% hObject    handle to spectroBtn (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-    updateSource(handles,'Spectro');
+% % --- Executes on button press in abioticBtn.
+% function abioticBtn_Callback(hObject, eventdata, handles)
+% % hObject    handle to abioticBtn (see GCBO)
+% % eventdata  reserved - to be defined in a future version of MATLAB
+% % handles    structure with handles and user data (see GUIDATA)
+%     updateSource(handles,'Abiotic');
+%     
+% % --- Executes on button press in weatherBtn.
+% function weatherBtn_Callback(hObject, eventdata, handles)
+% % hObject    handle to weatherBtn (see GCBO)
+% % eventdata  reserved - to be defined in a future version of MATLAB
+% % handles    structure with handles and user data (see GUIDATA)
+%     updateSource(handles,'Weather');
+%     
+% % --- Executes on button press in imageBtn.
+% function imageBtn_Callback(hObject, eventdata, handles)
+% % hObject    handle to imageBtn (see GCBO)
+% % eventdata  reserved - to be defined in a future version of MATLAB
+% % handles    structure with handles and user data (see GUIDATA)
+%     updateSource(handles,'Image');
+% 
+% % --- Executes on button press in spectroBtn.
+% function spectroBtn_Callback(hObject, eventdata, handles)
+% % hObject    handle to spectroBtn (see GCBO)
+% % eventdata  reserved - to be defined in a future version of MATLAB
+% % handles    structure with handles and user data (see GUIDATA)
+%     updateSource(handles,'Spectro');
     
     
 % --- Executes on button press in pushbutton7.
@@ -245,50 +244,11 @@ function pushbutton7_Callback(hObject, eventdata, handles)
 
 function initGuiElements(handles,varargin)
     set(handles.editDate,'String',date);
-    set(handles.editID,'String',[date,'_',num2str(randi(10000,1))])
     set(handles.posRdbtn,'value',1);   
     if ~isempty(varargin)
         set(handles.output,'UserData',varargin{1});
     end
     
-function updateSource(handles,type)
-    tempStruct = get(handles.output,'UserData');
-    
-    [fname,pname,~] = uigetfile('MultiSelect','on');
-        
-    if ischar(fname)
-        source = [pname,fname];
-    else
-        source = struct;
-        
-            size_ = size(fname);
-            for i=1:size_(2)
-                temp = fname{1,i};
-                source.(['path',num2str(i)]) = [pname,temp];
-            end
-            
-            fname = fname{1,1};
-    end
-    
-    tempStruct.(type) = source;
-    set(handles.output,'UserData',tempStruct);
-    
-    switch type
-        case 'Behaviour'
-            set(handles.behaveText,'String',[pname,fname]);
-        case 'Spectro'
-            set(handles.spectroText,'String',[pname,fname]);
-        case 'Weather'
-            set(handles.weatherText,'String',[pname,fname]);
-        case 'Image'
-            set(handles.imageText,'String',[pname,fname]);
-        case 'Abiotic'
-            set(handles.abioText,'String',[pname,fname]);
-    end
-           
-   
-
-
 % --- Executes during object deletion, before destroying properties.
         function figure1_DeleteFcn(hObject, eventdata, handles)
 % hObject    handle to figure1 (see GCBO)

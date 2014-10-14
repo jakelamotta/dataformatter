@@ -65,9 +65,9 @@ classdef InputManager
                     typeDir = dir(p);
                     numFiles = size(typeDir);
                     
-                    for j=3:numFiles
-                        this.paths{1,end+1} = [p,'\',typeDir(j).name];
-                    end
+                    %for j=3:numFiles
+                        this.paths{1,end+1} = [p,'\',typeDir(i).name];
+                    %end
                 else
                     this = this.recSearch([p,'\',temp(i).name],t);
                 end

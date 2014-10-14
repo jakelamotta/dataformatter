@@ -36,16 +36,13 @@ classdef DataManager < handle
             temp = this.manager.getDataObject(id,path);
             current = this.getObject();
             tempMat = temp.getMatrix();
-            rows = [2];
-            s = size(tempMat);
-            for i=3:s(1)
-                rows(end+1) = i;
-            end           
+            rows = [];
             
-            newMat = [current.getMatrix();tempMat(rows,:)];
-            current = current.setMatrix(newMat);
+            for i=2:
             
-            this = this.setObject(current);
+            
+            newMat = [current.getMatrix();]
+            
         
         end
         

@@ -89,23 +89,43 @@ classdef GUIHandler
 
                 disp(paths_{1,1});                
                 
+                observations = struct;
+                
                 for i=1:length(paths_)
-                    %if i >= 1
-                        this.dataManager = this.dataManager.appendObject(type,{paths_{i}});
-                    %else
-                        %this.dataManager = this.dataManager.addObject(type,{paths_{i}});
-                    %end
+                   temp = paths{1,i};
+                   idx = strfind(temp,'\');
+                   obsName = temp(idx(end-2)+1,idx(end-1)-1);
+                   if isfield(observations,obsName)
+                       observations.(obsName) = [observations.(obsName),obsName]
+                   else
+                       observations.(obsName) = {obsName};
+                   end
                 end
+                
+                obsNames = observations
+                numOfObs = size();
+                
+                for j=1:length(numOfObs)
+                    
+                    paths_ = 
+                    
+                    for i=1:length(paths_)
+                        %if i >= 1
+                            this.dataManager = this.dataManager.appendObject(type,{paths_{i}});
+                        %else
+                            %this.dataManager = this.dataManager.addObject(type,{paths_{i}});
+                        %end
+                    end
 
-                s = size(this.dataManager.getObject().getMatrix());
+                    s = size(this.dataManager.getObject().getMatrix());
 
-                if s(1) > 2
-                    this = this.launchDialogue(type);
+                    if s(1) > 2
+                        this = this.launchDialogue(type);
+                    end
+
+                    this.dataManager = this.dataManager.finalize();
                 end
-
-                this.dataManager = this.dataManager.finalize();
-
-
+                
                 this = this.updateGUI();
             end
         end

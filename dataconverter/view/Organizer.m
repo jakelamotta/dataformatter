@@ -21,10 +21,15 @@ classdef Organizer
         function this = launchGUI(this)
             
             out_ = loaddata(this.sources);
-            
             if isstruct(out_)
-                this.sources = out_.sources;
-                this.target = out_.target;
+                out2 = loaddatastep2(this.sources,out_.target);
+                
+                if isstruct(out2)
+                    if isstruct(out_)
+                        this.sources = out2.sources;
+                        this.target = [out_.target,out2.id,'\'];
+                    end
+                end
             end
         end
         

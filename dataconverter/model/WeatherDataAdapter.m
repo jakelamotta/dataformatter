@@ -36,10 +36,28 @@ classdef WeatherDataAdapter < AbstractDataAdapter
             
             obj = this.dobj;
             
-        end        
+        end
+        function rawData = fileReader(this, path)
+
+              rawData = fileReader@AbstractDataAdapter(this,path);   
+%             fid = fopen(path,'r');
+%             
+%             line_ = fgets(fid);
+%             rawData = cell(1,1);
+%             index = 1;
+%             while line_ ~= -1
+%                 rawData{1,index} = line_;
+%                 line_ = fgets(fid);
+%                 index = index+1;
+%             end
+%             
+%             fclose(fid);
+        end
     end
     
     methods (Access = private)
+        
+        
         
         function temp = createDob(this, inRow)
             
@@ -52,20 +70,6 @@ classdef WeatherDataAdapter < AbstractDataAdapter
             this.objList{1,size_(2)+1} = this.dobj;        
         end
         
-        function rawData = fileReader(this, path)
-            
-            fid = fopen(path,'r');
-            
-            line_ = fgets(fid);
-            rawData = cell(1,1);
-            index = 1;
-            while line_ ~= -1
-                rawData{1,index} = line_;
-                line_ = fgets(fid);
-                index = index+1;
-            end
-            
-            fclose(fid);
-        end        
+                
     end    
 end

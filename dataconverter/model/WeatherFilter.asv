@@ -45,17 +45,17 @@ classdef WeatherFilter
                             if k==1
                                 start = 2;
                             else
-                                start = lenOfObs(k-1)+1;
+                                start = lenOfObs(k-1);
                             end
                             for j=start:lenOfObs(k)%s(1)
                                 tempSum = tempSum + rows{j,i};
                             end
                             if k == 1
-                                numRows = lenOfObs(k)-1;
+                                numRows = lenOfObs(k)-lenOfObs(k-1);
                             else
                                 numRows = lenOfObs(k)-lenOfObs(k-1);
                             end
-                            rows{k+1,i} = tempSum/(numRows);%s(1)-1);
+                            rows{2,i} = tempSum/();%s(1)-1);
 
                         end                    
                         filtered = rows(inclrows,:);%[1 2],:);
