@@ -86,18 +86,13 @@ classdef GUIHandler
                 p = importInfo{1,2};
                 this.inputManager = this.inputManager.splitPaths(p,type);
                 paths_ = this.inputManager.getPaths();
-
-                disp(paths_{1,1});                
+            
                 
                 for i=1:length(paths_)
-                    %if i >= 1
                         this.dataManager = this.dataManager.appendObject(type,{paths_{i}});
-                    %else
-                        %this.dataManager = this.dataManager.addObject(type,{paths_{i}});
-                    %end
                 end
 
-                s = size(this.dataManager.getObject().getMatrix());
+                s = size(this.dataManager.getUnfObject().getMatrix());
 
                 if s(1) > 2
                     this = this.launchDialogue(type);
@@ -139,7 +134,7 @@ classdef GUIHandler
         end
         
         function this = launchDialogue(this,id)
-            out_ = selectData(this.dataManager.getObject().getMatrix());
+            out_ = selectData(this.dataManager.getUnfObject().getMatrix());
             type = out_.type;
             if strcmp(type,'average')
                 this.dataManager = this.dataManager.applyFilter(id,type);

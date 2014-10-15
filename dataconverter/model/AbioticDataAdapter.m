@@ -1,4 +1,4 @@
-classdef AbioticDataAdapter < AbstractDataAdapter
+classdef AbioticDataAdapter < DataAdapter
     %ABIOTICDATAADAPTER Summary of this class goes here
     %   Detailed explanation goes here
     
@@ -46,19 +46,7 @@ classdef AbioticDataAdapter < AbstractDataAdapter
         end
         
         function rawData = fileReader(this, path)
-            
-            fid = fopen(path,'r');
-            
-            line_ = fgets(fid);
-            rawData = cell(1,1);
-            index = 1;
-            while line_ ~= -1
-                rawData{1,index} = line_;
-                line_ = fgets(fid);
-                index = index+1;
-            end
-            
-            fclose(fid);
+            rawData = fileReader@DataAdapter(this,path);
         end
         
     end

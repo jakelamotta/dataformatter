@@ -42,7 +42,7 @@ else
     gui_mainfcn(gui_State, varargin{:});
 end
 % End initialization code - DO NOT EDIT
-
+end
 
 % --- Executes just before selectData is made visible.
 function selectData_OpeningFcn(hObject, eventdata, handles, varargin)
@@ -61,10 +61,11 @@ guidata(hObject, handles);
 set(handles.okBtn,'UserData',false);
 %data = myTable(handles.figure1,data);
 setTable(handles,data);
+setGraph(handles,data);
 %set(handles.figure1,'UserData',data);
 % UIWAIT makes selectData wait for user response (see UIRESUME)
  uiwait(handles.figure1);
-
+end
 
 % --- Outputs from this function are returned to the command line.
 function varargout = selectData_OutputFcn(hObject, eventdata, handles) 
@@ -90,6 +91,7 @@ out_.data = get(handles.figure1,'UserData');
 varargout{1} = out_;
 
 delete(handles.figure1);
+end
 
 % --- Executes when user attempts to close figure1.
 function figure1_CloseRequestFcn(hObject, eventdata, handles)
@@ -105,6 +107,7 @@ function figure1_CloseRequestFcn(hObject, eventdata, handles)
     else
         % The GUI is no longer waiting, just close it
         delete(hObject);
+    end
 end
 
 
@@ -116,12 +119,13 @@ function okBtn_Callback(hObject, eventdata, handles)
     data = get(handles.figure1,'UserData');
     s = size(data);
     
-    if get(handles.checkbox1,'value') || s(1) == 2     
+    if get(handles.checkbox1,'value') || validateData(data)     
         set(hObject,'UserData',true);
         close;
     else
        errordlg('Exactly one observation/row or "Use average" must be seleced'); 
     end
+end
 
 % --- Executes on button press in cancelBtn.
 function cancelBtn_Callback(hObject, eventdata, handles)
@@ -129,6 +133,7 @@ function cancelBtn_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
     close;
+end
 
 % --- Executes on button press in checkbox1.
 function checkbox1_Callback(hObject, eventdata, handles)
@@ -137,7 +142,8 @@ function checkbox1_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 % Hint: get(hObject,'Value') returns toggle state of checkbox1
-    
+end
+
 function cellSelect(src,evt)
     % get indices of selected rows and make them available for other callbacks
     index = evt.Indices;
@@ -146,6 +152,7 @@ function cellSelect(src,evt)
         rows = index(:,1);
         set(src,'UserData',rows);
     end
+end
 
 function setTable(handles,data)
     %h = figure('Position',[600 400 402 100],'numbertitle','off','MenuBar','none');
@@ -160,6 +167,7 @@ function setTable(handles,data)
     
     %uiwait(h);
     %data = get(t,'Data');
+end
 
 function deleteRow(varargin)
     handle = varargin{3};
@@ -176,3 +184,22 @@ function deleteRow(varargin)
     set(th,'Data',data);
     
     set(handle.figure1,'UserData',data);
+end
+
+function setGraph(h,data)
+end
+
+function out_ = validateData(data)
+    out_ = true;
+    s = size(data);
+    
+    temp = data{2,2};
+    
+    for i=3:s(1)
+        if strcmp(temp,data{i,2})
+            out_ = false;
+            break;
+        end
+        temp = data{i,2};
+    end
+end

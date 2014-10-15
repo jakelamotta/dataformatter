@@ -1,4 +1,4 @@
-classdef WeatherDataAdapter < AbstractDataAdapter
+classdef WeatherDataAdapter < DataAdapter
     %WEATHERDATAADAPTER Summary of this class goes here
     %   Detailed explanation goes here
     
@@ -11,7 +11,7 @@ classdef WeatherDataAdapter < AbstractDataAdapter
         
         function this = WeatherDataAdapter()
             this.dobj = DataObject();
-            this.tempMatrix = {'Year','month','day','hour','min','wind speed (m/s)','direction(degrees)','temperature(c)'};
+            this.tempMatrix = {'wind speed (m/s)','direction(degrees)','Temperature(c)'};
         end
         
         function obj = getDataObject(this,paths)
@@ -28,7 +28,7 @@ classdef WeatherDataAdapter < AbstractDataAdapter
                 temp = cellfun(@this.createDob,rawData,'UniformOutput',false);
                 
                 for j=1:length(temp)
-                    this.tempMatrix = [this.tempMatrix;temp{1,j}];
+                    this.tempMatrix = [this.tempMatrix;temp{1,j}(6:8)];
                 end
                 
                 this.dobj = this.dobj.setObservation(this.tempMatrix,id_);
@@ -38,20 +38,7 @@ classdef WeatherDataAdapter < AbstractDataAdapter
             
         end
         function rawData = fileReader(this, path)
-
-              rawData = fileReader@AbstractDataAdapter(this,path);   
-%             fid = fopen(path,'r');
-%             
-%             line_ = fgets(fid);
-%             rawData = cell(1,1);
-%             index = 1;
-%             while line_ ~= -1
-%                 rawData{1,index} = line_;
-%                 line_ = fgets(fid);
-%                 index = index+1;
-%             end
-%             
-%             fclose(fid);
+              rawData = fileReader@DataAdapter(this,path);   
         end
     end
     

@@ -1,4 +1,4 @@
-classdef OlfactoryDataAdapter < AbstractDataAdapter
+classdef OlfactoryDataAdapter < DataAdapter
     %OLFACTORYDATAADAPTER Summary of this class goes here
     %   Detailed explanation goes here
     
@@ -38,7 +38,7 @@ classdef OlfactoryDataAdapter < AbstractDataAdapter
     
     methods (Access = private)
         function rawData = fileReader(this,p)
-           rawData = fileReader@AbstractDataAdapter(this,p); 
+           rawData = fileReader@DataAdapter(this,p); 
         end
     end
     

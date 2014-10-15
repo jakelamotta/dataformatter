@@ -10,8 +10,26 @@ classdef DataObject < handle
     methods (Access = public)
         
         function this = DataObject()
-            this.xlsMatrix = {'Date','ID','Flower','Year','month','day','hour','min','wind speed (m/s)','direction(degrees)','temperature(c)','Humidity','Pressure'};
+            this.xlsMatrix = {'Date','ID','Flower','wind speed (m/s)','direction(degrees)','Temperature(c)','temperature(c)','Humidity','Pressure'};
             %this.xlsMatrix = [this.xlsMatrix;{'','','',0,0,0,0,0,0,0,0,0,0}];
+        end
+        
+        function row = getRowFromID(this,id)
+            
+            height = this.getNumRows();
+            width = this.getWidth();
+            row = [];
+            
+            for i=2:height
+               for j=1:width
+                   if strcmp(this.xlsMatrix{1,j},'ID') 
+                       if strcmp(this.xlsMatrix{i,j},id)
+                           row = [this.xlsMatrix(1,:);this.xlsMatrix(i,:)];
+                           break;
+                       end
+                   end
+               end                
+            end           
         end
         
         function this = setObservation(this,matrix,id)
@@ -35,11 +53,25 @@ classdef DataObject < handle
             s = size_(2);
         end
         
+        function s = getNumRows(this)
+            size_ = size(this.xlsMatrix);
+            s = size_(1);
+        end
+        
         function id = getObjectID(this)
+            id = cell(1,1);
             
             for i=1:this.getWidth()
                 if strcmp('ID',this.xlsMatrix{1,i})
-                    id = this.xlsMatrix{2,i};                   
+                    id{1,1} = this.xlsMatrix{2,i};                   
+                end
+            end
+            
+            for i=3:this.getNumRows()
+                for j=1:this.getWidth()
+                  if strcmp('ID',this.xlsMatrix{1,j})
+                      id{1,i-1} = this.xlsMatrix{i,j};
+                  end
                 end
             end
             

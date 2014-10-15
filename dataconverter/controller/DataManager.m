@@ -8,6 +8,7 @@ classdef DataManager < handle
         manager;
         dataObject;
         objList;
+        unfilteredObj;
         filterFactory;
     end
     
@@ -18,6 +19,7 @@ classdef DataManager < handle
             this.manager = inM;
             this.xlsWriter = XLSWriter();
             this.objList = containers.Map();
+            this.unfilteredObj = DataObject();
             this.dataObject = DataObject();
         end
         
@@ -27,14 +29,13 @@ classdef DataManager < handle
         
         function this = addObject(this,id,path)
             row = this.manager.getDataObject(id,path);
-            this = this.setObject(row);
-            %%%this.objList('temp') = row;
-            
+            %%%this = this.setObject(row);
+            this = this.setUnfObject(row);
         end
         
         function this = appendObject(this,id,path)
             temp = this.manager.getDataObject(id,path);
-            current = this.getObject();
+            current = this.getUnfObject();
             tempMat = temp.getMatrix();
             rows = [2];
             s = size(tempMat);
@@ -45,12 +46,12 @@ classdef DataManager < handle
             newMat = [current.getMatrix();tempMat(rows,:)];
             current = current.setMatrix(newMat);
             
-            this = this.setObject(current);
-        
+            %%%this = this.setObject(current);
+            this = this.setUnfObject(current);
         end
         
         function this = applyFilter(this,id,type)
-            row = this.getObject();
+            row = this.getUnfObject();
             filter = this.filterFactory.createFilter(id);
             row = row.setMatrix(filter.filter(row,type));
             this = this.setObject(row);
@@ -58,33 +59,50 @@ classdef DataManager < handle
         
         function this = finalize(this)
             
-            row = this.getObject();
-            objID = row.getObjectID();
+            obj = this.getUnfObject();
+            objID = obj.getObjectID();
             
-            if this.objList.isKey(objID);
-                row = this.combine(row);
-                this = this.setObject(row);
+            numberOfObs = length(objID);
+            
+            for k=1:numberOfObs
+                id = objID{1,k};
+                
+                if this.objList.isKey(id);
+                    row = this.combine(obj,id);
+                    this = this.setObject(row);
+                else
+                    row = DataObject();
+                    row = row.setMatrix(obj.getRowFromID(id));
+                end
+
+                this.objList(id) = row;
+
+                %if ~isempty(this.dataObject.getMatrix())% && (numRows(1) > 2 || append )
+                this = this.setObject(this.merge());
+                %else
+                %    this = this.setObject(row);
+                    %this.objList.remove(objID);
+                %end
             end
             
-            this.objList(objID) = row;
-            
-            %if ~isempty(this.dataObject.getMatrix())% && (numRows(1) > 2 || append )
-                this = this.setObject(this.merge());
-            %else
-            %    this = this.setObject(row);
-                %this.objList.remove(objID);
-            %end
+            this = this.setUnfObject(DataObject());
         
         end
         
         function obj = getObject(this)
             obj = this.dataObject;
-            %obj = this.objList('temp');
         end
         
         function this = setObject(this,obj)
             this.dataObject = obj;
-            %this.objList('temp');
+        end
+        
+        function this = setUnfObject(this,obj)
+            this.unfilteredObj = obj;
+        end
+        
+        function obj = getUnfObject(this)
+            obj = this.unfilteredObj;
         end
         
         function list = getObjectList(this)
@@ -109,10 +127,12 @@ classdef DataManager < handle
             obs = rows([1 2],:);
         end
         
-        function combined = combine(this,obj)
-            combinee = this.objList(obj.getObjectID());
+        function combined = combine(this,obj,id)
+            %combinee = this.objList(obj.getObjectID());
+            combinee = this.objList(id);
             combineeMat = combinee.getMatrix();
-            objMat = obj.getMatrix();
+            %objMat = obj.getMatrix();
+            objMat = obj.getRowFromID(id);
             combined = DataObject();
             s = size(combineeMat);
             
