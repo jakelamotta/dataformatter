@@ -205,24 +205,23 @@ toSend.x = x;
 toSend.y = y;
 toSend.t = t;
 
-uicontrol(handle,'Style','edit','Tag','sampleedit','String','10','Position',[30 50 130 20]);
+uicontrol(handle,'Style','edit','Tag','sampleedit','String','10');
 uicontrol(handle,'Style','pushbutton','String','Downsample','Callback',{@downSsample,toSend});
 
 end
 
 function downSsample(varargin)
-    inData = varargin{3};
-    x = inData.x;
-    y = inData.y;
-    t = inData.t;
-    h = findobj('Tag','sampleedit');
-    rate = get(h,'String');;
+    toSend = varargin{3};
+    x = toSend.x;
+    y = toSend.y;
+    t = toSend.t;
+    rate = '10';
     
     dbrate = str2double(rate);
     x = downsample(x,dbrate);
     y = downsample(y,dbrate);
     
-    hold on
+    hol
     plot(t,x,y,'r');
     
 

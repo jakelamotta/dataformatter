@@ -42,18 +42,25 @@ classdef DataObject < handle
         
         function this = setObservation(this,matrix,id)
             
-            s = size(matrix);
+            s = size(matrix);            
             
-            for i=1:s(2)
-                for k=2:s(1);
-                    this.xlsMatrix{k,2} = id;
+            if s(2) < 50
+            
+                for i=1:s(2)
                     for j=1:this.getWidth()
-                        if strcmp(this.xlsMatrix{1,j},matrix{1,i})
-                            this.xlsMatrix{k,j} = matrix{k,i};
-                            break;
+                        for k=2:s(1);
+                            this.xlsMatrix{k,2} = id;
+                            if strcmp(this.xlsMatrix{1,j},matrix{1,i})
+                                this.xlsMatrix{k,j} = matrix{k,i};
+                            end
                         end
-                    end
+                    end                
                 end
+                
+            else
+                
+                
+                
             end
             
         end

@@ -134,7 +134,7 @@ classdef GUIHandler
         end
         
         function this = launchDialogue(this,id)
-            out_ = selectData(this.dataManager.getUnfObject().getMatrix());
+            out_ = selectData(this.dataManager.getUnfObject().getMatrix(),id);
             type = out_.type;
             if strcmp(type,'average')
                 this.dataManager = this.dataManager.applyFilter(id,type);
