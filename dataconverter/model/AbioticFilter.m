@@ -7,7 +7,7 @@ classdef AbioticFilter < Filter
     
     methods (Access = public)
         
-        function filtered = filter(this,unfiltered,type)
+        function filtered = filter(this,unfiltered,type,varargin)
             filtered = unfiltered;
             
             switch type

@@ -18,8 +18,8 @@ classdef FilterFactory
         
         function filter = createFilter(this,id)
             if this.filters.isKey(id)
-                filter = this.filters(id);
-                filter = filter();
+                filter_ = this.filters(id);
+                filter = filter_();
             else
                 filter = '';
             end

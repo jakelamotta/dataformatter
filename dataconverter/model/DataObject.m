@@ -5,22 +5,31 @@ classdef DataObject < handle
     properties (Access = private)
         xlsMatrix;
         id;
+        spectroData;
     end
     
     methods (Access = public)
         
         function this = DataObject()
             %this.xlsMatrix = cell(1,414);
-            this.xlsMatrix = {'Date','ID','Flower','wind speed (m/s)','direction(degrees)','Temperature(c)','temperature(c)','Humidity','Pressure','dominant','peak','purity','timestamp'};
-            temp = cell(1,401);
+            this.xlsMatrix = {'Date','ID','Flower','wind speed (m/s)','direction(degrees)','Temperature(c)','temperature(c)','Humidity','Pressure','dominant1','peak1','purity1','timestamp1','dominant2','peak2','purity2','timestamp2'};
+            this.spectroData = struct;
             
-            for i=1:401
-                temp{1,i} = num2str(379+i);
-            end
+            this = this.initStructFields();
             
-            this.xlsMatrix = [this.xlsMatrix,temp];
+            %temp = cell(1,401);
+            
+            %for i=1:401
+            %    temp{1,i} = num2str(379+i);
+            %end
+            
+            %this.xlsMatrix = [this.xlsMatrix,temp];
             %this.xlsMatrix = [this.xlsMatrix;{'','','',0,0,0,0,0,0,0,0,0,0}];
         end
+        
+        function this = addSpectroData(this,inStruct)
+            this.spectroData = mergestruct(this.spectroData,inStruct);
+        end        
         
         function row = getRowFromID(this,id)
             
@@ -44,17 +53,30 @@ classdef DataObject < handle
             
             s = size(matrix);
             
+            
             for i=1:s(2)
-                for k=2:s(1);
-                    this.xlsMatrix{k,2} = id;
-                    for j=1:this.getWidth()
+                for j=1:this.getWidth()
+                    for k=2:s(1);
+                        this.xlsMatrix{k,2} = id;
+                        
                         if strcmp(this.xlsMatrix{1,j},matrix{1,i})
                             this.xlsMatrix{k,j} = matrix{k,i};
-                            break;
+                            
                         end
                     end
                 end
             end
+%             for i=1:s(2)
+%                 for k=2:s(1);
+%                     this.xlsMatrix{k,2} = id;
+%                     for j=1:this.getWidth()
+%                         if strcmp(this.xlsMatrix{1,j},matrix{1,i})
+%                             this.xlsMatrix{k,j} = matrix{k,i};
+%                             break;
+%                         end
+%                     end
+%                 end
+%             end
             
         end
         
@@ -97,7 +119,22 @@ classdef DataObject < handle
             this.xlsMatrix = m;
         end
         
+        function sout = getSpectroData(this)
+            sout = this.spectroData;
+        end
         
     end    
+    
+    methods (Access = private)        
+        
+        function this = initStructFields(this)
+            this.spectroData.obs1.x = [];
+            this.spectroData.obs1.y = [];
+            this.spectroData.obs2.x = [];
+            this.spectroData.obs2.y = [];         
+            this.spectroData.id = '';
+        end
+    end
+    
 end
 

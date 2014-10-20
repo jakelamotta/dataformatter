@@ -62,7 +62,7 @@ classdef Filter
                     rows{k+1,2} = rows{start,2};
                 end
                 
-                filtered = rows(inclrows,:);
+                filtered = filtered.setMatrix(rows(inclrows,:));
             end
             
             

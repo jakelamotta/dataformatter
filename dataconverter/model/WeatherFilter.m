@@ -7,13 +7,12 @@ classdef WeatherFilter < Filter
     
     methods (Access = public)
         
-        function filtered = filter(this,unfiltered,type)
+        function filtered = filter(this,unfiltered,type,varargin)
             filtered = unfiltered;
             
             switch type
                 case 'average'                      
                     filtered = filter@Filter(this,unfiltered,4,6);
-
             end                    
                     
         end

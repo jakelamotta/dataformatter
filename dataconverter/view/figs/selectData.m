@@ -51,7 +51,10 @@ function selectData_OpeningFcn(hObject, eventdata, handles, varargin)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 % varargin   command line arguments to selectData (see VARARGIN)
-data = varargin{1};
+obj = varargin{1};
+
+data = obj.getMatrix();
+spectro = obj.getSpectroData();
 id = varargin{2};
 % Choose default command line output for selectData
 handles.output = hObject;
@@ -62,11 +65,10 @@ guidata(hObject, handles);
 set(handles.okBtn,'UserData',false);
 %data = myTable(handles.figure1,data);
 
-if strcmp(id,'Spectro')
-    setGraph(handles,data);
-else    
-    setTable(handles,data);
-end
+%if strcmp(id,'Spectro')
+    setGraph(handles,spectro);
+
+setTable(handles,data);
 
 
 
@@ -166,12 +168,12 @@ function setTable(handles,data)
     %h = figure('Position',[600 400 402 100],'numbertitle','off','MenuBar','none');
     h = handles.figure1;
     defaultData = data;
-    t = uitable(h,'Units','normalized','Position',[.10 .4, .8 .3],'Data', defaultData,'Tag','myTable',...
+    t = uitable(h,'Units','normalized','Position',[.10 .55, .8 .25],'Data', defaultData,'Tag','myTable',...
         'ColumnName', [],'RowName',[],...
         'CellSelectionCallback',@cellSelect);
     disp(get(t,'Position'));
     % create pushbutton to delete selected rows
-    uicontrol(h,'Style','pushbutton','String','Delete','Callback',{@deleteRow,handles});
+    %uicontrol(h,'Style','pushbutton','String','Delete','Callback',{@deleteRow,handles});
     
     %uiwait(h);
     %data = get(t,'Data');
@@ -181,72 +183,82 @@ function setGraph(h,data)
 
 handle = h.figure1;
 
-s = size(data);
+% s = size(data);
+% 
+% for i=1:s(2)
+%    if strcmp(data{1,i},'380')
+%       idx = i;
+%       break;
+%    end
+% end
+% x = zeros(1,(s(2)-idx));
+% y = zeros(1,(s(2)-idx));
 
-for i=1:s(2)
-   if strcmp(data{1,i},'380')
-      idx = i;
-      break;
-   end
-end
-x = zeros(1,(s(2)-idx));
-y = zeros(1,(s(2)-idx));
+% for i=idx:s(2)
+%     x(i-idx+1) = str2double(data{1,i});
+%     y(i-idx+1) = data{2,i};
+% end
 
-for i=idx:s(2)
-    x(i-idx+1) = str2double(data{1,i});
-    y(i-idx+1) = data{2,i};
-end
-
-t = axes('Position',[.10 .4, .8 .3]);
-plot(t,x,y);
+t = axes('Position',[.10 .25, .8 .25]);
+plot(t,[data.obs1.x],[data.obs1.y],'blue');
+hold on;
+plot(t,[data.obs2.x],[data.obs2.y],'green');
 %t = axes(handle,'Data',data);
 
-toSend.x = x;
-toSend.y = y;
-toSend.t = t;
+toSend = data;
 
-uicontrol(handle,'Style','edit','Tag','sampleedit','String','10','Position',[30 50 130 20]);
-uicontrol(handle,'Style','pushbutton','String','Downsample','Callback',{@downSsample,toSend});
+uicontrol(handle,'Style','edit','Tag','sampleedit','String','1','Position',[30 50 130 20]);
+uicontrol(handle,'Style','pushbutton','String','Downsample','Callback',{@downSample,toSend,t,handle});
 
 end
 
-function downSsample(varargin)
+function downSample(varargin)
     inData = varargin{3};
-    x = inData.x;
-    y = inData.y;
-    t = inData.t;
+    
+    h = varargin{5};
+    x1 = [inData.obs1.x];
+    y1 = [inData.obs1.y];
+    x2 = [inData.obs2.x];
+    y2 = [inData.obs2.y];
+    
+    t = varargin{4};
     h = findobj('Tag','sampleedit');
-    rate = get(h,'String');;
+    rate = get(h,'String');
     
     dbrate = str2double(rate);
-    x = downsample(x,dbrate);
-    y = downsample(y,dbrate);
+    x1new = linspace(380,600,dbrate);
+    x2new = linspace(380,600,dbrate);
+    
+    y1 = interp1(x1,y1,x1new);
+    y2 = interp1(x2,y2,x2new);
     
     hold on
-    plot(t,x,y,'r');
     
-
-
+    plot(t,x1new,y1,'r');
+    plot(t,x2new,y2,'y');
+    set(h,'UserData',dbrate);
 end
 
 function deleteRow(varargin)
     handle = varargin{3};
     th = findobj('Tag','myTable');
-    % get current data
+    
+    %get current data
     data = get(th,'Data');
-    % get indices of selected rows
+    
+    %get indices of selected rows
     rows = get(th,'UserData');
-    % create mask containing rows to keep
+    
+    %create mask containing rows to keep
     mask = (1:size(data,1))';
     mask(rows) = [];
-    % delete selected rows and re-write data
+    
+    %delete selected rows and re-write data
     data = data(mask,:);
     set(th,'Data',data);
     
     set(handle.figure1,'UserData',data);
 end
-
-
 
 function out_ = validateData(data)
     out_ = true;

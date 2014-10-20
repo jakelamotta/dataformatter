@@ -94,7 +94,7 @@ classdef GUIHandler
 
                 s = size(this.dataManager.getUnfObject().getMatrix());
 
-                if s(1) > 2
+                if s(1) > 2 || strcmp(type,'Spectro')
                     this = this.launchDialogue(type);
                 end
 
@@ -133,14 +133,15 @@ classdef GUIHandler
             this.dataTable = uitable(this.mainWindow,'data',this.dataManager.getObject().getMatrix(),'Position',[70 90 850 220]);
         end
         
-        function this = launchDialogue(this,id)
-            out_ = selectData(this.dataManager.getUnfObject().getMatrix(),id);
+        function this = launchDialogue(this,id,varargin)
+            out_ = selectData(this.dataManager.getUnfObject(),id);
             type = out_.type;
-            if strcmp(type,'average')
-                this.dataManager = this.dataManager.applyFilter(id,type);
-            else
-                this.dataManager = this.dataManager.setObject(this.dataManager.getObject.setMatrix(out_.data));
-            end
+            input_ = out_.data;
+            %if strcmp(type,'average')
+            this.dataManager = this.dataManager.applyFilter(id,type);
+            %else
+            %    this.dataManager = this.dataManager.setObject(this.dataManager.getObject.setMatrix(out_.data));
+            %end
         end
     end    
 end

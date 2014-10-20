@@ -11,7 +11,7 @@ classdef SpectroDataAdapter < DataAdapter
 
         function this = SpectroDataAdapter()
            this.dobj = DataObject();
-           this.tempMatrix = this.dobj.getMatrix();
+           this.tempMatrix = {'dominant1','peak1','purity1','timestamp2','dominant2','peak2','purity2','timestamp2'};
         end
    
         function rawData = fileReader(this,path)
@@ -30,6 +30,9 @@ classdef SpectroDataAdapter < DataAdapter
                 
                 wli = strfind(rawData,'waveLengthInfo');
                 wli = wli{1};
+                
+                tempStruct = struct;
+                tempStruct.id = id_;
                 
                 for obs=1:length(wli)
                     idx = strfind(rawData,'lux');
@@ -50,20 +53,32 @@ classdef SpectroDataAdapter < DataAdapter
                     points = regexp(points,',','split');
                     temp = cellfun(@this.createDob,points,'UniformOutput',false);
                     
-                    %x = zeros(size(temp));
-                    %y = zeros(size(temp));
+                    x = zeros(size(temp));
+                    y = zeros(size(temp));
+                    
                     len_ = length(temp);
-                    offset = 13;
+                    %offset = 13;
                     
                     for k=1:len_
+                        
+                        
+                        x(k) = str2double(temp{k}(1));
+                        val1 = temp{k}(2);
+                        %cell 
+                        y(k) = val1{1};
+                        
                        %x(k) = temp{k}(1);
                        %y(k) = temp{k}(2);
-                       index = size(this.tempMatrix);
-                       index = index(2)+1;
-                       pairs = temp{k};
-                       this.tempMatrix{1,k+offset} = pairs{1};%temp{k}(1);
-                       this.tempMatrix{obs+1,k+offset} = pairs{2};%temp{k}(2);
+%                        index = size(this.tempMatrix);
+%                        index = index(2)+1;
+%                        pairs = temp{k};
+%                        this.tempMatrix{1,k+offset} = pairs{1};%temp{k}(1);
+%                        this.tempMatrix{obs+1,k+offset} = pairs{2};%temp{k}(2);
                     end
+                    
+                    var1 = ['obs',(num2str(obs))];
+                    tempStruct.(var1).x = x;
+                    tempStruct.(var1).y = y;
                     
                     winfo = tempData(1:first-20);
                     winfo = regexp(winfo,',','split');
@@ -79,18 +94,16 @@ classdef SpectroDataAdapter < DataAdapter
                        variable = temp{1}(2:end-1);
                        value = str2double(temp{2});
                        
+                       %tempStruct.(num2str(obs)).(variable) = value;
                        
-                       this.tempMatrix{1,offset+h} = variable;
-                       this.tempMatrix{obs+1,offset+h} = value; 
+                        %this.tempMatrix{1,h+h*(obs-1)} = variable;
+                        this.tempMatrix{2,h+length(winfo)*(obs-1)} = value; 
                     end
-                    
-                    
-                    
-                
                 end
             end
             
-            obj = this.dobj.setObservation(this.tempMatrix,id_);
+            this.dobj = this.dobj.setObservation(this.tempMatrix,id_);
+            obj = this.dobj.addSpectroData(tempStruct);%tempStruct.obs1.x,tempStruct.obs1.x,tempStruct.obs2.x,tempStruct.obs2.x,id_);
         end
         
     end

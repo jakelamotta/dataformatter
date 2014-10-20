@@ -46,7 +46,7 @@ classdef DataManager < handle
             
             newMat = [current.getMatrix();tempMat(rows,:)];
             current = current.setMatrix(newMat);
-            
+            current = current.addSpectroData(temp.getSpectroData());
             %%%this = this.setObject(current);
             this = this.setUnfObject(current);
         end
@@ -54,8 +54,10 @@ classdef DataManager < handle
         function this = applyFilter(this,id,type)
             row = this.getUnfObject();
             filter = this.filterFactory.createFilter(id);
-            row = row.setMatrix(filter.filter(row,type));
-            this = this.setObject(row);
+%             row = row.setMatrix(filter.filter(row,type));
+%             this = this.setObject(row);
+            this = this.setObject(filter.filter(row,type,1));
+
         end
         
         function this = finalize(this)
@@ -74,8 +76,9 @@ classdef DataManager < handle
                 else
                     row = DataObject();
                     row = row.setMatrix(obj.getRowFromID(id));
+                    row = row.addSpectroData(obj.getSpectroData());
                 end
-
+                
                 this.objList(id) = row;
 
                 %if ~isempty(this.dataObject.getMatrix())% && (numRows(1) > 2 || append )
@@ -146,12 +149,16 @@ classdef DataManager < handle
                 end
             end
             
+            newSpectro = mergestruct(combinee.getSpectroData(),obj.getSpectroData());
+            combined = combined.addSpectroData(newSpectro);
+            
+            
             combined = combined.setMatrix(temp);
         end
         
         function obj = merge(this)
             keys_ = this.objList.keys();
-            obj = this.getObject();
+            obj = this.getUnfObject();
             
             for i=1:length(keys_)
                 key = keys_{1,i};
