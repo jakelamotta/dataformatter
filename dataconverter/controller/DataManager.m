@@ -10,6 +10,7 @@ classdef DataManager < handle
         objList;
         unfilteredObj;
         filterFactory;
+        spectroDP;
     end
     
     methods (Access=public)
@@ -21,10 +22,25 @@ classdef DataManager < handle
             this.objList = containers.Map();
             this.unfilteredObj = DataObject();
             this.dataObject = DataObject();
+            
+            %Initializes to -1, once its set after this its final
+            this.spectroDP = 1;
+        end
+        
+        function dp = getNrOfSpectroDP(this)
+            dp = this.spectroDP;
+        end
+        
+        function this = setNrOfSpectroDP(this,dp)
+            if this.spectroDP == 1
+                this.spectroDP = dp;
+            end
         end
         
         function this = clearAll(this)
-            this.dataObject = DataObject();            
+            this = this.setUnfObject(DataObject());
+            this = this.setObject(DataObject());
+            this.objList = containers.Map();
         end
         
         function this = addObject(this,id,path)
@@ -158,8 +174,8 @@ classdef DataManager < handle
         
         function obj = merge(this)
             keys_ = this.objList.keys();
-            obj = this.getUnfObject();
-            
+            %obj = this.getUnfObject();
+            obj = this.getObject();
             for i=1:length(keys_)
                 key = keys_{1,i};
                 obs = this.objList(key);

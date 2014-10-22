@@ -52,7 +52,7 @@ function selectData_OpeningFcn(hObject, eventdata, handles, varargin)
 % handles    structure with handles and user data (see GUIDATA)
 % varargin   command line arguments to selectData (see VARARGIN)
 obj = varargin{1};
-
+handler = varargin{3};
 data = obj.getMatrix();
 spectro = obj.getSpectroData();
 id = varargin{2};
@@ -62,11 +62,18 @@ handles.output = hObject;
 % Update handles structure
 guidata(hObject, handles);
 
+userdata = struct;
+userdata.handler = handler;
+userdata.data = data;
+userdata.spectro =spectro;
+userdata.dp = handler.dataManager.getNrOfSpectroDP();
+set(hObject,'UserData',userdata);
 set(handles.okBtn,'UserData',false);
+
 %data = myTable(handles.figure1,data);
 
 %if strcmp(id,'Spectro')
-    setGraph(handles,spectro);
+setGraph(handles,spectro);
 
 setTable(handles,data);
 
@@ -85,19 +92,35 @@ function varargout = selectData_OutputFcn(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 % Get default command line output from handles structure
+out_ = struct;
+
 if get(handles.okBtn,'UserData')
     if get(handles.checkbox1,'value')
         type = 'average';
     else
         type = 'random';
     end
+    
+    userdata = get(handles.figure1,'UserData');
+    data = userdata.data;
+    handler = userdata.handler;
+
+    handler.dataManager = handler.dataManager.setNrOfSpectroDP(userdata.dp); 
+
+    out_.data = data;
+    out_.handler = handler;
+    
 else
     type = 'nofilter';
 end
 
-out_ = struct;
+handler = get(hObject,'UserData');
+
+
+
+
 out_.type = type;
-out_.data = get(handles.figure1,'UserData');
+
 varargout{1} = out_;
 
 delete(handles.figure1);
@@ -126,8 +149,9 @@ function okBtn_Callback(hObject, eventdata, handles)
 % hObject    handle to okBtn (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-    data = get(handles.figure1,'UserData');
-    s = size(data);
+    userdata = get(handles.figure1,'UserData');
+    data = userdata.data;
+    %s = size(data);
     
     if get(handles.checkbox1,'value') || validateData(data)     
         set(hObject,'UserData',true);
@@ -207,7 +231,18 @@ plot(t,[data.obs2.x],[data.obs2.y],'green');
 
 toSend = data;
 
-uicontrol(handle,'Style','edit','Tag','sampleedit','String','1','Position',[30 50 130 20]);
+userdata = get(handle,'UserData');
+handler = userdata.handler;
+dp = handler.dataManager.getNrOfSpectroDP();
+
+
+
+button = uicontrol(handle,'Style','edit','Tag','sampleedit','String',dp,'Position',[30 50 130 20]);
+
+if dp > 1
+    set(button,'Enable','off')
+end
+
 uicontrol(handle,'Style','pushbutton','String','Downsample','Callback',{@downSample,toSend,t,handle});
 
 end
@@ -215,7 +250,7 @@ end
 function downSample(varargin)
     inData = varargin{3};
     
-    h = varargin{5};
+    hfig = varargin{5};
     x1 = [inData.obs1.x];
     y1 = [inData.obs1.y];
     x2 = [inData.obs2.x];
@@ -232,11 +267,18 @@ function downSample(varargin)
     y1 = interp1(x1,y1,x1new);
     y2 = interp1(x2,y2,x2new);
     
-    hold on
+    hold off
+    plot(t,x1,[inData.obs1.y],'b');
     
+    hold on
+    plot(t,x2,[inData.obs2.y],'g');
     plot(t,x1new,y1,'r');
     plot(t,x2new,y2,'y');
-    set(h,'UserData',dbrate);
+    
+    userdata = get(hfig,'UserData');
+    userdata.dp = dbrate;
+    
+    set(hfig,'UserData',userdata);
 end
 
 function deleteRow(varargin)

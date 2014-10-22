@@ -71,7 +71,13 @@ function varargout = exportWindow_OutputFcn(hObject, eventdata, handles)
 
 % Get default command line output from handles structure
     %varargout{1} = handles.output;
-    varargout{1} = get(handles.text1,'string');
+    
+    if get(handles.okBtn,'UserData')
+        varargout{1} = get(handles.text1,'string');
+    else
+        varargout{1} = -1;
+    end
+    
     delete(handles.figure1);   
 
 % --- Executes on button press in okBtn.
@@ -101,7 +107,6 @@ function radiobutton1_Callback(hObject, eventdata, handles)
 
 % Hint: get(hObject,'Value') returns toggle state of radiobutton1
     set(handles.radiobutton2,'value',~get(hObject,'value'));
-
 
 % --- Executes on button press in radiobutton2.
 function radiobutton2_Callback(hObject, eventdata, handles)
@@ -145,4 +150,7 @@ function browseBtn_Callback(hObject, eventdata, handles)
 %        errordlg('You need to select one of the alternatives above!','Error!');
 %    end
     
-    set(handles.text1,'string',[pname,fname]);
+    if ~isnumeric(fname) && ~isnumeric(pname)
+        set(handles.text1,'string',[pname,fname]);
+    end
+    

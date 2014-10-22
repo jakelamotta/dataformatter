@@ -64,7 +64,7 @@ classdef GUIHandler
             
             fp = exportWindow();         
             
-            if ~strcmp(fp(6:end),' -')
+            if ~strcmp(fp(6:end),' -') && ~isnumeric(fp)
                 if this.dataManager.store(fp)
                     this.dataTable = uitable(this.mainWindow,'Position',[70 90 850 220]);
                     this.dataManager = this.dataManager.clearObj();
@@ -81,7 +81,7 @@ classdef GUIHandler
         function this = importCallback(this,varargin)
             importInfo = importWindow();
             
-            if iscell(importInfo)            
+            if iscell(importInfo) && ~isnumeric(importInfo{1,2})           
                 type = importInfo{1,1}; 
                 p = importInfo{1,2};
                 this.inputManager = this.inputManager.splitPaths(p,type);
@@ -97,9 +97,6 @@ classdef GUIHandler
                 if s(1) > 2 || strcmp(type,'Spectro')
                     this = this.launchDialogue(type);
                 end
-
-                this.dataManager = this.dataManager.finalize();
-
 
                 this = this.updateGUI();
             end
@@ -134,14 +131,15 @@ classdef GUIHandler
         end
         
         function this = launchDialogue(this,id,varargin)
-            out_ = selectData(this.dataManager.getUnfObject(),id);
+            out_ = selectData(this.dataManager.getUnfObject(),id,this);
             type = out_.type;
-            input_ = out_.data;
-            %if strcmp(type,'average')
-            this.dataManager = this.dataManager.applyFilter(id,type);
-            %else
-            %    this.dataManager = this.dataManager.setObject(this.dataManager.getObject.setMatrix(out_.data));
-            %end
+            
+            if ~strcmp(type,'nofilter')
+                this = out_.handler;
+                input_ = out_.data;
+                this.dataManager = this.dataManager.applyFilter(id,type);
+                this.dataManager = this.dataManager.finalize();
+            end
         end
     end    
 end
