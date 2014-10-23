@@ -85,7 +85,7 @@ if get(handles.okBtn,'UserData')
     if pos
         negOrPos = 'positive';
     end
-
+    
     target = [date_,'\',flower,'\',negOrPos,'\'];
 
     %varargout{1}.sources = get(handles.output,'UserData');
@@ -243,7 +243,13 @@ function pushbutton7_Callback(hObject, eventdata, handles)
     updateSource(handles,'Behaviour');
 
 function initGuiElements(handles,varargin)
-    set(handles.editDate,'String',date);
+    time_ = round(clock());
+    y = time_(1);
+    mon = time_(2);
+    d = time_(3);
+    date_ = [num2str(y),num2str(mon),num2str(d)];
+    
+    set(handles.editDate,'String',date_);
     set(handles.posRdbtn,'value',1);   
     if ~isempty(varargin)
         set(handles.output,'UserData',varargin{1});

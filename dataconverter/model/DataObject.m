@@ -12,7 +12,7 @@ classdef DataObject < handle
         
         function this = DataObject()
             %this.xlsMatrix = cell(1,414);
-            this.xlsMatrix = {'Date','ID','Flower','wind speed (m/s)','direction(degrees)','Temperature(c)','temperature(c)','Humidity','Pressure','dominant1','peak1','purity1','timestamp1','dominant2','peak2','purity2','timestamp2'};
+            this.xlsMatrix = {'Date','ID','Flower','wind speed (m/s)','direction(degrees)','Temperature(c)','temperature(c)','Humidity','Pressure','lux1','lux2'};
             this.spectroData = struct;
             
             this = this.initStructFields();

@@ -192,12 +192,12 @@ function setTable(handles,data)
     %h = figure('Position',[600 400 402 100],'numbertitle','off','MenuBar','none');
     h = handles.figure1;
     defaultData = data;
-    t = uitable(h,'Units','normalized','Position',[.10 .55, .8 .25],'Data', defaultData,'Tag','myTable',...
+    t = uitable(h,'Units','normalized','Position',[.15 .55, .8 .25],'Data', defaultData,'Tag','myTable',...
         'ColumnName', [],'RowName',[],...
         'CellSelectionCallback',@cellSelect);
     disp(get(t,'Position'));
     % create pushbutton to delete selected rows
-    %uicontrol(h,'Style','pushbutton','String','Delete','Callback',{@deleteRow,handles});
+    uicontrol(h,'Style','pushbutton','Position',[20,400,60,20],'String','Delete','Callback',{@deleteRow,handles});
     
     %uiwait(h);
     %data = get(t,'Data');
@@ -223,7 +223,7 @@ handle = h.figure1;
 %     y(i-idx+1) = data{2,i};
 % end
 
-t = axes('Position',[.10 .25, .8 .25]);
+t = axes('Position',[.15 .25, .8 .25]);
 plot(t,[data.obs1.x],[data.obs1.y],'blue');
 hold on;
 plot(t,[data.obs2.x],[data.obs2.y],'green');
@@ -235,16 +235,15 @@ userdata = get(handle,'UserData');
 handler = userdata.handler;
 dp = handler.dataManager.getNrOfSpectroDP();
 
-
-
-button = uicontrol(handle,'Style','edit','Tag','sampleedit','String',dp,'Position',[30 50 130 20]);
+edit_ = uicontrol(handle,'Style','edit','Tag','sampleedit','String',dp,'Position',[20 240 40 20]);
+uicontrol(handle,'Style','text','String','Nr of datapoints used','Position',[65 240 110 20]);
 
 if dp > 1
-    set(button,'Enable','off')
+    set(edit_,'Enable','off')
 end
 
-uicontrol(handle,'Style','pushbutton','String','Downsample','Callback',{@downSample,toSend,t,handle});
-
+button = uicontrol(handle,'Style','pushbutton','Position',[20 190 100 20],'String','Downsample??','Callback',{@downSample,toSend,t,handle});
+disp(get(button,'Position'));
 end
 
 function downSample(varargin)
@@ -298,8 +297,9 @@ function deleteRow(varargin)
     %delete selected rows and re-write data
     data = data(mask,:);
     set(th,'Data',data);
-    
-    set(handle.figure1,'UserData',data);
+    userdata = get(handle.figure1,'UserData');
+    userdata.data = data;
+    set(handle.figure1,'UserData',userdata);
 end
 
 function out_ = validateData(data)

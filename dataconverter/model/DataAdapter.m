@@ -9,6 +9,7 @@ classdef DataAdapter
     methods (Access = public)
        function rawData = fileReader(this, path)
             
+           try
             fid = fopen(path,'r');
             
             line_ = fgets(fid);
@@ -21,6 +22,10 @@ classdef DataAdapter
             end
             
             fclose(fid);
+            
+           catch
+              errordlg('Could not load source-file'); 
+           end
         end 
     end
     

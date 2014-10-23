@@ -88,16 +88,12 @@ classdef GUIHandler
                 paths_ = this.inputManager.getPaths();
             
                 
-                if isempty(paths_)
-                    errordlg('There are no abiotic data files in the specified folder, please try again','No such file')
-                end
-                
                 for i=1:length(paths_)
                     try    
                         this.dataManager = this.dataManager.appendObject(type,{paths_{i}});
                     catch ex
                         %Suggestions is to log details of the error
-                        errordlg(['Something went wrong when trying to parse the ',type,' data file.'],'Parse error');
+                        errordlg('Something went wrong, maybe the data file is missing']);
                     end
                 end
 

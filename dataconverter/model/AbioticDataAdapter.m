@@ -22,6 +22,7 @@ classdef AbioticDataAdapter < DataAdapter
                 id_ = paths{1,i}(idx(end-2)+1:idx(end-1)-1);
                 
                 path = paths{1,i};
+                
                 rawData = this.fileReader(path);
                 
                 temp = cellfun(@this.createDob,rawData,'UniformOutput',false);

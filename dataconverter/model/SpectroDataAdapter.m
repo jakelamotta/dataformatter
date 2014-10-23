@@ -11,7 +11,7 @@ classdef SpectroDataAdapter < DataAdapter
 
         function this = SpectroDataAdapter()
            this.dobj = DataObject();
-           this.tempMatrix = {'dominant1','peak1','purity1','timestamp2','dominant2','peak2','purity2','timestamp2'};
+           this.tempMatrix = {'lux1','lux2'};
         end
    
         function rawData = fileReader(this,path)
@@ -28,7 +28,7 @@ classdef SpectroDataAdapter < DataAdapter
                 path = paths{1,i};
                 rawData = this.fileReader(path);
                 
-                wli = strfind(rawData,'waveLengthInfo');
+                wli = strfind(rawData,'spectrumPoints');
                 wli = wli{1};
                 
                 tempStruct = struct;
@@ -37,6 +37,15 @@ classdef SpectroDataAdapter < DataAdapter
                 for obs=1:length(wli)
                     idx = strfind(rawData,'lux');
                     last = idx{1}(1+2*(obs-1))-4;
+                    
+                    luxIndex = idx{1}(2+2*(obs-1));
+                    tempData = rawData{1}(luxIndex:end);
+                    
+                    idx = strfind(tempData,'}');
+                    lastLux = idx(1);
+                    
+                    luxValue = str2num(tempData(6:lastLux-1));
+                    this.tempMatrix{2,obs} = luxValue;
                     
                     tempData = rawData{1}(wli(obs):last);
                     
@@ -86,19 +95,19 @@ classdef SpectroDataAdapter < DataAdapter
                     
                     offset = 9;
                        
-                    for h=1:length(winfo)
-                       temp = winfo{h};
-                       temp = strrep(temp,'}','');
-                       temp = regexp(temp,':','split');
-                       
-                       variable = temp{1}(2:end-1);
-                       value = str2double(temp{2});
-                       
-                       %tempStruct.(num2str(obs)).(variable) = value;
-                       
-                        %this.tempMatrix{1,h+h*(obs-1)} = variable;
-                        this.tempMatrix{2,h+length(winfo)*(obs-1)} = value; 
-                    end
+%                     for h=1:length(winfo)
+%                        temp = winfo{h};
+%                        temp = strrep(temp,'}','');
+%                        temp = regexp(temp,':','split');
+%                        
+%                        variable = temp{1}(2:end-1);
+%                        value = str2double(temp{2});
+%                        
+%                        %tempStruct.(num2str(obs)).(variable) = value;
+%                        
+%                         %this.tempMatrix{1,h+h*(obs-1)} = variable;
+%                         this.tempMatrix{2,h+length(winfo)*(obs-1)} = value; 
+%                     end
                 end
             end
             

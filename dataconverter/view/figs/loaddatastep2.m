@@ -58,14 +58,32 @@ handles.output = hObject;
 % Update handles structure
 guidata(hObject, handles);
 
+
 str_ = varargin{2};
 idx = strfind(str_,'\');
 sub1 = str_(idx(1)+1:idx(1)+3);
 sub2 = str_(idx(2)+1:idx(2)+1);
 sub3 = str_(1:idx(1)-1);
-sub4 = num2str(randi(10000,1));
 
-str_ = [sub1,'_',sub2,'_',sub3,'_',sub4];
+if exist('config.mat','file')
+    load('config.mat');
+    if ~isfield(config,'id')
+        config.id = 1;
+    end
+else
+    config = struct;
+    config.id = 1;
+    save('config.mat','config');
+end
+    
+id_ = config.id;
+sub4 = num2str(id_);
+
+while length(sub4) < 3
+    sub4 = ['0',sub4];
+end
+
+str_ = [sub1,'_',sub2,sub3,'.',sub4];
 str_ = strrep(str_,'\','');
 set(handles.edit1,'String',str_);
 
@@ -175,6 +193,9 @@ function okBtn_Callback(hObject, eventdata, handles)
 
     if stringsExist%~iscell(varargout{1}.sources) && stringsExist
         set(hObject,'UserData',true);
+        load('config.mat');
+        config.id = config.id+1;
+        save('config.mat','config');
         close;
     else
         errordlg('All fields are not entered correctly or no file is selected for loading','Error!');
