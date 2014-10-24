@@ -7,13 +7,15 @@ classdef AbioticFilter < Filter
     
     methods (Access = public)
         
-        function filtered = filter(this,unfiltered,type,varargin)
-            filtered = unfiltered;
+        function output = filter(this,unfiltered,type,varargin)
+            this.filtered = unfiltered;
             
             switch type
                 case 'average'                    
-                    filtered = filter@Filter(this,unfiltered,7,9);
+                    this.filtered = filter@Filter(this,unfiltered,7,9);
             end
+            
+            output = this.filtered;
             
         end
     end

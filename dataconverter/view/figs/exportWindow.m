@@ -149,7 +149,7 @@ function browseBtn_Callback(hObject, eventdata, handles)
 %    elseif ~get(handles.radiobutton1,'value') && ~get(handles.radiobutton2,'value')
 %        errordlg('You need to select one of the alternatives above!','Error!');
 %    end
-    
+    fname = strrep(fname,'.xls','');
     if ~isnumeric(fname) && ~isnumeric(pname)
         set(handles.text1,'string',[pname,fname]);
     end

@@ -86,8 +86,7 @@ classdef GUIHandler
                 p = importInfo{1,2};
                 this.inputManager = this.inputManager.splitPaths(p,type);
                 paths_ = this.inputManager.getPaths();
-            
-                
+                                
                 if isempty(paths_)
                     errordlg('There are no abiotic data files in the specified folder, please try again','No such file')
                 end

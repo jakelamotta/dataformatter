@@ -24,7 +24,7 @@ classdef DataManager < handle
             this.dataObject = DataObject();
             
             %Initializes to -1, once its set after this its final
-            this.spectroDP = 1;
+            this.spectroDP = 300;
         end
         
         function dp = getNrOfSpectroDP(this)
@@ -32,7 +32,7 @@ classdef DataManager < handle
         end
         
         function this = setNrOfSpectroDP(this,dp)
-            if this.spectroDP == 1
+            if this.spectroDP == 300
                 this.spectroDP = dp;
             end
         end
@@ -43,11 +43,11 @@ classdef DataManager < handle
             this.objList = containers.Map();
         end
         
-        function this = addObject(this,id,path)
-            row = this.manager.getDataObject(id,path);
-            %%%this = this.setObject(row);
-            this = this.setUnfObject(row);
-        end
+%         function this = addObject(this,id,path)
+%             row = this.manager.getDataObject(id,path);
+%             %%%this = this.setObject(row);
+%             this = this.setUnfObject(row);
+%         end
         
         function this = appendObject(this,id,path)
             temp = this.manager.getDataObject(id,path);
@@ -72,7 +72,7 @@ classdef DataManager < handle
             filter = this.filterFactory.createFilter(id);
 %             row = row.setMatrix(filter.filter(row,type));
 %             this = this.setObject(row);
-            this = this.setObject(filter.filter(row,type,1));
+            this = this.setObject(filter.filter(row,type,this.spectroDP));
 
         end
         
@@ -133,11 +133,11 @@ classdef DataManager < handle
             obj = this.getObject();
             success = this.xlsWriter.appendXLS(path,obj);
         end
-        
-        function this = clearObj(this)
-            this.dataObject = DataObject();
-            this.objList = containers.Map();
-        end
+%         
+%         function this = clearObj(this)
+%             this.dataObject = DataObject();
+%             this.objList = containers.Map();
+%         end
     end
     
     methods (Access = private)
@@ -186,8 +186,27 @@ classdef DataManager < handle
                     else
                         obs = obs.getMatrix();
                         matrix = obj.getMatrix();
+                        if length(matrix) < length(obs)
+                            diff = abs(length(matrix)-length(obs));
+                            s = size(matrix);
+                            height = s(1);
+                            
+                            newMat = cell(height,diff);
+                            matrix = [matrix,newMat];
+                            matrix(1,:) = obs(1,:);
+                        elseif length(matrix) > length(obs)
+                            diff = abs(length(matrix)-length(obs));
+                            s = size(obs);
+                            height = s(1);
+                            
+                            newMat = cell(height,diff);
+                            obs = [obs,newMat];
+                            obs(1,:) = matrix(1,:);
+                        end
                         obj = obj.setMatrix([matrix;obs(2:end,:)]);
+                        
                     end
+                    
                 end
                 %this.objList.remove(key);
             end

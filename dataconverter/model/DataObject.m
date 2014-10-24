@@ -12,7 +12,7 @@ classdef DataObject < handle
         
         function this = DataObject()
             %this.xlsMatrix = cell(1,414);
-            this.xlsMatrix = {'Date','ID','Flower','wind speed (m/s)','direction(degrees)','Temperature(c)','temperature(c)','Humidity','Pressure','lux1','lux2'};
+            this.xlsMatrix = {'Date','ID','Flower','wind speed (m/s)','direction(degrees)','Temperature(c)','temperature(c)','Humidity','Pressure','lux1','lux2','Comment'};
             this.spectroData = struct;
             
             this = this.initStructFields();
@@ -28,7 +28,8 @@ classdef DataObject < handle
         end
         
         function this = addSpectroData(this,inStruct)
-            this.spectroData = mergestruct(this.spectroData,inStruct);
+            this.spectroData = inStruct;
+            %this.spectroData = mergestruct(this.spectroData,inStruct);
         end        
         
         function row = getRowFromID(this,id)

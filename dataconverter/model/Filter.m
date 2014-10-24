@@ -3,12 +3,13 @@ classdef Filter
     %   Detailed explanation goes here
     
     properties
+        filtered;
     end
     
     methods (Access = public)
         
-        function filtered = filter(this,unfiltered,colStart,colEnd)
-            filtered = unfiltered;
+        function output = filter(this,unfiltered,colStart,colEnd)
+            this.filtered = unfiltered;
             
             
             rows = unfiltered.getMatrix();
@@ -62,10 +63,10 @@ classdef Filter
                     rows{k+1,2} = rows{start,2};
                 end
                 
-                filtered = filtered.setMatrix(rows(inclrows,:));
+                this.filtered = this.filtered.setMatrix(rows(inclrows,:));
             end
             
-            
+            output = this.filtered;
         end
         
     end

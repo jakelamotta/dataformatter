@@ -10,7 +10,8 @@ classdef XLSWriter
         function success = writeToXLS(this,fileName,obj)
             try
                 xlswrite(fileName,obj.getMatrix());
-                success = exist(fileName,'file');
+                fullname = [fileName,'.xls'];
+                success = exist(fullname,'file');
             
             catch e
                 errordlg(e.getReport(),'Error');
@@ -42,4 +43,3 @@ classdef XLSWriter
         end        
     end    
 end
-
