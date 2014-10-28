@@ -71,9 +71,7 @@ classdef GUIHandler
         end
         
         function this = manageCallback(this, varargin)
-            userdata = manageData();            
-            this.dataManager = this.dataManager.addComment(userdata.row,userdata.comment);        
-            this.updateGUI();
+            
         end
                 
         function this = importCallback(this,varargin)
@@ -102,8 +100,6 @@ classdef GUIHandler
 
                 if s(1) > 2 || strcmp(type,'Spectro')
                     this = this.launchDialogue(type);
-                else
-                    this.dataManager.setObject(this.dataManager.getUnfObject());
                 end
 
                 this = this.updateGUI();

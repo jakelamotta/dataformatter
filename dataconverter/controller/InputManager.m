@@ -18,8 +18,14 @@ classdef InputManager
         
         function obj = getDataObject(this,adapterId,paths)
             adapter = this.adapterFactory.createAdapter(adapterId);
-            obj = adapter.getDataObject(paths);
+            
+            if ischar(adapter)
+                errordlg('The data adapter could not be created');
+            else
+                obj = adapter.getDataObject(paths);
+            end
         end
+        
         
         function this = splitPaths(this,p,type)
             this.paths = {};

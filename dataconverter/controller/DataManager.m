@@ -73,7 +73,6 @@ classdef DataManager < handle
 %             row = row.setMatrix(filter.filter(row,type));
 %             this = this.setObject(row);
             this = this.setObject(filter.filter(row,type,this.spectroDP));
-
         end
         
         function this = finalize(this)
@@ -138,6 +137,22 @@ classdef DataManager < handle
 %             this.dataObject = DataObject();
 %             this.objList = containers.Map();
 %         end
+
+        function this = addComment(this,row,comment)
+            obj = this.getObject();
+            d = obj.getMatrix();
+            size_ = size(d);
+            for i=2:size_(2)
+                if strcmp(d{1,i},'Comment') || strcmp(d{1,i},'comment')
+                    d{row,i} = [d{row,i},' ',comment];
+                    break;
+                end
+            end
+            
+            obj.setMatrix(d);
+            
+            this = this.setObject(obj);
+        end
     end
     
     methods (Access = private)
@@ -210,19 +225,6 @@ classdef DataManager < handle
                 end
                 %this.objList.remove(key);
             end
-        end
-        
-        function this = addComment(this,row,comment)
-            d = this.getObject();
-            size_ = size(d);
-            for i=2:size_(2)
-                if strcmp(d{1,i},'Comment')
-                    d{row,i} = [d{row,i},' ',comment];
-                    break;
-                end
-            end
-            
-            this = this.setObject(d);
         end
         
         function this = removeColumn(this,col)

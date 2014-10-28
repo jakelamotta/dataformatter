@@ -93,7 +93,7 @@ function okBtn_Callback(hObject, eventdata, handles)
     elseif get(handles.radiobutton4,'value')
         type = 'Spectro';
     elseif get(handles.radiobutton5,'value')
-        type = 'Weather';
+        type = 'Behavior';
     elseif get(handles.radiobutton6,'value')
         type = 'Weather';
     else

@@ -13,6 +13,9 @@ classdef DataObject < handle
         function this = DataObject()
             %this.xlsMatrix = cell(1,414);
             this.xlsMatrix = {'Date','ID','Flower','wind speed (m/s)','direction(degrees)','Temperature(c)','temperature(c)','Humidity','Pressure','lux1','lux2','Comment'};
+            [~,~,tempMat] = xlsread('C:\Users\Kristian\Documents\GitHub\dataformatter\dataconverter\data\behavior_variables');
+            this.xlsMatrix = [this.xlsMatrix,tempMat];
+            
             this.spectroData = struct;
             
             this = this.initStructFields();

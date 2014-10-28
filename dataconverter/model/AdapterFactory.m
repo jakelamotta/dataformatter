@@ -14,6 +14,7 @@ classdef AdapterFactory
             this.adapters('Spectro') = @() SpectroDataAdapter();
             this.adapters('Weather') = @() WeatherDataAdapter();
             this.adapters('Image') = @() ImageDataAdapter();
+            this.adapters('Behavior') = @() BehaviorDataAdapter();
         end
         
         function adapter = createAdapter(this,id)

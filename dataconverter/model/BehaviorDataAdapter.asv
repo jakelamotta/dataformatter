@@ -3,16 +3,12 @@ classdef BehaviorDataAdapter < DataAdapter
     %   Detailed explanation goes here
     
     properties
-        tempMatrix;
-        dobj;
     end
     
     methods (Access = public)
         
         function this = BehaviorDataAdapter()
-            [~,~,out] = xlsread('C:\Users\Kristian\Documents\GitHub\dataformatter\dataconverter\data\behavior_variables');
-            this.tempMatrix = out;
-            this.dobj = DataObject();
+            this.tempMatrix = xlsread('behavior_variables');
         end
         
         function rawData = fileReader(this,path)
@@ -30,8 +26,6 @@ classdef BehaviorDataAdapter < DataAdapter
                
                rawData = this.fileReader(path);
                this = this.addVars(rawData);
-               
-               obj = this.dobj.setObservation(this.tempMatrix,id_);
            end
             
         end
@@ -40,16 +34,14 @@ classdef BehaviorDataAdapter < DataAdapter
     
     methods (Access = private)
         
-        function this = addVars(this,rawData)           
-            this.tempMatrix{2,17} = rawData{3,3};
-            this.tempMatrix{2,16} = rawData{3,2};
+        function this = addVars(this,rawData)
+           
+            B_Lsit_dur'
+
             
-            this.tempMatrix{2,14} = rawData{4,2};
-            this.tempMatrix{2,15} = rawData{4,3};
-            
-            this.tempMatrix{2,6} = rawData{5,2};
-            this.tempMatrix{2,7} = rawData{5,3};           
         end
+        
+        
         
     end
     

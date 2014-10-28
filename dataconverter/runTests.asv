@@ -30,6 +30,8 @@ function runTests()
     end
 end
 
+function output = test
+
 function output = testBehaviorAD()
     
     paths = {'C:\Users\Kristian\Documents\GitHub\dataformatter\dataconverter\test\02-Oct-2014\Blåsippa\positive\2\Behavior\behave'};
@@ -39,12 +41,10 @@ function output = testBehaviorAD()
     
     output = isa(obj,'DataObject');
     mat = obj.getMatrix();
-    output = ~output;
     for i=1:length(mat)
         
         if strcmp(mat{1,i},'B_Hover_dur')
             output = (mat{2,i} == 5.5);
-            output = ~output;
         end
         
         if strcmp(mat{1,i},'B_Lsit_freq')
@@ -148,9 +148,11 @@ function outp = testSpectroFilter(obj)
         
     mat = filtered.getMatrix();
     if length(mat) > 120
-        outp = outp & ~isempty(mat{2,40+18});
-        outp = outp & ~isempty(mat{2,85+18});
-        outp = outp & ~isempty(mat{2,120+18});
+        outp = outp & ~isempty(mat{2,40});
+        outp = outp & ~isempty(mat{2,85});
+        outp = outp & ~isempty(mat{2,120});
+    else
+       outp = false; 
     end
 end
 
