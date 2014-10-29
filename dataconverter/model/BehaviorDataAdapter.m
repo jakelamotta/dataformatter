@@ -16,7 +16,11 @@ classdef BehaviorDataAdapter < DataAdapter
         end
         
         function rawData = fileReader(this,path)
-            [~,~,rawData] = xlsread(path,2);
+            try
+                [~,~,rawData] = xlsread(path,2);
+            catch
+                errordlg('Incorrect path, excel file for behavior data could not be read');
+            end
         end
         
         function obj = getDataObject(this,paths)
@@ -24,7 +28,11 @@ classdef BehaviorDataAdapter < DataAdapter
            
            for i=1:s(2)
                idx = strfind(paths{1,i},'\');
-               id_ = paths{1,i}(idx(end-2)+1:idx(end-1)-1);
+               try
+                    id_ = paths{1,i}(idx(end-2)+1:idx(end-1)-1);
+               catch
+                    errordlg('Incorrect path was passed to the file reader');
+               end
                
                path = paths{1,i};
                
@@ -32,8 +40,7 @@ classdef BehaviorDataAdapter < DataAdapter
                this = this.addVars(rawData);
                
                obj = this.dobj.setObservation(this.tempMatrix,id_);
-           end
-            
+           end            
         end
         
     end

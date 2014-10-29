@@ -19,7 +19,11 @@ classdef AbioticDataAdapter < DataAdapter
             s = size(paths);
             for i=1:s(2)
                 idx = strfind(paths{1,i},'\');
-                id_ = paths{1,i}(idx(end-2)+1:idx(end-1)-1);
+                try
+                    id_ = paths{1,i}(idx(end-2)+1:idx(end-1)-1);
+                catch e
+                    errordlg('Incorrect path was passed to the file reader');
+                end
                 
                 path = paths{1,i};
                 

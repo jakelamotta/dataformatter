@@ -5,7 +5,7 @@ function runTests()
     
     output = true;
     
-    funcMap = {@testfilters,@testxlswriter,@testSpectroAdapter,@testBehaviorAD};
+    funcMap = {@testfilters,@testxlswriter,@testSpectroAdapter,@testBehaviorAD,@testPadMatrix,@testcombine2,@testmerge2};
     
     l = length(funcMap);
     
@@ -25,9 +25,84 @@ function runTests()
     
     if output
         disp('Tests were succesfull!');
-    %else
-    %    disp('Tests failed');
+    else
+        disp('Tests failed');
     end
+end
+
+function output = testPadMatrix()
+    output = true;
+    
+    a = {1,2,3;4,5,6};
+    b = {1,2,3,4,5,6,7;8,9,10,11,12,13,14};
+    
+    
+    test1 = {1,2,3,4,5,6,7;4,5,6,[],[],[],[]};
+    test2 = {};
+    
+    [a,b] = Utilities.padMatrix(a,b);
+    
+    output = output & (a{1,1} == test1{1,1});
+    output = output & (a{1,5} == test1{1,5});
+    output = output & (isempty(a{2,4}) & isempty(test1{2,4}));
+    output = output & (a{2,3} == test1{2,3});
+    output = output & (a{1,3} == test1{1,3});
+    
+    [a,b] = Utilities.padMatrix({},{});
+    output = output & (length(a) == length(test2));
+
+end
+
+function output = testcombine2()
+    a = {'are','ID','some','no','empty';12,'wef',[],[],'aw'};
+    b = {'are','ID','some','no','empty';[],'wef',[],3,'aw';[],'bef',[],[1,2,3],[]};
+    ipm = InputManager();
+    
+    man = DataManager(ipm);
+    obj1 = DataObject();
+    obj1.setMatrix(b);
+    
+    man.setObject(obj1);
+    
+    obj2 = DataObject();
+    obj2.setMatrix(a);
+    
+    ut = man.combine2(obj2,'wef');
+    c = ut.getMatrix();
+    output = true;
+    s = size(c);
+    output = output & (s(1) == 2);
+    output = output & strcmp(c{2,2},'wef');
+    output = output & (c{2,1} == 12);
+    output = output & (isempty(c{2,3}));
+end
+
+function output = testmerge2()
+    ipm = InputManager();
+    
+    man = DataManager(ipm);
+    
+    a = {'are','ID','some','no','empty';12,'tef',[],[],'aw'};
+    b = {'are','ID','some','no','empty';[],'wef',[],3,'aw';[],'bef',[],[1,2,3],[]};
+    
+    obj1 = DataObject();
+    obj1.setMatrix(b);
+    
+    man.setObject(obj1);
+    
+    obj2 = DataObject();
+    obj2.setMatrix(a);
+    
+    man.setUnfObject(obj2);
+    
+    man.merge2();
+    obj = man.getObject().getMatrix();
+    
+    output = true;
+    output = output & (man.getObject().getNumRows() == 4);
+    output = output & (strcmp(obj{4,2},'tef'));
+    output = output & (strcmp(obj{2,2},'wef'));
+    
 end
 
 function output = testBehaviorAD()
@@ -124,7 +199,7 @@ function output = testxlswriter()
 end
 
 function outp = testAbioticfilter(obj)
-filter = AbioticFilter();
+    filter = AbioticFilter();
     
     filtered = filter.filter(obj,'average');
     outp= strcmp(class(filtered),'DataObject');

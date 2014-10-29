@@ -13,7 +13,12 @@ classdef OlfactoryDataAdapter < DataAdapter
             
             for i=1:size_(2)              
                 idx = strfind(paths{1,i},'\');
-                id_ = paths{1,i}(idx(end-2)+1:idx(end-1)-1);
+                
+                try
+                    id_ = paths{1,i}(idx(end-2)+1:idx(end-1)-1);
+                catch e
+                    errordlg('Incorrect path was passed to the file reader');
+                end
                 
                 rawData = this.fileReader(paths{1,i});
                 

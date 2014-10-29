@@ -23,7 +23,12 @@ classdef SpectroDataAdapter < DataAdapter
             s = size(paths);
             for i=1:s(2)
                 idx = strfind(paths{1,i},'\');
-                id_ = paths{1,i}(idx(end-2)+1:idx(end-1)-1);
+                
+                try
+                    id_ = paths{1,i}(idx(end-2)+1:idx(end-1)-1);
+                catch e
+                    errordlg('Incorrect path was passed to the file reader');
+                end
                 
                 path = paths{1,i};
                 rawData = this.fileReader(path);
@@ -34,80 +39,84 @@ classdef SpectroDataAdapter < DataAdapter
                 tempStruct = struct;
                 tempStruct.id = id_;
                 
-                for obs=1:length(wli)
-                    idx = strfind(rawData,'lux');
-                    last = idx{1}(1+2*(obs-1))-4;
-                    
-                    luxIndex = idx{1}(2+2*(obs-1));
-                    tempData = rawData{1}(luxIndex:end);
-                    
-                    idx = strfind(tempData,'}');
-                    lastLux = idx(1);
-                    
-                    luxValue = str2num(tempData(6:lastLux-1));
-                    this.tempMatrix{2,obs} = luxValue;
-                    
-                    tempData = rawData{1}(wli(obs):last);
-                    
-                    
-                    %idx = strfind(tempData,'lux');
-                    %last = idx{1}(1)-4;
-                    
-                    idx = strfind(tempData,'spectrumPoints');
-                    first = idx+17;
-                    
-                    %this = this.doSomething(rawData);
-                    
-                    points = tempData(first:end);
-                    points = regexp(points,',','split');
-                    temp = cellfun(@this.createDob,points,'UniformOutput',false);
-                    
-                    x = zeros(size(temp));
-                    y = zeros(size(temp));
-                    
-                    len_ = length(temp);
-                    %offset = 13;
-                    
-                    for k=1:len_
-                        
-                        
-                        x(k) = str2double(temp{k}(1));
-                        val1 = temp{k}(2);
-                        %cell 
-                        y(k) = val1{1};
-                        
-                       %x(k) = temp{k}(1);
-                       %y(k) = temp{k}(2);
-%                        index = size(this.tempMatrix);
-%                        index = index(2)+1;
-%                        pairs = temp{k};
-%                        this.tempMatrix{1,k+offset} = pairs{1};%temp{k}(1);
-%                        this.tempMatrix{obs+1,k+offset} = pairs{2};%temp{k}(2);
+                try
+                    for obs=1:length(wli)
+                        idx = strfind(rawData,'lux');
+                        last = idx{1}(1+2*(obs-1))-4;
+
+                        luxIndex = idx{1}(2+2*(obs-1));
+                        tempData = rawData{1}(luxIndex:end);
+
+                        idx = strfind(tempData,'}');
+                        lastLux = idx(1);
+
+                        luxValue = str2num(tempData(6:lastLux-1));
+                        this.tempMatrix{2,obs} = luxValue;
+
+                        tempData = rawData{1}(wli(obs):last);
+
+
+                        %idx = strfind(tempData,'lux');
+                        %last = idx{1}(1)-4;
+
+                        idx = strfind(tempData,'spectrumPoints');
+                        first = idx+17;
+
+                        %this = this.doSomething(rawData);
+
+                        points = tempData(first:end);
+                        points = regexp(points,',','split');
+                        temp = cellfun(@this.createDob,points,'UniformOutput',false);
+
+                        x = zeros(size(temp));
+                        y = zeros(size(temp));
+
+                        len_ = length(temp);
+                        %offset = 13;
+
+                        for k=1:len_
+
+
+                            x(k) = str2double(temp{k}(1));
+                            val1 = temp{k}(2);
+                            %cell 
+                            y(k) = val1{1};
+
+                           %x(k) = temp{k}(1);
+                           %y(k) = temp{k}(2);
+    %                        index = size(this.tempMatrix);
+    %                        index = index(2)+1;
+    %                        pairs = temp{k};
+    %                        this.tempMatrix{1,k+offset} = pairs{1};%temp{k}(1);
+    %                        this.tempMatrix{obs+1,k+offset} = pairs{2};%temp{k}(2);
+                        end
+
+                        var1 = ['obs',(num2str(obs))];
+                        tempStruct.(var1).x = x;
+                        tempStruct.(var1).y = y;
+
+                        winfo = tempData(1:first-20);
+                        winfo = regexp(winfo,',','split');
+                        winfo{1} = strrep(winfo{1},'waveLengthInfo":{','');
+
+                        offset = 9;
+
+    %                     for h=1:length(winfo)
+    %                        temp = winfo{h};
+    %                        temp = strrep(temp,'}','');
+    %                        temp = regexp(temp,':','split');
+    %                        
+    %                        variable = temp{1}(2:end-1);
+    %                        value = str2double(temp{2});
+    %                        
+    %                        %tempStruct.(num2str(obs)).(variable) = value;
+    %                        
+    %                         %this.tempMatrix{1,h+h*(obs-1)} = variable;
+    %                         this.tempMatrix{2,h+length(winfo)*(obs-1)} = value; 
+    %                     end
                     end
-                    
-                    var1 = ['obs',(num2str(obs))];
-                    tempStruct.(var1).x = x;
-                    tempStruct.(var1).y = y;
-                    
-                    winfo = tempData(1:first-20);
-                    winfo = regexp(winfo,',','split');
-                    winfo{1} = strrep(winfo{1},'waveLengthInfo":{','');
-                    
-                    offset = 9;
-                       
-%                     for h=1:length(winfo)
-%                        temp = winfo{h};
-%                        temp = strrep(temp,'}','');
-%                        temp = regexp(temp,':','split');
-%                        
-%                        variable = temp{1}(2:end-1);
-%                        value = str2double(temp{2});
-%                        
-%                        %tempStruct.(num2str(obs)).(variable) = value;
-%                        
-%                         %this.tempMatrix{1,h+h*(obs-1)} = variable;
-%                         this.tempMatrix{2,h+length(winfo)*(obs-1)} = value; 
-%                     end
+                catch e
+                    errordlg(['Spectrophotometer file was in an incorrect format. Matlab error output: ',e.message]);
                 end
             end
             

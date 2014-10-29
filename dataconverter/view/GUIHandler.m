@@ -63,7 +63,7 @@ classdef GUIHandler
             if ~strcmp(fp(6:end),' -') && ~isnumeric(fp)
                 if this.dataManager.store(fp)
                     this.dataTable = uitable(this.mainWindow,'Position',[70 90 850 220]);
-                    this.dataManager = this.dataManager.clearObj();
+                    this.dataManager = this.dataManager.clearAll();%clearObj();
                 else
                     errordlg('Exporting could not be performed, please try again','Error!');
                     end
@@ -71,7 +71,7 @@ classdef GUIHandler
         end
         
         function this = manageCallback(this, varargin)
-            userdata = manageData();            
+            userdata = manageData(this.dataManager.getObject());            
             this.dataManager = this.dataManager.addComment(userdata.row,userdata.comment);        
             this.updateGUI();
         end
@@ -91,7 +91,7 @@ classdef GUIHandler
                 
                 for i=1:length(paths_)
                     try    
-                        this.dataManager = this.dataManager.appendObject(type,{paths_{i}});
+                        this.dataManager = this.dataManager.addObject(type,{paths_{i}});
                     catch ex
                         %Suggestions is to log details of the error
                         errordlg(['Something went wrong when trying to parse the ',type,' data file.'],'Parse error');

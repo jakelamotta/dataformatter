@@ -62,9 +62,12 @@ end
 matrix = obj.getMatrix();
 s = size(matrix);
 ids = cell(1,s(1)-1);
+
 for i=2:s(1)
     ids{1,i-1} = matrix{i,2};
 end
+
+set(handles.popupmenu1,'String',ids);
 
 
 % Update handles structure
@@ -88,7 +91,7 @@ function varargout = manageData_OutputFcn(hObject, eventdata, handles)
 %varargout{1} = handles.output;
 
 userdata = get(handles.figure1,'UserData');
-userdata.row = 2;
+userdata.row = get(handles.popupmenu1,'Value')+1;
 if userdata.save
     varargout{1} = userdata;
 else

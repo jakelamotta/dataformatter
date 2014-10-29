@@ -9,8 +9,8 @@ classdef XLSWriter
         
         function success = writeToXLS(this,fileName,obj)
             try
-                xlswrite(fileName,obj.getMatrix());
-                fullname = [fileName,'.xls'];
+                fullname = [fileName,'.xlsx'];
+                xlswrite(fullname,obj.getMatrix());
                 success = exist(fullname,'file');
             
             catch e
@@ -26,6 +26,9 @@ classdef XLSWriter
                     [~,~,old] = xlsread(fname);
 
                     toAppend = obj.getMatrix();
+%                     
+                    
+                    [toAppend,old] = Utilities.padMatrix(toAppend,old);
                     s = size(toAppend);
                     temp = [];
 
@@ -34,6 +37,24 @@ classdef XLSWriter
                     end
 
                     toAppend = toAppend(temp,:);
+%                     if length(toAppend) > length(old)
+%                         diff = abs(length(toAppend)-length(old));
+%                         s = size(old);
+%                         height = s(1);
+%                             
+%                         newMat = cell(height,diff);
+%                         old = [old,newMat];
+%                         old(1,:) = toAppend(1,:);
+%                     elseif length(toAppend) < length(old)
+%                         diff = abs(length(toAppend)-length(old));
+%                         s = size(toAppend);
+%                         height = s(1);
+%                             
+%                         newMat = cell(height,diff);
+%                         toAppend = [toAppend,newMat];
+%                         toAppend(1,:) = old(1,:);
+%                     end
+
                     toSave = toSave.setMatrix([old;toAppend]);
                 end
             catch e
