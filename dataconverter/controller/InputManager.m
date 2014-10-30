@@ -71,9 +71,8 @@ classdef InputManager
                     typeDir = dir(p);
                     numFiles = size(typeDir);
                     
-                    %for j=3:numFiles
-                        this.paths{1,end+1} = [p,'\',typeDir(i).name];
-                    %end
+                    this.paths{1,end+1} = [p,'\',typeDir(i).name];
+                    
                 else
                     this = this.recSearch([p,'\',temp(i).name],t);
                 end
@@ -82,11 +81,12 @@ classdef InputManager
         
         function success = saveToDir(this,sourcePath, targetPath)
             success = true;
-            %parent = 'C:\Users\Kristian\Documents\GitHub\dataformatter\dataconverter\data\';
-            %path = [parent,targetPath];
+            
             path = Utilities.getpath(targetPath);
             if ~exist(path,'dir')
                 [s,a,b] = mkdir(path);
+            else
+                s = true;
             end
             success = s & success;
             copyfile(sourcePath,path);

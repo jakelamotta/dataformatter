@@ -11,7 +11,6 @@ classdef DataObject < handle
     methods (Access = public)
         
         function this = DataObject()
-            %this.xlsMatrix = cell(1,414);
             this.xlsMatrix = {'Date','ID','Flower','wind speed (m/s)','direction(degrees)','Temperature(c)','temperature(c)','Humidity','Pressure','lux1','lux2','Comment'};
             [a,b,tempMat] = xlsread(Utilities.getpath('behavior_variables'));%xlsread('C:\Users\Kristian\Documents\GitHub\dataformatter\dataconverter\data\behavior_variables');
             this.xlsMatrix = [this.xlsMatrix,tempMat];
@@ -19,20 +18,10 @@ classdef DataObject < handle
             this.spectroData = struct;
             
             this = this.initStructFields();
-            
-            %temp = cell(1,401);
-            
-            %for i=1:401
-            %    temp{1,i} = num2str(379+i);
-            %end
-            
-            %this.xlsMatrix = [this.xlsMatrix,temp];
-            %this.xlsMatrix = [this.xlsMatrix;{'','','',0,0,0,0,0,0,0,0,0,0}];
         end
         
         function this = addSpectroData(this,inStruct)
             this.spectroData = inStruct;
-            %this.spectroData = mergestruct(this.spectroData,inStruct);
         end        
         
         function row = getRowFromID(this,id)
@@ -86,19 +75,7 @@ classdef DataObject < handle
                         end
                     end
                 end
-            end
-%             for i=1:s(2)
-%                 for k=2:s(1);
-%                     this.xlsMatrix{k,2} = id;
-%                     for j=1:this.getWidth()
-%                         if strcmp(this.xlsMatrix{1,j},matrix{1,i})
-%                             this.xlsMatrix{k,j} = matrix{k,i};
-%                             break;
-%                         end
-%                     end
-%                 end
-%             end
-            
+            end            
         end
         
         function s = getWidth(this)
@@ -127,9 +104,6 @@ classdef DataObject < handle
                   end
                 end
             end
-            
-            %Temporary id generator
-            %id = num2str(round(rand*100));
         end
         
         function matrix = getMatrix(this)

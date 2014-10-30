@@ -83,10 +83,7 @@ if get(handles.okBtn,'UserData')
     negOrPos = 'negative';
 
     if pos
-        flies = get(handles.popupmenu2,'String');
-        index = get(handles.popupmenu2,'Value');
-        fly = flies{index,1};
-        negOrPos = ['positive','-',fly];
+        negOrPos = 'positive';
     end
     
     target = [date_,'\',flower,'\',negOrPos,'\'];
@@ -153,7 +150,7 @@ function posRdbtn_Callback(hObject, eventdata, handles)
 
 % Hint: get(hObject,'Value') returns toggle state of posRdbtn
     set(handles.negRdbtn,'value',~get(hObject,'value'));
-    set(handles.popupmenu2,'enable','on');
+    
     
 % --- Executes on button press in negRdbtn.
 function negRdbtn_Callback(hObject, eventdata, handles)
@@ -163,7 +160,7 @@ function negRdbtn_Callback(hObject, eventdata, handles)
 
 % Hint: get(hObject,'Value') returns toggle state of negRdbtn
     set(handles.posRdbtn,'value',~get(hObject,'value'));
-    set(handles.popupmenu2,'enable','off');
+
 
 function editID_Callback(hObject, eventdata, handles)
 % hObject    handle to editID (see GCBO)
@@ -265,13 +262,13 @@ function initGuiElements(handles,varargin)
     flies = cell(1,1);
     index = 1;
     
-    while line ~= -1
-        flies{1,index} = line;
-        index = index +1;
-        line = fgets(fid);
-    end
+    flies{1,index} = line;
         
-    set(handles.popupmenu2,'String',flies);
+    while line ~= -1
+        index = index +1;
+        flies{1,index} = 
+    
+    set(handles.popupmenu1,'String',flies);
     
 % --- Executes during object deletion, before destroying properties.
         function figure1_DeleteFcn(hObject, eventdata, handles)
