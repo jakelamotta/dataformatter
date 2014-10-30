@@ -1,5 +1,8 @@
 /dataconverter/test/*
-\dataconverter\data\* 
+\dataconverter\data\*
+
+*.dataconverter/test
+*.dataconverter\data
 
 #################
 ## Eclipse
