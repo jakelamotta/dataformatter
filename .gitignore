@@ -1,10 +1,9 @@
-/dataconverter/test/*
-\dataconverter\data\*
+dataconverter/data/*
+dataconverter/test/*
+!dataconverter/data/behavior_variables.xlsx
+!dataconverter/data/insects.txt
 
-*.dataconverter\test\*
-*.dataconverter\data\*
-*.dataconverter/test
-*.dataconverter\data\*\*
+
 
 #################
 ## Eclipse
