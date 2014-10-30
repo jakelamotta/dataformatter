@@ -67,7 +67,7 @@ function output = testcombine2()
     obj2 = DataObject();
     obj2.setMatrix(a);
     
-    ut = man.combine2(obj2,'wef');
+    ut = man.combine(obj2,'wef');
     c = ut.getMatrix();
     output = true;
     s = size(c);
@@ -95,7 +95,7 @@ function output = testmerge2()
     
     man.setUnfObject(obj2);
     
-    man.merge2();
+    man.merge();
     obj = man.getObject().getMatrix();
     
     output = true;

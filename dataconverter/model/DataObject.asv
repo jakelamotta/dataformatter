@@ -54,20 +54,11 @@ classdef DataObject < handle
         end
         
         function this = deleteRowFromID(this,id)
-            mat = this.getMatrix();
             height = this.getNumRows();
-            rowNr = -1;
-            for i=2:height
-                if strcmp(id,mat{i,2})
-                    rowNr = i;
-                    break;
-                end
-            end
+            width = this.getWidth();
             
-            if rowNr ~= -1
-                mat = [mat(1:rowNr-1,:);mat(rowNr+1:end,:)];
-            end
-            this.setMatrix(mat);
+            
+            
         end
         
         function this = setObservation(this,matrix,id)
