@@ -91,6 +91,15 @@ if get(handles.okBtn,'UserData')
     
     target = [date_,'\',flower,'\',negOrPos,'\'];
 
+    if exist('config.mat','file')
+       load('config.mat');
+    else
+        config = struct;
+    end
+    
+    config.date = date_;
+    save('config.mat','config');
+    
     %varargout{1}.sources = get(handles.output,'UserData');
     varargout{1}.target = target;
 else
@@ -106,7 +115,7 @@ function okBtn_Callback(hObject, eventdata, handles)
     varargout{1}.sources = get(handles.output,'UserData');
     date_ = get(handles.editDate,'String');
     flower = get(handles.editFlower,'String');
-    
+   
     stringsExist = ~isempty(date_) & ~isempty(flower);
 
     if stringsExist%~iscell(varargout{1}.sources) && stringsExist
@@ -247,11 +256,22 @@ function pushbutton7_Callback(hObject, eventdata, handles)
     updateSource(handles,'Behaviour');
 
 function initGuiElements(handles,varargin)
-    time_ = round(clock());
-    y = time_(1);
-    mon = time_(2);
-    d = time_(3);
-    date_ = [num2str(y),num2str(mon),num2str(d)];
+    
+    if exist('config.mat','file')
+        load('config.mat');
+    else
+        config = struct;
+    end
+    
+    if isfield(config,'date')
+        date_ = config.date;
+    else
+        time_ = round(clock());
+        y = time_(1);
+        mon = time_(2);
+        d = time_(3);
+        date_ = [num2str(y),num2str(mon),num2str(d)];
+    end
     
     set(handles.editDate,'String',date_);
     set(handles.posRdbtn,'value',1);   

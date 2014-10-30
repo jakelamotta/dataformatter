@@ -35,7 +35,13 @@ classdef Utilities
             tmp = mfilename('fullpath'); %Returns path of current m-file
             
             prefixpy = [tmp(1:end-length(mfilename)),'data\'];
-              path = [prefixpy,file];
+            path = [prefixpy,file];
+        end
+        
+        function row = findRowFromTime(matrix,time)
+            %Time in format 'yyyymmddhhmm'
+            
+            
         end
         
     end

@@ -5,7 +5,7 @@ function runTests()
     
     output = true;
     
-    funcMap = {@testfindrow,@testPath,@testfilters,@testSpectroAdapter,@testBehaviorAD,@testPadMatrix,@testcombine2,@testmerge2};
+    funcMap = {@testPath,@testfilters,@testSpectroAdapter,@testBehaviorAD,@testPadMatrix,@testcombine2,@testmerge2};
     
     l = length(funcMap);
     
@@ -31,14 +31,14 @@ function runTests()
 end
 
 function output = testfindrow()
-    output = true;
+
     ad = WeatherDataAdapter();
     paths = {'C:\Users\Kristian\Documents\GitHub\dataformatter\dataconverter\test\02-Oct-2014\Blåsippa\positive\3\Weather\Uppsala_temp_rh_p_aug_sep_2014.dat'};
     obj = ad.getDataObject(paths);
     matrix = obj.getMatrix();
     
     time = '201408020400';
-    %row = findRowFromTime(matrix,time);
+    row = findRowFromTime(matrix,time);
     
     
 end

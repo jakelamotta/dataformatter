@@ -72,7 +72,9 @@ classdef GUIHandler
         
         function this = manageCallback(this, varargin)
             userdata = manageData(this.dataManager.getObject());            
-            this.dataManager = this.dataManager.addComment(userdata.row,userdata.comment);        
+            if ~strcmp('',userdata)
+                this.dataManager = this.dataManager.addComment(userdata.row,userdata.comment);        
+            end
             this.updateGUI();
         end
                 

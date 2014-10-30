@@ -100,7 +100,7 @@ function okBtn_Callback(hObject, eventdata, handles)
         type = NaN;
     end
     
-    path_ = uigetdir('C:\Users\Kristian\Documents\GitHub\dataformatter\dataconverter\data');
+    path_ = uigetdir(Utilities.getpath(''));
     
     data{1,1} = type;
     data{1,2} = path_;    
