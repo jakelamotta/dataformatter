@@ -82,7 +82,7 @@ classdef InputManager
         
         function success = saveToDir(this,sourcePath, targetPath)
             success = true;
-            parent = 'C:\Users\Kristian\Documents\GitHub\dataformatter\dataconverter\data\';
+            parent = 'C:\Users\JD\Documents\GitHub\dataformatter\dataconverter\data\';
             path = [parent,targetPath];
             [s,~,~] = mkdir(path);
             success = s & success;
