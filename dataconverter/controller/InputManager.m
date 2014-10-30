@@ -82,9 +82,12 @@ classdef InputManager
         
         function success = saveToDir(this,sourcePath, targetPath)
             success = true;
-            parent = 'C:\Users\JD\Documents\GitHub\dataformatter\dataconverter\data\';
-            path = [parent,targetPath];
-            [s,~,~] = mkdir(path);
+            %parent = 'C:\Users\Kristian\Documents\GitHub\dataformatter\dataconverter\data\';
+            %path = [parent,targetPath];
+            path = Utilities.getpath(targetPath);
+            if ~exist(path,'dir')
+                [s,a,b] = mkdir(path);
+            end
             success = s & success;
             copyfile(sourcePath,path);
         end

@@ -5,7 +5,7 @@ function runTests()
     
     output = true;
     
-    funcMap = {@testPath,@testfilters,@testxlswriter,@testSpectroAdapter,@testBehaviorAD,@testPadMatrix,@testcombine2,@testmerge2};
+    funcMap = {@testfilters,@testxlswriter,@testSpectroAdapter,@testBehaviorAD,@testPadMatrix,@testcombine2,@testmerge2};
     
     l = length(funcMap);
     
@@ -77,9 +77,7 @@ function output = testcombine2()
     output = output & (isempty(c{2,3}));
 end
 
-function output = testPath()
-    output = strcmp(Utilities.getpath('behavior_variables'),'C:\Users\Kristian\Documents\GitHub\dataformatter\dataconverter\data\behavior_variables');
-end
+function output = testPath(
 
 function output = testmerge2()
     ipm = InputManager();
