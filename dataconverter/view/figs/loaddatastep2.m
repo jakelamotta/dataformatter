@@ -211,8 +211,14 @@ function cancelBtn_Callback(hObject, eventdata, handles)
 function updateSource(handles,type)
     tempStruct = get(handles.output,'UserData');
     
-    [fname,pname,~] = uigetfile('MultiSelect','on');
-        
+    if strcmp(type,'Spectro')
+        pname = uigetdir(Utilities.getpath(''));
+        fname = '';
+        %manager = InputManager();        
+    else
+        [fname,pname,~] = uigetfile('MultiSelect','on');
+    end
+    
     if ischar(fname)
         source = [pname,fname];
     else

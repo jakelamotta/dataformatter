@@ -2,10 +2,10 @@ function runTests()
     clear all;
     clear classes;
     
-    
+    tic;
     output = true;
     
-    funcMap = {@testfindrow,@testPath,@testfilters,@testSpectroAdapter,@testBehaviorAD,@testPadMatrix,@testcombine2,@testmerge2};
+    funcMap = {@testCompareTime,@testPadding,@testfindrow,@testPath,@testfilters,@testSpectroAdapter,@testBehaviorAD,@testPadMatrix,@testcombine2,@testmerge2};
     
     l = length(funcMap);
     
@@ -28,13 +28,61 @@ function runTests()
     else
         disp('Tests failed');
     end
+    elapsed = toc;
+    disp(['Test ran for ',num2str(elapsed),' seconds.']);
+end
+
+function output = testCompareTime()
+    ad = WeatherDataAdapter();
+    
+    at = {2014,08,21,14,33};
+    r = {2014,08,21,14,38};
+    output = ad.compareTime(at,r);
+    
+    at = {2014,08,11,14,33};
+    r = {2014,08,21,14,38};
+    output = output & ~ad.compareTime(at,r);
+    
+    at = {2014,1,21,14,33};
+    r = {2014,08,21,14,38};
+    output = output & ~ad.compareTime(at,r);
+    
+    at = {2014,08,21,14,03};
+    r = {2014,08,21,13,58};
+    output = output & ad.compareTime(at,r);
+
+    at = {2014,08,21,14,58};
+    r = {2014,08,21,14,01};
+    output = output & ~ad.compareTime(at,r);
+    
+    %at = {2014,1,21,14,33};
+    %r = {2014,08,21,14,38};
+    %output = output & ad.compareTime(at,r);
+    
+%    at = {2014,1,21,0,3};
+%    r = {2014,08,21,23,58};
+%    output = output & ad.compareTime(at,r);
+end
+
+function output = testPadding()
+    a = '3';
+    b = '242';
+    c = '';
+    d = '00';
+    
+    output = true;
+    
+    output = output & (Utilities.padString(a,'0',3) == '003');
+    output = output & (Utilities.padString(b,'0',3) == '242');
+    output = output & (Utilities.padString(c,'0',3) == '000');
+    output = output & (Utilities.padString(d,'0',3) == '000');
 end
 
 function output = testfindrow()
     output = true;
     ad = WeatherDataAdapter();
     paths = {'C:\Users\Kristian\Documents\GitHub\dataformatter\dataconverter\test\02-Oct-2014\Blåsippa\positive\3\Weather\Uppsala_temp_rh_p_aug_sep_2014.dat'};
-    obj = ad.getDataObject(paths);
+    obj = ad.getDataObject(paths,'');
     matrix = obj.getMatrix();
     
     time = '201408020400';
@@ -151,7 +199,7 @@ function output = testfilters()
     output = true & testSpectroFilter(obj);
     
     ad = WeatherDataAdapter();
-    obj = ad.getDataObject({'C:\Users\Kristian\Documents\GitHub\dataformatter\dataconverter\data\02-Oct-2014\Blåsippa\positive\2\Weather\Uppsala_temp_rh_p_aug_sep_2014.dat'});
+    obj = ad.getDataObject({'C:\Users\Kristian\Documents\GitHub\dataformatter\dataconverter\data\02-Oct-2014\Blåsippa\positive\2\Weather\Uppsala_temp_rh_p_aug_sep_2014.dat'},'');
     output = output & testWeatherFilter(obj);
     
     ad = AbioticDataAdapter();

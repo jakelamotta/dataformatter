@@ -40,8 +40,13 @@ classdef Utilities
         
         function row = findRowFromTime(matrix,time)
             %Time in format 'yyyymmddhhmm'
-            
-            
+        end
+        
+        function outStr = padString(inVal,padWith,len)
+            outStr = inVal;
+            while length(outStr) < len
+                outStr = [padWith,outStr];
+            end
         end
         
     end

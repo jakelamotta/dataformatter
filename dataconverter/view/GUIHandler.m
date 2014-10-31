@@ -91,13 +91,20 @@ classdef GUIHandler
                     errordlg('There are no abiotic data files in the specified folder, please try again','No such file')
                 end
                 
-                for i=1:length(paths_)
-                    try    
-                        this.dataManager = this.dataManager.addObject(type,{paths_{i}});
-                    catch ex
+%                 for i=1:length(paths_)
+%                     try    
+%                         this.dataManager = this.dataManager.addObject(type,{paths_{i}});
+%                     catch ex
+%                         %Suggestions is to log details of the error
+%                         errordlg(['Something went wrong when trying to parse the ',type,' data file. Error message: ',ex.message],'Parse error');
+%                     end
+%                 end
+
+                try    
+                    this.dataManager = this.dataManager.addObject(type,paths_);
+                catch ex
                         %Suggestions is to log details of the error
-                        errordlg(['Something went wrong when trying to parse the ',type,' data file.'],'Parse error');
-                    end
+                    errordlg(['Something went wrong when trying to parse the ',type,' data file. Error message: ',ex.message],'Parse error');
                 end
 
                 s = size(this.dataManager.getUnfObject().getMatrix());

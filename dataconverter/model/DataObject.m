@@ -62,20 +62,37 @@ classdef DataObject < handle
         function this = setObservation(this,matrix,id)
             
             s = size(matrix);
-            
+            appendCell = cell(1,s(1));
             
             for i=1:s(2)
                 for j=1:this.getWidth()
                     for k=2:s(1);
-                        this.xlsMatrix{k,2} = id;
+                        appendCell{k,2} = id;
                         
                         if strcmp(this.xlsMatrix{1,j},matrix{1,i})
-                            this.xlsMatrix{k,j} = matrix{k,i};
+                            appendCell{k,j} = matrix{k,i};
                             
                         end
                     end
                 end
-            end            
+            end
+            
+            [this.xlsMatrix,appendCell] = Utilities.padMatrix(this.xlsMatrix,appendCell);
+            
+            this.xlsMatrix = [this.xlsMatrix;appendCell(2:end,:)];
+            
+%             for i=1:s(2)
+%                 for j=1:this.getWidth()
+%                     for k=2:s(1);
+%                         this.xlsMatrix{k,2} = id;
+%                         
+%                         if strcmp(this.xlsMatrix{1,j},matrix{1,i})
+%                             this.xlsMatrix{k,j} = matrix{k,i};
+%                             
+%                         end
+%                     end
+%                 end
+%             end            
         end
         
         function s = getWidth(this)
@@ -126,7 +143,8 @@ classdef DataObject < handle
             this.spectroData.obs1.x = [];
             this.spectroData.obs1.y = [];
             this.spectroData.obs2.x = [];
-            this.spectroData.obs2.y = [];         
+            this.spectroData.obs2.y = [];
+            this.spectroData.time = '';
             this.spectroData.id = '';
         end
     end

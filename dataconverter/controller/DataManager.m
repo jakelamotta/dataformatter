@@ -43,7 +43,7 @@ classdef DataManager < handle
         end
         
         function this = addObject(this,id,path)
-            temp = this.manager.getDataObject(id,path);
+            temp = this.manager.getDataObject(id,path,this.getObject());
             current = this.getUnfObject();
             tempMat = temp.getMatrix();
             rows = [2];

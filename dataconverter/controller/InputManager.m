@@ -16,13 +16,19 @@ classdef InputManager
             this.paths = {};
         end
         
-        function obj = getDataObject(this,adapterId,paths)
+        function obj = getDataObject(this,adapterId,paths,inObj)
             adapter = this.adapterFactory.createAdapter(adapterId);
-            
+                        
             if ischar(adapter)
                 errordlg('The data adapter could not be created');
             else
-                obj = adapter.getDataObject(paths);
+                if strcmp(adapterId,'Weather')
+                    spectro = inObj.getSpectroData();
+                    obj = adapter.getDataObject(paths,spectro.time);
+                else
+                    obj = adapter.getDataObject(paths);
+                end
+                
             end
         end
         
@@ -59,22 +65,27 @@ classdef InputManager
     
     methods (Access = private)
         
-        function this = recSearch(this,p,t)
-            temp = dir(p);
-            fs = strfind(p,'\');
+        function this = recSearch(this,path,type)
+            
+            if strcmp(type,'Spectro')
+                type = 'metadata';
+            end
+            
+            temp = dir(path);
+            fs = strfind(path,'\');
             last = fs(end);
             
             s = size(temp);
             
             for i=3:s(1)
-                if strcmp(p(last+1:end),t)
-                    typeDir = dir(p);
+                if strcmp(path(last+1:end),type)
+                    typeDir = dir(path);
                     numFiles = size(typeDir);
                     
-                    this.paths{1,end+1} = [p,'\',typeDir(i).name];
+                    this.paths{1,end+1} = [path,'\',typeDir(i).name];
                     
                 else
-                    this = this.recSearch([p,'\',temp(i).name],t);
+                    this = this.recSearch([path,'\',temp(i).name],type);
                 end
             end
         end
