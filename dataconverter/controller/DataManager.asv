@@ -39,6 +39,7 @@ classdef DataManager < handle
         function this = clearAll(this)
             this = this.setUnfObject(DataObject());
             this = this.setObject(DataObject());
+            %this.objList = containers.Map();
         end
         
         function this = addObject(this,id,path)
@@ -70,24 +71,20 @@ classdef DataManager < handle
             objID = obj.getObjectID();
             
             numberOfObs = length(objID);
-            listOfIds = cell(1,1);
-            index = 1;
+            
             for k=1:numberOfObs
                 id = objID{1,k};
                 
-                if ~isempty(this.getObject().getRowFromID(id))
-                    listOfIds{1,index} = id;
-                    index = index +1;
+                if ~isempty(this.getObject().getRowFromID(id))%this.objList.isKey(id);
+                    row = this.combine(obj,id);
+                    this = this.setObject(row);
+%                 else
+%                     row = DataObject();
+%                     row = row.setMatrix(obj.getRowFromID(id));
+%                     row = row.addSpectroData(obj.getSpectroData());
                 end
             end
             
-            if ~isempty(listOfIds{1,1})
-                for i=1:length(listOfIds)
-                   id = listOfIds{1,i};
-                   row = this.combine(obj,id);
-                   this = this.setObject(row); 
-                end
-            end
             this.merge();
             this = this.setUnfObject(DataObject());        
         end
@@ -107,6 +104,10 @@ classdef DataManager < handle
         function obj = getUnfObject(this)
             obj = this.unfilteredObj;
         end
+%         
+%         function list = getObjectList(this)
+%             list = this.objList;
+%         end
         
         function success = store(this,path)
             obj = this.getObject();
@@ -152,9 +153,8 @@ classdef DataManager < handle
             combined = combined.addSpectroData(newSpectro);
             
             obj.deleteRowFromID(id);
-            %matrix = obj.getMatrix();
-            %temp = [matrix;temp(2,:)];
-            combined = combined.setMatrix(temp);
+            
+            combined = combined.setMatrix([temp]);
         end
 
         function this = addComment(this,row,comment)
@@ -184,6 +184,13 @@ classdef DataManager < handle
     end
     
     methods (Access = private)
+        
+        
+        
+        function obs = filter(this,rows)
+            rows = rows.getMatrix();
+            obs = rows([1 2],:);
+        end
         
         function this = removeColumn(this,col)
         end

@@ -204,7 +204,7 @@ function output = testfilters()
     
     ad = AbioticDataAdapter();
     obj = ad.getDataObject({'C:\Users\Kristian\Documents\GitHub\dataformatter\dataconverter\data\02-Oct-2014\Blåsippa\positive\1\Abiotic\abtest.txt'});
-    output = output & testAbioticfilter(obj);
+    %output = output & testAbioticfilter(obj);
     
 end
 function [outp,obj] = testSpectroAdapter()

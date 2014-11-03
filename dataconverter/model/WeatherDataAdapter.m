@@ -93,9 +93,6 @@ classdef WeatherDataAdapter < DataAdapter
                 else
                     start = 1;
                 end
-                %Safety mesure to not miss the day due to missing data
-                %points etc
-                start = start-144;
                 
                 for j=start:length(temp)
                     
