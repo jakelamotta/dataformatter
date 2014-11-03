@@ -26,12 +26,13 @@ classdef InputManager
                     spectro = inObj.getSpectroData();
                     obj = adapter.getDataObject(paths,spectro.time);
                 else
+                    tic;
                     obj = adapter.getDataObject(paths);
-                end
-                
+                    disp('time elapsed:')
+                    toc
+                end                
             end
-        end
-        
+        end        
         
         function this = splitPaths(this,p,type)
             this.paths = {};
@@ -68,7 +69,7 @@ classdef InputManager
         function this = recSearch(this,path,type)
             
             if strcmp(type,'Spectro')
-                type = 'metadata';
+               type = 'metadata';
             end
             
             temp = dir(path);
@@ -100,6 +101,12 @@ classdef InputManager
                 s = true;
             end
             success = s & success;
+            
+            if isdir(sourcePath)
+                indices = strfind(sourcePath,'\');
+                index = indices(end);
+                path = [path,'\',sourcePath(index+1:end)];                
+            end
             copyfile(sourcePath,path);
         end
     end    

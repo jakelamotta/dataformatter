@@ -21,13 +21,25 @@ classdef SpectroDataAdapter < DataAdapter
         function obj = getDataObject(this,paths)
             
             s = size(paths);
+            obj = DataObject();
+            
             for i=1:s(2)
                 if strcmp(paths{1,i}(end-10:end),'rawData.txt')
-                    disp('hej');
+                    
                     idx = strfind(paths{1,i},'\');
                     
+                    timeStringStart = strfind(paths{1,i},'multiple');
+                    
+                    if isempty(timeStringStart)
+                        timeString = '';
+                    else
+                        timeString = paths{1,i}(timeStringStart:end);
+                        timeStringEnd = strfind(timeString,'\');
+                        timeString = timeString(1:timeStringEnd);
+                    end
+                    
                     try
-                        id_ = paths{1,i}(idx(end-2)+1:idx(end-1)-1);
+                        id_ = paths{1,i}(idx(end-4)+1:idx(end-3)-1);
                     catch e
                         errordlg(['Incorrect path was passed to the file reader. Matlab error: ',e.message]);
                     end
@@ -40,6 +52,7 @@ classdef SpectroDataAdapter < DataAdapter
                     
                     tempStruct = struct;
                     tempStruct.id = id_;
+                    tempStruct.time = timeString;
                     
                     try
                         for obs=1:length(wli)
@@ -68,8 +81,9 @@ classdef SpectroDataAdapter < DataAdapter
                             
                             points = tempData(first:end);
                             points = regexp(points,',','split');
-                            temp = cellfun(@this.createDob,points,'UniformOutput',false);
                             
+                            temp = cellfun(@this.createDob,points,'UniformOutput',false);
+                           
                             x = zeros(size(temp));
                             y = zeros(size(temp));
                             
@@ -97,12 +111,12 @@ classdef SpectroDataAdapter < DataAdapter
                             tempStruct.(var1).x = x;
                             tempStruct.(var1).y = y;
                             
-                            winfo = tempData(1:first-20);
-                            winfo = regexp(winfo,',','split');
-                            winfo{1} = strrep(winfo{1},'waveLengthInfo":{','');
-                            
-                            offset = 9;
-                            
+%                             winfo = tempData(1:first-20);
+%                             winfo = regexp(winfo,',','split');
+%                             winfo{1} = strrep(winfo{1},'waveLengthInfo":{','');
+%                             
+%                             offset = 9;
+%                             
                             %                     for h=1:length(winfo)
                             %                        temp = winfo{h};
                             %                        temp = strrep(temp,'}','');

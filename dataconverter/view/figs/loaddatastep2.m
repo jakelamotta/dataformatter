@@ -216,7 +216,7 @@ function updateSource(handles,type)
         fname = '';
         %manager = InputManager();        
     else
-        [fname,pname,~] = uigetfile('MultiSelect','on');
+        [fname,pname,~] = uigetfile('MultiSelect','on','*.*');
     end
     
     if ischar(fname)

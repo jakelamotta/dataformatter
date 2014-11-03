@@ -11,7 +11,7 @@ classdef DataObject < handle
     methods (Access = public)
         
         function this = DataObject()
-            this.xlsMatrix = {'Date','ID','Flower','wind speed (m/s)','direction(degrees)','Temperature(c)','temperature(c)','Humidity','Pressure','lux1','lux2','Comment'};
+            this.xlsMatrix = {'Flower','ID','Date','temperature(c)','Humidity','Pressure','wind speed (m/s)','direction(degrees)','Temperature(c)','lux1','lux2','Comment'};
             [a,b,tempMat] = xlsread(Utilities.getpath('behavior_variables'));%xlsread('C:\Users\Kristian\Documents\GitHub\dataformatter\dataconverter\data\behavior_variables');
             this.xlsMatrix = [this.xlsMatrix,tempMat];
             
@@ -60,33 +60,55 @@ classdef DataObject < handle
         end
         
         function this = setObservation(this,matrix,id)
-            
             s = size(matrix);
-            appendCell = cell(1,s(1));
             
-            for i=1:s(2)
-                for j=1:this.getWidth()
-                    for k=2:s(1);
-                        appendCell{k,2} = id;
-                        
-                        if strcmp(this.xlsMatrix{1,j},matrix{1,i})
+            appendCell = cell(s(1),this.getWidth());
+            
+            start = 1;
+            
+            counter = 0;
+            
+%             for i=1:this.getWidth()
+%                 
+%                 if strcmp(this.xlsMatrix{1,i},matrix{1,1})
+%                     for k=2:s(1)
+%                         appendCell{k,i} = matrix{k,1};
+%                         start = i+1;
+%                         counter = counter +1;
+%                     end
+%                     break;
+%                 end
+%                 counter = counter +1;
+%             end
+%             
+            
+            for i=1:s(2)                
+                for j=start:this.getWidth()
+                    
+                    if strcmp(this.xlsMatrix{1,j},matrix{1,i})
+                        for k=2:s(1);
+                            counter = counter +1;
+                            appendCell{k,2} = id;
                             appendCell{k,j} = matrix{k,i};
-                            
                         end
+                        break;
                     end
+                    counter = counter+1;
                 end
             end
+            
+            disp(['Loop ran for ',num2str(counter),' times']);
             
             [this.xlsMatrix,appendCell] = Utilities.padMatrix(this.xlsMatrix,appendCell);
             
             this.xlsMatrix = [this.xlsMatrix;appendCell(2:end,:)];
             
-%             for i=1:s(2)
-%                 for j=1:this.getWidth()
-%                     for k=2:s(1);
-%                         this.xlsMatrix{k,2} = id;
+%           for i=1:s(2)
+%               for j=1:this.getWidth()
+%                   for k=2:s(1);
+%                       this.xlsMatrix{k,2} = id;
 %                         
-%                         if strcmp(this.xlsMatrix{1,j},matrix{1,i})
+%                       if strcmp(this.xlsMatrix{1,j},matrix{1,i})
 %                             this.xlsMatrix{k,j} = matrix{k,i};
 %                             
 %                         end

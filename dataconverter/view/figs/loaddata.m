@@ -270,7 +270,7 @@ function initGuiElements(handles,varargin)
         y = time_(1);
         mon = time_(2);
         d = time_(3);
-        date_ = [num2str(y),num2str(mon),num2str(d)];
+        date_ = [num2str(y),Utilities.padString(num2str(mon),'0',2),Utilities.padString(num2str(d),'0',2)];
     end
     
     set(handles.editDate,'String',date_);

@@ -36,23 +36,23 @@ function output = testCompareTime()
     ad = WeatherDataAdapter();
     
     at = {2014,08,21,14,33};
-    r = {2014,08,21,14,38};
+    r = {'2014','08','21','14','38'};
     output = ad.compareTime(at,r);
     
     at = {2014,08,11,14,33};
-    r = {2014,08,21,14,38};
+    r = {'2014','08','21','14','38'};
     output = output & ~ad.compareTime(at,r);
     
     at = {2014,1,21,14,33};
-    r = {2014,08,21,14,38};
+    r = {'2014','08','21','14','38'};
     output = output & ~ad.compareTime(at,r);
     
     at = {2014,08,21,14,03};
-    r = {2014,08,21,13,58};
+    r = {'2014','08','21','13','58'};
     output = output & ad.compareTime(at,r);
 
     at = {2014,08,21,14,58};
-    r = {2014,08,21,14,01};
+    r = {'2014','08','21','14','01'};
     output = output & ~ad.compareTime(at,r);
     
     %at = {2014,1,21,14,33};
@@ -80,12 +80,12 @@ end
 
 function output = testfindrow()
     output = true;
-    ad = WeatherDataAdapter();
-    paths = {'C:\Users\Kristian\Documents\GitHub\dataformatter\dataconverter\test\02-Oct-2014\Blåsippa\positive\3\Weather\Uppsala_temp_rh_p_aug_sep_2014.dat'};
-    obj = ad.getDataObject(paths,'');
-    matrix = obj.getMatrix();
-    
-    time = '201408020400';
+%     ad = WeatherDataAdapter();
+%     paths = {'C:\Users\Kristian\Documents\GitHub\dataformatter\dataconverter\test\02-Oct-2014\Blåsippa\positive\3\Weather\Uppsala_temp_rh_p_aug_sep_2014.dat'};
+%     obj = ad.getDataObject(paths,'');
+%     matrix = obj.getMatrix();
+%     
+%     time = '201408020400';
     %row = findRowFromTime(matrix,time);
     
     
@@ -198,9 +198,9 @@ function output = testfilters()
     [~,obj] = testSpectroAdapter();
     output = true & testSpectroFilter(obj);
     
-    ad = WeatherDataAdapter();
-    obj = ad.getDataObject({'C:\Users\Kristian\Documents\GitHub\dataformatter\dataconverter\data\02-Oct-2014\Blåsippa\positive\2\Weather\Uppsala_temp_rh_p_aug_sep_2014.dat'},'');
-    output = output & testWeatherFilter(obj);
+%     ad = WeatherDataAdapter();
+%     obj = ad.getDataObject({'C:\Users\Kristian\Documents\GitHub\dataformatter\dataconverter\data\02-Oct-2014\Blåsippa\positive\2\Weather\Uppsala_temp_rh_p_aug_sep_2014.dat'},'');
+%     output = output & testWeatherFilter(obj);
     
     ad = AbioticDataAdapter();
     obj = ad.getDataObject({'C:\Users\Kristian\Documents\GitHub\dataformatter\dataconverter\data\02-Oct-2014\Blåsippa\positive\1\Abiotic\abtest.txt'});

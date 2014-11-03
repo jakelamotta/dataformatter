@@ -32,14 +32,15 @@ classdef AbioticDataAdapter < DataAdapter
                 temp = cellfun(@this.createDob,rawData,'UniformOutput',false);
                 
                 for k=1:length(temp)
-                   
                    this.tempMatrix = [this.tempMatrix;temp{1,k}];
-                   
-                   this.dobj = this.dobj.setObservation(this.tempMatrix,id_);                    
                 end
+                
+                this.dobj = this.dobj.setObservation(this.tempMatrix,id_);                    
+            
             end
             
             obj = this.dobj;
+            
         end
         
         function temp = createDob(this, inRow)
