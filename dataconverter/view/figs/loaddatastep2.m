@@ -79,9 +79,11 @@ end
 id_ = config.id;
 sub4 = num2str(id_);
 
-while length(sub4) < 3
-    sub4 = ['0',sub4];
-end
+% while length(sub4) < 3
+%     sub4 = ['0',sub4];
+% end
+
+sub4 = Utilities.padString(sub4,'0',3);
 
 str_ = [sub1,'_',sub2,sub3,'.',sub4];
 str_ = strrep(str_,'\','');

@@ -86,7 +86,7 @@ if get(handles.okBtn,'UserData')
         flies = get(handles.popupmenu2,'String');
         index = get(handles.popupmenu2,'Value');
         fly = flies{index,1};
-        negOrPos = ['positive','-',fly];
+        negOrPos = ['positive','-',fly(1:end-2)];
     end
     
     target = [date_,'\',flower,'\',negOrPos,'\'];
