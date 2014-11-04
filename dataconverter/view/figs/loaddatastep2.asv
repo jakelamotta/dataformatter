@@ -58,11 +58,6 @@ handles.output = hObject;
 % Update handles structure
 guidata(hObject, handles);
 
-if ~isempty(varargin)
-    tempStruct = varargin{1};
-else
-    tempStruct = struct;
-end
 
 str_ = varargin{2};
 idx = strfind(str_,'\');
@@ -87,14 +82,12 @@ end
 
 if ~isfield(config,'weatherPath')
     inputManager = InputManager();
-    startSearch = Utilities.getpath('');
-    inputManager.splitPaths(startSearch(1:end-1),'weatherPath');
+    inputManager.splitPaths(Utilities.getpath(),'weatherPath');
     path_ = inputManager.getPaths();
     
     if ~isempty(path_)
         config.weatherPath = path_{1};
-        set(handles.weatherText,'String',path_{1});
-        tempStruct.Weather = path_{1};
+        set
     end
 end
 
@@ -111,7 +104,9 @@ str_ = [sub1,'_',sub2,sub3,'.',sub4];
 str_ = strrep(str_,'\','');
 set(handles.edit1,'String',str_);
 
-set(handles.output,'UserData',tempStruct);
+if ~isempty(varargin)
+    set(handles.output,'UserData',varargin{1});
+end
 
 
 

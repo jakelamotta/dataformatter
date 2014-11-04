@@ -1,7 +1,7 @@
 dataconverter/data/*
 dataconverter/test/*
 !dataconverter/data/behavior_variables.xlsx
-!dataconverter/data/insects.txt
+!dataconverter/config.mat
 
 
 
