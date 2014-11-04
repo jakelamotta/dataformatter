@@ -1,6 +1,7 @@
 Eristalis
 Episyrphus
-Spaerophoria
+Sphaerophoria
+Syrphus
 Bee
 Bumblebee
 Butterfly
