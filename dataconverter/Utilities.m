@@ -8,16 +8,21 @@ classdef Utilities
     methods (Static)
         
         function [first,second] = padMatrix(first, second)
-            if length(first) < length(second)
-                diff = abs(length(first)-length(second));
+            lenFirst = size(first);
+            lenSecond = size(second);
+            lenFirst = lenFirst(2);
+            lenSecond = lenSecond(2);
+            
+            if lenFirst < lenSecond
+                diff = abs(lenFirst-lenSecond);
                 s = size(first);
                 height = s(1);
                 
                 newMat = cell(height,diff);
                 first = [first,newMat];
                 first(1,:) = second(1,:);
-            elseif length(first) > length(second)
-                diff = abs(length(first)-length(second));
+            elseif lenFirst > lenSecond
+                diff = abs(lenFirst-lenSecond);
                 s = size(second);
                 height = s(1);
                 

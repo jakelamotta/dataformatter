@@ -55,6 +55,7 @@ obj = varargin{1};
 handler = varargin{3};
 data = obj.getMatrix();
 spectro = obj.getSpectroData();
+olfactory = obj.getOlfactoryData();
 id = varargin{2};
 % Choose default command line output for selectData
 handles.output = hObject;
@@ -66,14 +67,22 @@ userdata = struct;
 userdata.handler = handler;
 userdata.data = data;
 userdata.spectro =spectro;
+userdata.olfactory = olfactory;
 userdata.dp = handler.dataManager.getNrOfSpectroDP();
 set(hObject,'UserData',userdata);
 set(handles.okBtn,'UserData',false);
 
 %data = myTable(handles.figure1,data);
 
-%if strcmp(id,'Spectro')
-setGraph(handles,spectro);
+if strcmp(id,'Spectro')
+    setGraph(handles,spectro);
+elseif strcmp(id,'Olfactory')
+    olfactory.obs1.x = olfactory.x;
+    olfactory.obs1.y = olfactory.y;
+    olfactory.obs1.x = [];
+    olfactory.obs1.y = [];
+    setGraph(handles,olfactory);
+end
 
 setTable(handles,data);
 
@@ -223,10 +232,19 @@ handle = h.figure1;
 %     y(i-idx+1) = data{2,i};
 % end
 
-t = axes('Position',[.15 .25, .8 .25]);
-plot(t,[data.obs1.x],[data.obs1.y],'blue');
-hold on;
-plot(t,[data.obs2.x],[data.obs2.y],'green');
+fnames = fieldnames(data);
+numFnames = length(fnames);
+
+for i=1:numFnames
+    
+    name = fnames{i};
+    
+    t = axes('Position',[.15 .25, .8 .25]);
+    plot(t,[data.(name).obs1.x],[data.(name).obs1.y],'blue');
+    hold on;
+    plot(t,[data.(name).obs2.x],[data.(name).obs2.y],'green');
+end
+
 %t = axes(handle,'Data',data);
 
 toSend = data;
@@ -242,8 +260,6 @@ if dp ~= 300
     set(edit_,'Enable','off')
 end
 
-
-
 button = uicontrol(handle,'Style','pushbutton','Position',[20 190 100 20],'String','Interpolate','Callback',{@downSample,toSend,t,handle});
 disp(get(button,'Position'));
 end
@@ -251,30 +267,39 @@ end
 function downSample(varargin)
     inData = varargin{3};
     
+    fnames = fieldnames(inData);
+    numFnames = length(fnames);
     hfig = varargin{5};
-    x1 = [inData.obs1.x];
-    y1 = [inData.obs1.y];
-    x2 = [inData.obs2.x];
-    y2 = [inData.obs2.y];
+        
+    for i=1:numFnames
+        
+        data = inData.(fnames{i});
+        
+        x1 = [data.obs1.x];
+        y1 = [data.obs1.y];
+        x2 = [data.obs2.x];
+        y2 = [data.obs2.y];
+
+        t = varargin{4};
+        h = findobj('Tag','sampleedit');
+        rate = get(h,'String');
+
+        dbrate = str2double(rate);
+        x1new = linspace(380,600,dbrate);
+        x2new = linspace(380,600,dbrate);
+
+        y1 = interp1(x1,y1,x1new);
+        y2 = interp1(x2,y2,x2new);
+
+        hold off
+        plot(t,x1,[data.obs1.y],'b');
+
+        hold on
+        plot(t,x2,[data.obs2.y],'g');
+        plot(t,x1new,y1,'r');
+        plot(t,x2new,y2,'y');
     
-    t = varargin{4};
-    h = findobj('Tag','sampleedit');
-    rate = get(h,'String');
-    
-    dbrate = str2double(rate);
-    x1new = linspace(380,600,dbrate);
-    x2new = linspace(380,600,dbrate);
-    
-    y1 = interp1(x1,y1,x1new);
-    y2 = interp1(x2,y2,x2new);
-    
-    hold off
-    plot(t,x1,[inData.obs1.y],'b');
-    
-    hold on
-    plot(t,x2,[inData.obs2.y],'g');
-    plot(t,x1new,y1,'r');
-    plot(t,x2new,y2,'y');
+    end
     
     userdata = get(hfig,'UserData');
     userdata.dp = dbrate;

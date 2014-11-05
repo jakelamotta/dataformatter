@@ -4,8 +4,8 @@ classdef DataObject < handle
     
     properties (Access = private)
         xlsMatrix;
-        id;
         spectroData;
+        olfactoryData;
     end
     
     methods (Access = public)
@@ -16,13 +16,29 @@ classdef DataObject < handle
             this.xlsMatrix = [this.xlsMatrix,tempMat];
             
             this.spectroData = struct;
-            
-            this = this.initStructFields();
+            this.olfactoryData = struct;
+            %this = this.initStructFields();
         end
         
-        function this = addSpectroData(this,inStruct)
+        function this = addSpectroData(this,inStruct,id_)
+            if ~isfield(this.spectroData,id_)
+                id_ = strrep(id_,'.','');
+                this.spectroData.(id_) = inStruct;            
+            end
+        end
+        
+        function this = setSpectroData(this,inStruct)
             this.spectroData = inStruct;
-        end        
+        end
+            
+        function this = setOlfactory(this,inStruct,id)
+            if ~isempty(this.spectroData)
+                mex = MException('awa');
+                throw(mex);
+            end
+            id = strrep(id,'.','');
+            this.spectroData.id = inStruct;
+        end
         
         function row = getRowFromID(this,id)
             
@@ -157,17 +173,26 @@ classdef DataObject < handle
             sout = this.spectroData;
         end
         
+        function oout = getOlfactoryData(this)
+            oout = this.olfactoryData;
+        end
+        
+        
     end    
     
-    methods (Access = private)        
-        
+    methods (Access = private)                
         function this = initStructFields(this)
-            this.spectroData.obs1.x = [];
-            this.spectroData.obs1.y = [];
-            this.spectroData.obs2.x = [];
-            this.spectroData.obs2.y = [];
-            this.spectroData.time = '';
-            this.spectroData.id = '';
+            this.spectroData = struct;
+            this.olfactoryData = struct;
+%             this.spectroData.obs1.x = [];
+%             this.spectroData.obs1.y = [];
+%             this.spectroData.obs2.x = [];
+%             this.spectroData.obs2.y = [];
+%             this.spectroData.time = '';
+%             this.spectroData.id = '';
+%             
+%             this.olfactoryData.x = [];
+%             this.olfactoryData.y = [];
         end
     end
     

@@ -54,7 +54,7 @@ classdef SpectroDataAdapter < DataAdapter
                     tempStruct.id = id_;
                     tempStruct.time = timeString;
                     
-                    try
+                    %try
                         for obs=1:length(wli)
                             idx = strfind(rawData,'lux');
                             last = idx{1}(1+2*(obs-1))-4;
@@ -131,12 +131,12 @@ classdef SpectroDataAdapter < DataAdapter
                             %                         this.tempMatrix{2,h+length(winfo)*(obs-1)} = value;
                             %                     end
                         end
-                    catch e
-                        errordlg(['Spectrophotometer file was in an incorrect format. Matlab error output: ',e.message]);
-                    end                
+                    %catch e
+                    %    errordlg(['Spectrophotometer file was in an incorrect format. Matlab error output: ',e.message]);
+                    %end                
                 
                     this.dobj = this.dobj.setObservation(this.tempMatrix,id_);
-                    obj = this.dobj.addSpectroData(tempStruct);%tempStruct.obs1.x,tempStruct.obs1.x,tempStruct.obs2.x,tempStruct.obs2.x,id_);
+                    obj = this.dobj.addSpectroData(tempStruct,id_);%tempStruct.obs1.x,tempStruct.obs1.x,tempStruct.obs2.x,tempStruct.obs2.x,id_);
                 end
             end
         end

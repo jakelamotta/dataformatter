@@ -22,7 +22,7 @@ function varargout = loaddatastep2(varargin)
 
 % Edit the above text to modify the response to help loaddatastep2
 
-% Last Modified by GUIDE v2.5 14-Oct-2014 11:55:01
+% Last Modified by GUIDE v2.5 04-Nov-2014 14:54:16
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -92,9 +92,20 @@ if ~isfield(config,'weatherPath')
     path_ = inputManager.getPaths();
     
     if ~isempty(path_)
-        config.weatherPath = path_{1};
-        set(handles.weatherText,'String',path_{1});
-        tempStruct.Weather = path_{1};
+        config.weatherPath = path_;
+        
+        set(handles.weatherText,'String',path_);
+        
+        source = struct;
+        
+        size_ = size(path_);
+        
+        for i=1:size_(2)
+            temp = path_{1,i};
+            source.(['path',num2str(i)]) = temp;
+        end
+        
+        tempStruct.Weather = source;
     end
 end
 
@@ -254,7 +265,7 @@ function updateSource(handles,type)
                 source.(['path',num2str(i)]) = [pname,temp];
             end
             
-            fname = fname{1,1};
+            %fname = fname{1,1};
     end
     
     tempStruct.(type) = source;
@@ -262,17 +273,17 @@ function updateSource(handles,type)
     
     switch type
         case 'Behaviour'
-            set(handles.behaveText,'String',[pname,fname]);
+            set(handles.behaveText,'String',fname);
         case 'Spectro'
-            set(handles.spectroText,'String',[pname,fname]);
+            set(handles.spectroText,'String',fname);
         case 'Weather'
-            set(handles.weatherText,'String',[pname,fname]);
+            set(handles.weatherText,'String',fname);
         case 'Image'
-            set(handles.imageText,'String',[pname,fname]);
+            set(handles.imageText,'String',fname);
         case 'Abiotic'
-            set(handles.abioText,'String',[pname,fname]);
+            set(handles.abioText,'String',fname);
         case 'Olfactory'
-            set(handles.olfText,'String',[pname,fname]);
+            set(handles.olfText,'String',fname);
     end
 
 

@@ -257,6 +257,8 @@ function pushbutton7_Callback(hObject, eventdata, handles)
 
 function initGuiElements(handles,varargin)
     
+    set(handles.okBtn,'UserData',false);
+    
     if exist('config.mat','file')
         load('config.mat');
     else

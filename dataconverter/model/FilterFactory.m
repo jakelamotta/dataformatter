@@ -15,6 +15,7 @@ classdef FilterFactory
             this.filters('Weather') = @() WeatherFilter();
             this.filters('Image') = @() ImageFilter();
             this.filters('Behavior') = @() BehaviorFilter();
+            this.filters('Olfactory') = @() OlfactoryFilter();
         end
         
         function filter = createFilter(this,id)

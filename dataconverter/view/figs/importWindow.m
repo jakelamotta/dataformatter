@@ -89,13 +89,13 @@ function okBtn_Callback(hObject, eventdata, handles)
     elseif get(handles.radiobutton2,'value')
         type = 'Weather';
     elseif get(handles.radiobutton3,'value')
-        type = 'Weather';
+        type = 'Image';
     elseif get(handles.radiobutton4,'value')
         type = 'Spectro';
     elseif get(handles.radiobutton5,'value')
         type = 'Behavior';
     elseif get(handles.radiobutton6,'value')
-        type = 'Weather';
+        type = 'Olfactory';
     else
         type = NaN;
     end

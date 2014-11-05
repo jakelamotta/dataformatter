@@ -26,11 +26,17 @@ classdef GUIHandler
         
         function this = GUIHandler()
             this.inputManager = InputManager();
-            this.dataManager = DataManager(this.inputManager);
+            this.dataManager = DataManager(this.inputManager,this);
+            this.inputManager.setDataManager(this.dataManager);
             this.organizer = Organizer();    
             this.initGUI();
             this.dialogues = containers.Map();
         end
+        
+        function time_ = getTime(this)
+            time_ = weatherQuest;
+            time_ = ['multiple-',time_];
+        end        
         
         function this = run(this)
             
@@ -88,7 +94,7 @@ classdef GUIHandler
                 paths_ = this.inputManager.getPaths();
                                 
                 if isempty(paths_)
-                    errordlg('There are no abiotic data files in the specified folder, please try again','No such file')
+                    errordlg(['There are no ', type,' data files in the specified folder, please try again.'],'No such file')
                 end
                 
 %                 for i=1:length(paths_)
@@ -100,19 +106,20 @@ classdef GUIHandler
 %                     end
 %                 end
 
-                try    
+                %try    
                     this.dataManager = this.dataManager.addObject(type,paths_);
-                catch ex
+                %catch ex
                         %Suggestions is to log details of the error
-                    errordlg(['Something went wrong when trying to parse the ',type,' data file. Error message: ',ex.message],'Parse error');
-                end
+                %    errordlg(['Something went wrong when trying to parse the ',type,' data file. Error message: ',ex.message],'Parse error');
+                %end
 
                 s = size(this.dataManager.getUnfObject().getMatrix());
 
                 if s(1) > 2 || strcmp(type,'Spectro')
                     this = this.launchDialogue(type);
                 else
-                    this.dataManager.setObject(this.dataManager.getUnfObject());
+                    this.dataManager.finalize();
+                    %this.dataManager.setObject(this.dataManager.getUnfObject());
                 end
 
                 this = this.updateGUI();

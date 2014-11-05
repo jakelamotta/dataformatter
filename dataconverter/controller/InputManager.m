@@ -7,30 +7,37 @@ classdef InputManager < handle
         dataObject;
         objList;
         paths;
+        dataManager;
     end
     
     methods (Access = public)
         
-        function this = InputManager()
+        function this = InputManager(varargin)
             this.adapterFactory = AdapterFactory();
             this.paths = {};
+            
+            if ~isempty(varargin)
+                this.dataManager = varargin{1};
+            end
+        end
+        
+        function this = setDataManager(this,dm)
+            this.dataManager = dm;
         end
         
         function obj = getDataObject(this,adapterId,paths,inObj)
             adapter = this.adapterFactory.createAdapter(adapterId);
-                        
             if ischar(adapter)
                 errordlg('The data adapter could not be created');
             else
+                tic;
                 if strcmp(adapterId,'Weather')
                     spectro = inObj.getSpectroData();
-                    obj = adapter.getDataObject(paths,spectro.time);
+                    obj = adapter.getDataObject(paths,spectro,this);
                 else
-                    tic;
                     obj = adapter.getDataObject(paths);
-                    disp('time elapsed:')
-                    toc
-                end                
+                end
+                toc
             end
         end        
         

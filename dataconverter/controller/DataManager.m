@@ -10,13 +10,15 @@ classdef DataManager < handle
         unfilteredObj;
         filterFactory;
         spectroDP;
+        handler;
     end
     
     methods (Access=public)
         
-        function this = DataManager(inM)
+        function this = DataManager(inM,inH)
             this.filterFactory = FilterFactory();
             this.manager = inM;
+            this.handler = inH;
             this.xlsWriter = XLSWriter();
             this.unfilteredObj = DataObject();
             this.dataObject = DataObject();
@@ -24,6 +26,10 @@ classdef DataManager < handle
             %Initializes to 300, once its set after this its final to not
             %create inconcistensies between observations
             this.spectroDP = 300;
+        end
+        
+        function handler = getHandler(this)
+           handler = this.handler; 
         end
         
         function dp = getNrOfSpectroDP(this)
@@ -53,7 +59,8 @@ classdef DataManager < handle
             
             newMat = [current.getMatrix();tempMat(rows,:)];
             current = current.setMatrix(newMat);
-            current = current.addSpectroData(temp.getSpectroData());
+            id_ = current.getObjectID();
+            current = current.setSpectroData(temp.getSpectroData());
             
             this = this.setUnfObject(current);
         end
@@ -149,7 +156,7 @@ classdef DataManager < handle
             end
             
             newSpectro = mergestruct(combinee.getSpectroData(),obj.getSpectroData());
-            combined = combined.addSpectroData(newSpectro);
+            combined = combined.setSpectroData(newSpectro);
             
             obj.deleteRowFromID(id);
             %matrix = obj.getMatrix();

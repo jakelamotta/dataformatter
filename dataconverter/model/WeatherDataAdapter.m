@@ -49,14 +49,12 @@ classdef WeatherDataAdapter < DataAdapter
         %%
         
         function obj = getDataObject(this,paths,varargin)
-            
+            profile on;
             %time in format: multiple-20140821-104913
             size_ = size(paths);
-            time = varargin{1};
-            timeList = {};
-            if ~strcmp('',time)
-                timeList = this.splitTime(time);
-            end
+            spectro = varargin{1};
+            inputManager = varargin{2};
+            
             for i=1:size_(2)              
                 idx = strfind(paths{1,i},'\');
                 
@@ -65,6 +63,20 @@ classdef WeatherDataAdapter < DataAdapter
                 catch e
                     errordlg(['Incorrect path was passed to the file reader. Error:',e.message]);
                 end
+                
+                timeList = {};
+                
+                if isfield(spectro,id_)
+                    time = spectro.(id_).time;
+                else
+                    time = '';
+                end
+                
+                if strcmp('',time)
+                     time = inputManager.dataManager.getHandler().getTime();
+                end
+                
+                timeList = this.splitTime(time);
                 
                 rawData = this.fileReader(paths{1,i});
                 rawData = strrep(rawData,'   ',' ');
@@ -115,7 +127,8 @@ classdef WeatherDataAdapter < DataAdapter
                 this.dobj = this.dobj.setObservation(this.tempMatrix,id_);
             end
             
-            obj = this.dobj;            
+            obj = this.dobj;
+            profile viewer;
         end
         
         function rawData = fileReader(this, path)
