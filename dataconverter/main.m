@@ -2,6 +2,11 @@ function main()
 %MAIN this is the starting point of the dataconverter program
 
 clear classes;
+
+global matrixColumns;
+
+[a,b,matrixColumns] = xlsread(Utilities.getpath('behavior_variables.xls'));
+
 handler = GUIHandler();
 % mnger = DataManager;
 % 

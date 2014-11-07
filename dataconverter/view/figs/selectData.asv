@@ -68,24 +68,21 @@ userdata.handler = handler;
 userdata.data = data;
 userdata.spectro =spectro;
 userdata.olfactory = olfactory;
-
+userdata.dp = handler.dataManager.getNrOfSpectroDP();
+set(hObject,'UserData',userdata);
+set(handles.okBtn,'UserData',false);
 
 %data = myTable(handles.figure1,data);
 
 if strcmp(id,'Spectro')
-    userdata.dp = handler.dataManager.getNrOfSpectroDP();
-    set(hObject,'UserData',userdata);
     setGraph(handles,spectro);
 elseif strcmp(id,'Olfactory')
-    userdata.dp = handler.getDataManager().getNrOfOlfactoryDP();
-    set(hObject,'UserData',userdata);
     setOlfGraph(handles,olfactory);
 end
 
-
-set(handles.okBtn,'UserData',false);
-
 setTable(handles,data);
+
+
 
 %set(handles.figure1,'UserData',data);
 % UIWAIT makes selectData wait for user response (see UIRESUME)
@@ -113,8 +110,7 @@ if get(handles.okBtn,'UserData')
     data = userdata.data;
     handler = userdata.handler;
 
-    handler.getDataManager().setNrOfSpectroDP(userdata.dp);
-    %handler.dataManager = handler.dataManager.setNrOfSpectroDP(userdata.dp); 
+    handler.dataManager = handler.dataManager.setNrOfSpectroDP(userdata.dp); 
 
     out_.data = data;
     out_.handler = handler;
@@ -270,7 +266,7 @@ toSend = data;
 
 userdata = get(handle,'UserData');
 handler = userdata.handler;
-dp = handler.getDataManager().getNrOfOlfactoryDP();
+dp = handler.dataManager.getNrOfSpectroDP();
 
 edit_ = uicontrol(handle,'Style','edit','Tag','sampleedit','String',dp,'Position',[20 240 40 20]);
 uicontrol(handle,'Style','text','String','Nr of datapoints used','Position',[65 240 110 20]);
@@ -279,8 +275,8 @@ if dp ~= 15000
     set(edit_,'Enable','off')
 end
 
-button = uicontrol(handle,'Style','pushbutton','Position',[20 190 100 20],'String','Interpolate','Callback',{@downSampleOlf,toSend,t,handle});
-
+button = uicontrol(handle,'Style','pushbutton','Position',[20 190 100 20],'String','Interpolate','Callback',{@downSample,toSend,t,handle});
+disp(get(button,'Position'));
 end
 
 function downSample(varargin)
@@ -321,11 +317,6 @@ function downSample(varargin)
     end
     
     userdata = get(hfig,'UserData');
-    
-    handler = userdata.handler;
-
-    handler.dataManager = handler.dataManager.setNrOfSpectroDP(userdata.dp); 
-    userdata.handler = handler;
     userdata.dp = dbrate;
     
     set(hfig,'UserData',userdata);
@@ -352,22 +343,20 @@ function downSampleOlf(varargin)
         dbrate = str2double(rate);
         xnew = linspace(1,70,dbrate);
         
-        y = interp1(x,y,xnew);
-        
+        y1 = interp1(x1,y1,x1new);
+        y2 = interp1(x2,y2,x2new);
+
         hold off
-        plot(t,x,[data.y],'b');
+        plot(t,x1,[data.obs1.y],'b');
 
         hold on
-        plot(t,xnew,y,'r');
-        
+        plot(t,x2,[data.obs2.y],'g');
+        plot(t,x1new,y1,'r');
+        plot(t,x2new,y2,'y');
+    
     end
     
     userdata = get(hfig,'UserData');
-    handler = userdata.handler;
-
-    handler.getDataManager().setNrOfOlfactoryDP(dbrate); 
-    %handler.dataManager = handler.dataManager.setNrOfOlfactoryDP(dbrate); 
-    userdata.handler = handler;
     userdata.dp = dbrate;
     
     set(hfig,'UserData',userdata);

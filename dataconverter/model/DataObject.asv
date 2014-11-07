@@ -13,8 +13,8 @@ classdef DataObject < handle
         function this = DataObject()
             this.xlsMatrix = {'Flower','ID','Date','temperature(c)','Humidity','Pressure','wind speed (m/s)','direction(degrees)','Temperature(c)','lux1','lux2','Comment'};
             global matrixColumns;
-            %[a,b,tempMat] = xlsread(Utilities.getpath('behavior_variables'));
-            this.xlsMatrix = [this.xlsMatrix,matrixColumns];
+            [a,b,tempMat] = xlsread(Utilities.getpath('behavior_variables'));
+            this.xlsMatrix = [this.xlsMatrix,tempMat];
             
             this.spectroData = struct;
             this.olfactoryData = struct;

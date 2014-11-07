@@ -3,7 +3,6 @@ classdef OlfactoryFilter < Filter
     %   Detailed explanation goes here
     
     properties
-        filtered;
     end
     
     methods (Access = public)
@@ -27,7 +26,6 @@ classdef OlfactoryFilter < Filter
             x = [tempStruct.x];
             y = [tempStruct.y];
 
-            xnew = round(linspace(380,600,dsrate));
             xnew = round(linspace(380,600,dsrate));
             
             y = interp1(x,y,xnew);

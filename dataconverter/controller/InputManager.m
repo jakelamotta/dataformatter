@@ -28,7 +28,7 @@ classdef InputManager < handle
         function obj = getDataObject(this,adapterId,paths,inObj)
             adapter = this.adapterFactory.createAdapter(adapterId);
             if ischar(adapter)
-                errordlg('The data adapter could not be created');
+                errordlg('The data adapter could not be created, the adapterfactory did not return a valid object');
             else
                 tic;
                 if strcmp(adapterId,'Weather')

@@ -10,6 +10,7 @@ classdef DataManager < handle
         unfilteredObj;
         filterFactory;
         spectroDP;
+        olfactoryDP;
         handler;
     end
     
@@ -23,9 +24,10 @@ classdef DataManager < handle
             this.unfilteredObj = DataObject();
             this.dataObject = DataObject();
             
-            %Initializes to 300, once its set after this its final to not
+            %Initializes to 300 and 15000 respectively, once its set after this its final to not
             %create inconcistensies between observations
             this.spectroDP = 300;
+            this.olfactoryDP = 15000;
         end
         
         function handler = getHandler(this)
@@ -34,6 +36,16 @@ classdef DataManager < handle
         
         function dp = getNrOfSpectroDP(this)
             dp = this.spectroDP;
+        end
+        
+        function dp = getNrOfOlfactoryDP(this)
+            dp = this.olfactoryDP;
+        end
+        
+        function this = setNrOfOlfactoryDP(this,dp)
+           if this.olfactoryDP == 15000
+               this.olfactoryDP = dp;
+           end
         end
         
         function this = setNrOfSpectroDP(this,dp)
@@ -61,7 +73,7 @@ classdef DataManager < handle
             current = current.setMatrix(newMat);
             id_ = current.getObjectID();
             current = current.setSpectroData(temp.getSpectroData());
-            
+            current = current.setOlfactory(temp.getOlfactoryData());
             this = this.setUnfObject(current);
         end
         
