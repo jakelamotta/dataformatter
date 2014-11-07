@@ -63,21 +63,6 @@ classdef SpectroFilter < Filter
             
             this.filtered.setSpectroData(newListOfStructs);
             
-%             matrix = filtered.getMatrix();
-%             
-%             len_ = length(x1new);
-%             
-%             for i=1:len_
-%                 matrix{1,end+1} = x1new(i);
-%                 matrix{2,end+1} = y1(i);
-%             end
-%             
-%             for i=1:len_
-%                 matrix{1,end+1} =  x2new(i);
-%                 matrix{2,end+1} = y2(i);
-%             end
-%             
-%             filtered = filtered.setMatrix(matrix);
         end
         
         

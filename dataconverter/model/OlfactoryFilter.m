@@ -19,22 +19,77 @@ classdef OlfactoryFilter < Filter
     
     methods (Access = private)
         
-        
         function this = downSample(this,dsrate)
-            tempStruct = this.filtered.getOlfactoryData();
             
-            x = [tempStruct.x];
-            y = [tempStruct.y];
+            listOfStructs = this.filtered.getOlfactoryData();
+            fnames = fieldnames(listOfStructs);
+            numFnames = length(fnames);
+            
+            newListOfStructs = struct;
+            
+            for i=1:numFnames
+            
+            
+                tempStruct = listOfStructs.(fnames{i});
 
-            xnew = round(linspace(380,600,dsrate));
+
+                x = [tempStruct.x];
+                y = [tempStruct.y];
+
+                xnew = round(linspace(0,60,dsrate));
+                
+                y = interp1(x,y,xnew);
+                
+                tempStruct.x = xnew;
+                tempStruct.y = y;
+                
+                newListOfStructs.(fnames{i}) = tempStruct;
+            end
             
-            y = interp1(x,y,xnew);
-            
-            tempStruct.x = xnew;
-            tempStruct.y = y;
-            
-            this.filtered.setOlfactory(tempStruct);
+            this.filtered.setOlfactory(newListOfStructs);
+            this.addOlfactoryPoints();
         end
+        
+        function this = addOlfactoryPoints(this)
+            
+            listOfolfactory = this.filtered.getOlfactoryData();
+            fnames = fieldnames(listOfolfactory);
+            numOfFnames = length(fnames);
+            newMatrix = {};
+            
+            for j=1:numOfFnames 
+                
+                olf = listOfolfactory.(fnames{j});
+                
+                x = [olf.x];
+                y = [olf.y];
+
+                width = size(x);
+
+                tempMatrix = this.filtered.getRowFromID(olf.id);
+                this.filtered.deleteRowFromID(olf.id);
+                %tempMatrix = this.filtered.getMatrix();
+                s = size(tempMatrix);
+
+                height = s(1);
+
+                spectroMatrix = cell(height,width(2)*2);
+
+                for i=1:width(2)
+                    spectroMatrix{1,i} = x(i);
+                    spectroMatrix{2,i} = y(i);
+                    spectroMatrix{1,i+width(2)} = x2(i);
+                    spectroMatrix{2,i+width(2)} = y2(i);
+                end
+
+                tempMatrix = [tempMatrix,spectroMatrix];
+                newMatrix = [newMatrix;tempMatrix];
+            end
+            [newMatrix,oldMat] = Utilities.padMatrix(newMatrix,this.filtered.getMatrix());
+            finalMatrix = [oldMat;newMatrix(2:end,:)];
+            this.filtered = this.filtered.setMatrix(finalMatrix);            
+        end
+        
     end
     
 end

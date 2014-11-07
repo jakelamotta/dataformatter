@@ -26,13 +26,14 @@ classdef OlfactoryDataAdapter < DataAdapter
                 end
                 
                 rawData = this.fileReader(paths{1,i});
-                rawData = rawData(:,1:3);
                 
                 x = transpose(rawData(:,1));
-                y = transpose(rawData(:,3));
+                y = transpose(rawData(:,2));
                 
                 tempStruct = struct;
-                [tempStruct.x,tempStruct.y] = this.countSort(x,y);
+                tempStruct.x = x;
+                tempStruct.y = y;
+                
                 this.dobj.addOlfactoryData(tempStruct,id_);
                 this.dobj.setID(id_);
             end
