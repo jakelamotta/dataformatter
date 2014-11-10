@@ -15,8 +15,6 @@ classdef SpectroFilter < Filter
                 
                 case 'nofilter'
                     
-                    
-                    
                 case 'average'                    
                     this.filtered = filter@Filter(this,unfiltered,7,9);
             end

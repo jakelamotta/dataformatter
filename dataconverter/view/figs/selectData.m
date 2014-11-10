@@ -82,6 +82,7 @@ elseif strcmp(id,'Olfactory')
     setOlfGraph(handles,olfactory);
 end
 
+set(hObject,'UserData',userdata);
 
 set(handles.okBtn,'UserData',false);
 
@@ -113,8 +114,10 @@ if get(handles.okBtn,'UserData')
     data = userdata.data;
     handler = userdata.handler;
 
-    handler.getDataManager().setNrOfSpectroDP(userdata.dp);
-    %handler.dataManager = handler.dataManager.setNrOfSpectroDP(userdata.dp); 
+    if isfield(userdata,'dp')
+        handler.getDataManager().setNrOfSpectroDP(userdata.dp);
+    end
+    %handler.dataManager = handler.dataManager.setNrOfSpectroDP(userdata.dp);
 
     out_.data = data;
     out_.handler = handler;
@@ -124,9 +127,6 @@ else
 end
 
 handler = get(hObject,'UserData');
-
-
-
 
 out_.type = type;
 

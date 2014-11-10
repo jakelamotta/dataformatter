@@ -66,23 +66,21 @@ classdef OlfactoryFilter < Filter
 
                 width = size(x);
 
-                tempMatrix = this.filtered.getRowFromID(olf.id);
-                this.filtered.deleteRowFromID(olf.id);
+                tempMatrix = this.filtered.getRowFromID(fnames{j});
+                this.filtered.deleteRowFromID(fnames{j});
                 %tempMatrix = this.filtered.getMatrix();
                 s = size(tempMatrix);
 
                 height = s(1);
 
-                spectroMatrix = cell(height,width(2)*2);
+                olfMatrix = cell(height,width(2));
 
                 for i=1:width(2)
-                    spectroMatrix{1,i} = x(i);
-                    spectroMatrix{2,i} = y(i);
-                    spectroMatrix{1,i+width(2)} = x2(i);
-                    spectroMatrix{2,i+width(2)} = y2(i);
+                    olfMatrix{1,i} = x(i);
+                    olfMatrix{2,i} = y(i);
                 end
 
-                tempMatrix = [tempMatrix,spectroMatrix];
+                tempMatrix = [tempMatrix,olfMatrix];
                 newMatrix = [newMatrix;tempMatrix];
             end
             [newMatrix,oldMat] = Utilities.padMatrix(newMatrix,this.filtered.getMatrix());

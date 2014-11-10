@@ -62,7 +62,7 @@ classdef DataObject < handle
             for i=2:height
                for j=1:width
                    if strcmp(this.xlsMatrix{1,j},'ID') 
-                       if strcmp(this.xlsMatrix{i,j},id)
+                       if strcmp(strrep(this.xlsMatrix{i,j},'.',''),id)
                            row = [this.xlsMatrix(1,:);this.xlsMatrix(i,:)];
                            break;
                        end
@@ -76,7 +76,7 @@ classdef DataObject < handle
             height = this.getNumRows();
             rowNr = -1;
             for i=2:height
-                if strcmp(id,mat{i,2})
+                if strcmp(id,strrep(mat{i,2},'.',''))
                     rowNr = i;
                     break;
                 end
