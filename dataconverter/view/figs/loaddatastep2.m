@@ -254,28 +254,48 @@ function updateSource(handles,type)
         [fname,pname,~] = uigetfile('MultiSelect','on','*.*');
     end
     
-    if ischar(fname)
-        source = [pname,fname];
+    if isfield(tempStruct,type)
+        source = tempStruct.(type);
+        numFieldNames = fieldnames(source);
+        numFieldNames = size(numFieldNames);
+        numFieldNames = numFieldNames(1);
+    
     else
         source = struct;
-        
-            size_ = size(fname);
-            for i=1:size_(2)
-                temp = fname{1,i};
-                source.(['path',num2str(i)]) = [pname,temp];
-            end
+        numFieldNames = 0;
+    end
+    
+    
+    if ischar(fname)
+        source.(['pat',num2str(numFieldNames+1)]) = [pname,fname];
+    else
+        size_ = size(fname);
             
-            %fname = fname{1,1};
+        for i=1:size_(2)
+            temp = fname{1,i};
+            source.(['path',num2str(i+numFieldNames)]) = [pname,temp];
+        end
     end
     
     tempStruct.(type) = source;
     set(handles.output,'UserData',tempStruct);
     
+    fieldNames = fieldnames(source);
+    numFieldNames = size(fieldNames);
+    numFieldNames = numFieldNames(1);   
+    
+    fname = cell(numFieldNames,1);
+    
+    for i=1:numFieldNames
+        name = source.(fieldNames{i,1});
+        fname{i,1} = ['...',name(end-14:end)];
+    end
+        
     switch type
         case 'Behaviour'
             set(handles.behaveText,'String',fname);
         case 'Spectro'
-            set(handles.spectroText,'String',fname);
+            set(handles.spectroText,'String',['...',pname(end-15:end)]);
         case 'Weather'
             set(handles.weatherText,'String',fname);
         case 'Image'
@@ -285,7 +305,6 @@ function updateSource(handles,type)
         case 'Olfactory'
             set(handles.olfText,'String',fname);
     end
-
 
 % --- Executes when user attempts to close figure1.
 function figure1_CloseRequestFcn(hObject, eventdata, handles)

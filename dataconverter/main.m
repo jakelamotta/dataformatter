@@ -4,7 +4,9 @@ function main()
 clear classes;
 
 global matrixColumns;
+global colors;
 
+colors = {'black','blue','yellow','green'};
 [a,b,matrixColumns] = xlsread(Utilities.getpath('behavior_variables.xls'));
 
 handler = GUIHandler();

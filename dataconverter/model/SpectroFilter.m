@@ -82,8 +82,8 @@ classdef SpectroFilter < Filter
 
                 width = size(x1);
 
-                tempMatrix = this.filtered.getRowFromID(spectro.id);
-                this.filtered.deleteRowFromID(spectro.id);
+                tempMatrix = this.filtered.getRowFromID(fnames{j});
+                this.filtered.deleteRowFromID(fnames{j});
                 %tempMatrix = this.filtered.getMatrix();
                 s = size(tempMatrix);
 
@@ -99,8 +99,15 @@ classdef SpectroFilter < Filter
                 end
 
                 tempMatrix = [tempMatrix,spectroMatrix];
-                newMatrix = [newMatrix;tempMatrix];
+                
+                %%Keep the row with columns only for the first row.
+                if j==1
+                    newMatrix = [newMatrix;tempMatrix];
+                else
+                    newMatrix = [newMatrix;tempMatrix(2:end,:)];
+                end
             end
+            
             [newMatrix,oldMat] = Utilities.padMatrix(newMatrix,this.filtered.getMatrix());
             finalMatrix = [oldMat;newMatrix(2:end,:)];
             this.filtered = this.filtered.setMatrix(finalMatrix);

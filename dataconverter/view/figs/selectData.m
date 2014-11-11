@@ -22,7 +22,7 @@ function varargout = selectData(varargin)
 
 % Edit the above text to modify the response to help selectData
 
-% Last Modified by GUIDE v2.5 13-Oct-2014 11:33:50
+% Last Modified by GUIDE v2.5 11-Nov-2014 12:17:58
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -218,15 +218,15 @@ handle = h.figure1;
 
 fnames = fieldnames(data);
 numFnames = length(fnames);
-
+global colors;
+t = axes('Position',[.15 .25, .8 .25]);
+    
 for i=1:numFnames
     
     name = fnames{i};
-    
-    t = axes('Position',[.15 .25, .8 .25]);
-    plot(t,[data.(name).obs1.x],[data.(name).obs1.y],'blue');
+    plot(t,[data.(name).obs1.x],[data.(name).obs1.y],colors{1,mod(i,length(colors))+1});
     hold on;
-    plot(t,[data.(name).obs2.x],[data.(name).obs2.y],'green');
+    plot(t,[data.(name).obs2.x],[data.(name).obs2.y],colors{1,mod(i,length(colors))+1});
 end
 
 %t = axes(handle,'Data',data);
@@ -311,14 +311,13 @@ function downSample(varargin)
         y2 = interp1(x2,y2,x2new);
 
         hold off
-        plot(t,x1,[data.obs1.y],'b');
+        plot(t,x1,[data.obs1.y],'r');
 
         hold on
-        plot(t,x2,[data.obs2.y],'g');
+        plot(t,x2,[data.obs2.y],'r');
         plot(t,x1new,y1,'r');
         plot(t,x2new,y2,'y');
-    
-    end
+     end
     
     userdata = get(hfig,'UserData');
     
@@ -338,8 +337,7 @@ function downSampleOlf(varargin)
     numFnames = length(fnames);
     hfig = varargin{5};
         
-    for i=1:numFnames
-        
+    for i=1:numFnames        
         data = inData.(fnames{i});
         
         x = [data.x];
@@ -350,16 +348,15 @@ function downSampleOlf(varargin)
         rate = get(h,'String');
 
         dbrate = str2double(rate);
-        xnew = linspace(1,70,dbrate);
+        xnew = linspace(min(x),max(x),dbrate);
         
-        y = interp1(x,y,xnew);
+        y = interp1(x,y,xnew,'cubic');
         
         hold off
         plot(t,x,[data.y],'b');
 
         hold on
-        plot(t,xnew,y,'r');
-        
+        plot(t,xnew,y,'r');        
     end
     
     userdata = get(hfig,'UserData');
