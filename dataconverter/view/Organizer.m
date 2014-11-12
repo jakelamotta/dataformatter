@@ -27,7 +27,8 @@ classdef Organizer
                 if isstruct(out2)
                     if isstruct(out_)
                         this.sources = out2.sources;
-                        this.target = [out_.target,out2.id,'\'];
+                        this.target = out2.target;
+                        %this.target = [out2.target,'\'];
                     end
                 end
             end

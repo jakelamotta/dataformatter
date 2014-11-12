@@ -63,8 +63,11 @@ classdef GUIHandler
             
             this.organizer = this.organizer.launchGUI();
             
-            if ~strcmp(this.organizer.target,'')
-                success = this.inputManager.organize(this.organizer.sources,this.organizer.target);
+            if iscell(this.organizer.target)
+                size_ = size(this.organizer.target);
+                for i=1:size_(2)
+                    success = this.inputManager.organize(this.organizer.sources,this.organizer.target{1,i});
+                end
             end
         end
         

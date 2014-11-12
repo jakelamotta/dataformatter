@@ -64,24 +64,14 @@ else
     tempStruct = struct;
 end
 
-str_ = varargin{2};
-idx = strfind(str_,'\');
-sub1 = str_(idx(1)+1:idx(1)+3);
-sub2 = str_(idx(2)+1:idx(2)+1);
-sub3 = str_(1:idx(1)-1);
-
 if exist('config.mat','file')
     load('config.mat');
     if ~isfield(config,'id')
         config.id = 1;
     end
-    
-      
 else
     config = struct;
     config.id = 1;
-    
-    
     save('config.mat','config');
 end
 
@@ -92,12 +82,10 @@ if ~isfield(config,'weatherPath')
     path_ = inputManager.getPaths();
     
     if ~isempty(path_)
+        
         config.weatherPath = path_;
-        
         set(handles.weatherText,'String',path_);
-        
         source = struct;
-        
         size_ = size(path_);
         
         for i=1:size_(2)
@@ -109,19 +97,30 @@ if ~isfield(config,'weatherPath')
     end
 end
 
-id_ = config.id;
-sub4 = num2str(id_);
+strings = varargin{2};
 
-%while length(sub4) < 3
-%    sub4 = ['0',sub4];
-%end
+nrOfTargets = size(strings);
 
-sub4 = Utilities.padString(sub4,'0',3);
+for i=1:nrOfTargets(2)
+    str_ = strings{1,i};
+    idx = strfind(str_,'\');
+    sub1 = str_(idx(1)+1:idx(1)+3);
+    sub2 = str_(idx(2)+1:idx(2)+1);
+    sub3 = str_(1:idx(1)-1);
+    
+    id_ = config.id+i-1;
+    sub4 = num2str(id_);
 
-str_ = [sub1,'_',sub2,sub3,'.',sub4];
-str_ = strrep(str_,'\','');
-set(handles.edit1,'String',str_);
+    sub4 = Utilities.padString(sub4,'0',3);
 
+    str_ = [sub1,'_',sub2,sub3,'.',sub4];
+    str_ = strrep(str_,'\','');
+    
+    strings{1,i} = [strings{1,i},str_,'\'];
+end
+
+set(handles.edit1,'String',strings{1,1});
+tempStruct.targets = strings;
 set(handles.output,'UserData',tempStruct);
 
 
@@ -141,11 +140,12 @@ function varargout = loaddatastep2_OutputFcn(hObject, eventdata, handles)
 %varargout{1} = handles.output;
 if get(handles.okBtn,'UserData') 
     
-    varargout{1}.sources = get(handles.output,'UserData');
-    id_ = get(handles.edit1,'String');
-
-    varargout{1}.sources = get(handles.output,'UserData');
-    varargout{1}.id = id_;
+    data = get(handles.output,'UserData');
+    varargout{1}.target = data.targets;
+    data = rmfield(data,'targets');
+    varargout{1}.sources = data;
+    %varargout{1}.sources = get(handles.output,'UserData');
+    
 else
     varargout = cell(1,1);
 end

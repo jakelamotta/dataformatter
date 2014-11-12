@@ -12,7 +12,7 @@ classdef WeatherDataAdapter < DataAdapter
         %%
         function this = WeatherDataAdapter()
             this.dobj = DataObject();
-            this.tempMatrix = {'wind speed (m/s)','direction(degrees)','Temperature(c)'};
+            this.tempMatrix = {'time','wind speed (m/s)','direction(degrees)','Temperature(c)'};
         end
         
         %%
