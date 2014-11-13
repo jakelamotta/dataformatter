@@ -3,7 +3,6 @@ classdef AbioticDataAdapter < DataAdapter
     %   Detailed explanation goes here
     
     properties
-        dobj;
         tempMatrix;
     end
     
@@ -13,7 +12,7 @@ classdef AbioticDataAdapter < DataAdapter
             this.dobj = DataObject();
             this.tempMatrix = {'Date','Pressure','temperature(c)','Humidity'};
         end
-        
+%         
         function obj = getDataObject(this,paths)
             
             s = size(paths);

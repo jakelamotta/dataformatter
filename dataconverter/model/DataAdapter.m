@@ -1,6 +1,13 @@
 classdef DataAdapter
-    %ABSTRACTDATAADAPTER Summary of this class goes here
-    %   Detailed explanation goes here
+    %The DATAADAPTER class is a superclass to the different kinds of 
+    %dataadapters, one for each data type. Provides the subclasses with a
+    %method for reading files. The adapters are an fits the input data into
+    %the DataObject interface so that all data types can be represented
+    %with the same type of object. 
+    
+    properties
+       dobj; 
+    end
     
     methods (Abstract)
         obj = getDataObject(this,paths)

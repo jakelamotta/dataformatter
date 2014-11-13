@@ -216,6 +216,7 @@ function posRdbtn_Callback(hObject, eventdata, handles)
 % Hint: get(hObject,'Value') returns toggle state of posRdbtn
     set(handles.negRdbtn,'value',~get(hObject,'value'));
     set(handles.popupmenu2,'enable','on');
+    set(handles.popupmenu6,'enable','on');
     
 % --- Executes on button press in negRdbtn.
 function negRdbtn_Callback(hObject, eventdata, handles)
@@ -226,6 +227,7 @@ function negRdbtn_Callback(hObject, eventdata, handles)
 % Hint: get(hObject,'Value') returns toggle state of negRdbtn
     set(handles.posRdbtn,'value',~get(hObject,'value'));
     set(handles.popupmenu2,'enable','off');
+    set(handles.popupmenu6,'enable','off');
 
 function editID_Callback(hObject, eventdata, handles)
 % hObject    handle to editID (see GCBO)

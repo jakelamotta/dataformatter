@@ -10,16 +10,17 @@ classdef SpectroFilter < Filter
         function filtered = filter(this,unfiltered,type,varargin)
             dsrate = varargin{1};
             this.filtered = unfiltered;
+            this = this.downSample(dsrate);
+            this = this.addSpectrumPoints();
             
             switch type
                 
                 case 'nofilter'
                     
                 case 'average'                    
-                    this.filtered = filter@Filter(this,unfiltered,7,9);
+                    this.filtered = filter@Filter(this,this.filtered,10,this.filtered.getWidth());
             end
-            this = this.downSample(dsrate);
-            this = this.addSpectrumPoints();
+            
             filtered = this.filtered;
         end
     end
@@ -36,26 +37,28 @@ classdef SpectroFilter < Filter
             
             for i=1:numFnames
             
-            
-                tempStruct = listOfStructs.(fnames{i});
-
-
-                x1 = [tempStruct.obs1.x];
-                y1 = [tempStruct.obs1.y];
-                x2 = [tempStruct.obs2.x];
-                y2 = [tempStruct.obs2.y];
-
-                x1new = round(linspace(380,600,dsrate));
-                x2new = round(linspace(380,600,dsrate));
-
-                y1 = interp1(x1,y1,x1new);
-                y2 = interp1(x2,y2,x2new);
-
-                tempStruct.obs1.x = x1new;
-                tempStruct.obs1.y = y1;
-                tempStruct.obs2.x = x2new;
-                tempStruct.obs2.y = y2;
                 
+                tempStruct = listOfStructs.(fnames{i});
+                
+                numData = size(tempStruct);
+                for measurement=1:numData
+                    
+                    x1 = [tempStruct(measurement).obs1.x];
+                    y1 = [tempStruct(measurement).obs1.y];
+                    x2 = [tempStruct(measurement).obs2.x];
+                    y2 = [tempStruct(measurement).obs2.y];
+
+                    x1new = round(linspace(380,600,dsrate));
+                    x2new = round(linspace(380,600,dsrate));
+
+                    y1 = interp1(x1,y1,x1new);
+                    y2 = interp1(x2,y2,x2new);
+
+                    tempStruct(measurement).obs1.x = x1new;
+                    tempStruct(measurement).obs1.y = y1;
+                    tempStruct(measurement).obs2.x = x2new;
+                    tempStruct(measurement).obs2.y = y2;
+                end
                 newListOfStructs.(fnames{i}) = tempStruct;
             end
             
@@ -74,6 +77,8 @@ classdef SpectroFilter < Filter
             for j=1:numOfFnames 
                 
                 spectro = listOfspectro.(fnames{j});
+                
+                numberOfData = size(spectro);
                 
                 x1 = [spectro.obs1.x];
                 y1 = [spectro.obs1.y];

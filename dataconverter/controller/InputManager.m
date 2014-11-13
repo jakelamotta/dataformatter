@@ -1,8 +1,7 @@
 classdef InputManager < handle
-    %INPUTMANAGER Summary of this class goes here
-    %   Detailed explanation goes here
+    %INPUTMANAGER class deals with input and some organzing of data
     
-    properties
+    properties (Access = private)
         adapterFactory;
         dataObject;
         objList;
@@ -12,6 +11,7 @@ classdef InputManager < handle
     
     methods (Access = public)
         
+        %%Default constructor, can take an instance of a DataManager as an argument
         function this = InputManager(varargin)
             this.adapterFactory = AdapterFactory();
             this.paths = {};
@@ -21,12 +21,12 @@ classdef InputManager < handle
             end
         end
         
-        function this = setDataManager(this,dm)
-            this.dataManager = dm;
-        end
-        
+        %%Function that creates a dataadapter and retrieves an object
+        %%accordingly. The adapterId is the type of adapter to be created
         function obj = getDataObject(this,adapterId,paths,inObj)
+            
             adapter = this.adapterFactory.createAdapter(adapterId);
+            
             if ischar(adapter)
                 errordlg('The data adapter could not be created, the adapterfactory did not return a valid object');
             else
@@ -41,13 +41,11 @@ classdef InputManager < handle
             end
         end        
         
+        %%Takes a path as an input and finds all folders of the input type
+        %%that are located in a subfolder of the input path
         function this = splitPaths(this,p,type)
             this.paths = {};
             this = this.recSearch(p,type);         
-        end
-        
-        function ps = getPaths(this)
-            ps = this.paths;
         end
         
         function success = organize(this,sources,target)
@@ -65,14 +63,30 @@ classdef InputManager < handle
                     end
                 else
                    success = success & this.saveToDir(sources.(type),[target,type]);
-                end    
+                end
             end
             
+        end
+        
+        %%
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        %%%%%%%%%%%%%%%%%%%%%GETTERS AND SETTERS%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        
+        function this = setDataManager(this,dm)
+            this.dataManager = dm;
+        end
+        
+        function ps = getPaths(this)
+            ps = this.paths;
         end
     end
     
     methods (Access = private)
         
+        %%A recursive folder search function, takes a path to a folder as
+        %%an input and search for all occurences of the "type" in the
+        %%subfolders
         function this = recSearch(this,path,type)
             
             if strcmp(type,'Spectro')
@@ -98,15 +112,21 @@ classdef InputManager < handle
             end
         end
         
+        %%This is the function that copies files from one location to
+        %another location.
+        %Input: - sourcePath: the path to what is to be copied as a string
+        %       - targetPath: the relative path to the target folder 
         function success = saveToDir(this,sourcePath, targetPath)
             success = true;
             
             path = Utilities.getpath(targetPath);
+            
             if ~exist(path,'dir')
                 [s,a,b] = mkdir(path);
             else
                 s = true;
             end
+            
             success = s & success;
             
             if isdir(sourcePath)
@@ -114,6 +134,7 @@ classdef InputManager < handle
                 index = indices(end);
                 path = [path,'\',sourcePath(index+1:end)];                
             end
+            
             copyfile(sourcePath,path);
         end
     end    

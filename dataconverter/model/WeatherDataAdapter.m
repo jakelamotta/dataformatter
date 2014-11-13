@@ -3,7 +3,6 @@ classdef WeatherDataAdapter < DataAdapter
     %   Detailed explanation goes here
     
     properties (Access = private)
-        dobj;
         tempMatrix;
     end
     
@@ -12,7 +11,7 @@ classdef WeatherDataAdapter < DataAdapter
         %%
         function this = WeatherDataAdapter()
             this.dobj = DataObject();
-            this.tempMatrix = {'time','wind speed (m/s)','direction(degrees)','Temperature(c)'};
+            this.tempMatrix = {'weatherTime','wind speed (m/s)','direction(degrees)','Temperature(c)'};
         end
         
         %%
@@ -64,10 +63,10 @@ classdef WeatherDataAdapter < DataAdapter
                     errordlg(['Incorrect path was passed to the file reader. Error:',e.message]);
                 end
                 
-                timeList = {};
+                %timeList = {};
                 
-                if isfield(spectro,id_)
-                    time = spectro.(id_).time;
+                if isfield(spectro,strrep(id_,'.',''))
+                    time = spectro.(strrep(id_,'.','')).time;
                 else
                     time = '';
                 end
@@ -113,11 +112,17 @@ classdef WeatherDataAdapter < DataAdapter
                     
                         if this.compareTime(timeList,t_temp)
                             %disp(t_temp);
-                            this.tempMatrix = [this.tempMatrix;temp{1,j}(6:8)];
+                            weatherDate = temp{1,j}(1:5);
+                            weatherDate = ['/',weatherDate{1},'-',weatherDate{2},'-',weatherDate{3},'-',weatherDate{4},'-',weatherDate{5}];
+                            temp{1,j}(5) = {weatherDate};
+                            this.tempMatrix = [this.tempMatrix;temp{1,j}(5:8)];
                             break;
                         end
                     else
-                        this.tempMatrix = [this.tempMatrix;temp{1,j}(6:8)];
+                        weatherDate = temp{1,j}(1:5);
+                        weatherDate = ['/',weatherDate{1},'-',weatherDate{2},'-',weatherDate{3},'-',weatherDate{4},'-',weatherDate{5}];
+                        temp{1,j}(5) = {weatherDate};
+                        this.tempMatrix = [this.tempMatrix;temp{1,j}(5:8)];
                     end
                     
                     s = size(this.tempMatrix);
@@ -139,8 +144,6 @@ classdef WeatherDataAdapter < DataAdapter
     
     methods (Access = private)
         
-        
-        
         function temp = createDob(this, inRow)            
             row = regexp(inRow,' ','split');
             temp = row;
@@ -150,8 +153,6 @@ classdef WeatherDataAdapter < DataAdapter
         function this = addObject(this)
             size_ = size(this.objList);            
             this.objList{1,size_(2)+1} = this.dobj;        
-        end
-        
-                
+        end     
     end    
 end

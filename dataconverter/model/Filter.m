@@ -1,9 +1,9 @@
 classdef Filter
-    %ABSTRACTFILTER Summary of this class goes here
+    %FILTER Summary of this class goes here
     %   Detailed explanation goes here
     
     properties
-        filtered;
+        filered;
     end
     
     methods (Access = public)

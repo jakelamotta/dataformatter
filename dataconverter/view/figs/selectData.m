@@ -220,14 +220,28 @@ fnames = fieldnames(data);
 numFnames = length(fnames);
 global colors;
 t = axes('Position',[.15 .25, .8 .25]);
-    
+
+legendList = cell(1,numFnames*2);
+
 for i=1:numFnames
     
     name = fnames{i};
-    plot(t,[data.(name).obs1.x],[data.(name).obs1.y],colors{1,mod(i,length(colors))+1});
-    hold on;
-    plot(t,[data.(name).obs2.x],[data.(name).obs2.y],colors{1,mod(i,length(colors))+1});
+    
+    nrOfData = length(data.(name));
+    
+    legendList = [legendList,cell(1,2*(nrOfData-1))];
+    
+    for j=1:nrOfData
+        plot(t,[data.(name)(j).obs1.x],[data.(name)(j).obs1.y],colors{1,mod(i,length(colors))+1});
+
+        hold on;
+        plot(t,[data.(name)(j).obs2.x],[data.(name)(j).obs2.y],colors{1,mod(i,length(colors))+1});
+        legendList{2*j-1} = fnames{i};
+        legendList{2*j} = [fnames{i},'up'];
+    end
 end
+
+legend(legendList);
 
 %t = axes(handle,'Data',data);
 
@@ -255,15 +269,18 @@ handle = h.figure1;
 fnames = fieldnames(data);
 numFnames = length(fnames);
 
+global colors;
+
 for i=1:numFnames
     
     name = fnames{i};
     
     t = axes('Position',[.15 .25, .8 .25]);
-    plot(t,[data.(name).x],[data.(name).y],'blue');
+    plot(t,[data.(name).x],[data.(name).y],colors{1,mod(i,length(colors))+1});
     hold on;
 end
 
+legend(fnames);
 %t = axes(handle,'Data',data);
 
 toSend = data;

@@ -10,7 +10,13 @@ sout = struct;
 for i=1:s
    fname = fnames{i};
    
-   sout.(fname) = [a.(fname),b.(fname)];   
+   if isfield(a,fname) && isfield(b,fname)
+       sout.(fname) = [a.(fname),b.(fname)];
+   elseif isfield(a,fname) && ~isfield(b,fname)
+       sout.(fname) = a.(fname);
+   elseif ~isfield(a,fname) && isfield(b,fname)
+       sout.(fname) = b.(fname);
+   end
 end
 
 end

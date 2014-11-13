@@ -113,7 +113,7 @@ for i=1:nrOfTargets(2)
 
     sub4 = Utilities.padString(sub4,'0',3);
 
-    str_ = [sub1,'_',sub2,sub3,'.',sub4];
+    str_ = [sub1,'_',sub2,sub3,'_',sub4];
     str_ = strrep(str_,'\','');
     
     strings{1,i} = [strings{1,i},str_,'\'];

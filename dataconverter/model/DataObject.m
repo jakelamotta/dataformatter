@@ -11,7 +11,7 @@ classdef DataObject < handle
     methods (Access = public)
         
         function this = DataObject()
-            this.xlsMatrix = {'Flower','ID','Date','temperature(c)','Humidity','Pressure','wind speed (m/s)','direction(degrees)','Temperature(c)','lux1','lux2','Comment'};
+            this.xlsMatrix = {'Flower','ID','Date','temperature(c)','Humidity','Pressure','weatherTime','wind speed (m/s)','direction(degrees)','Temperature(c)','lux1','lux2','Comment'};
             global matrixColumns;
             %[a,b,tempMat] = xlsread(Utilities.getpath('behavior_variables'));
             this.xlsMatrix = [this.xlsMatrix,matrixColumns];
@@ -27,9 +27,12 @@ classdef DataObject < handle
         end
         
         function this = addSpectroData(this,inStruct,id_)
-            if ~isfield(this.spectroData,id_)
+            if ~isfield(this.spectroData,strrep(id_,'.',''))
                 id_ = strrep(id_,'.','');
-                this.spectroData.(id_) = inStruct;            
+                this.spectroData.(id_) = inStruct;     
+            else
+                id_ = strrep(id_,'.','');
+                this.spectroData.(id_)(end+1) = inStruct;
             end
         end
         
@@ -62,7 +65,7 @@ classdef DataObject < handle
             for i=2:height
                for j=1:width
                    if strcmp(this.xlsMatrix{1,j},'ID') 
-                       if strcmp(strrep(this.xlsMatrix{i,j},'.',''),id)
+                       if strcmp(strrep(this.xlsMatrix{i,j},'.',''),strrep(id,'.',''))
                            row = [this.xlsMatrix(1,:);this.xlsMatrix(i,:)];
                            break;
                        end
@@ -76,7 +79,7 @@ classdef DataObject < handle
             height = this.getNumRows();
             rowNr = -1;
             for i=2:height
-                if strcmp(id,strrep(mat{i,2},'.',''))
+                if strcmp(strrep(id,'.',''),strrep(mat{i,2},'.',''))
                     rowNr = i;
                     break;
                 end
