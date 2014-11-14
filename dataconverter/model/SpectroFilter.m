@@ -3,6 +3,7 @@ classdef SpectroFilter < Filter
     %   Detailed explanation goes here
     
     properties
+        
     end
     
     methods (Access = public)

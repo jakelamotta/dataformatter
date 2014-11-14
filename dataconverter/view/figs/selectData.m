@@ -223,6 +223,8 @@ t = axes('Position',[.15 .25, .8 .25]);
 
 legendList = cell(1,numFnames*2);
 
+index = 1;
+
 for i=1:numFnames
     
     name = fnames{i};
@@ -236,8 +238,10 @@ for i=1:numFnames
 
         hold on;
         plot(t,[data.(name)(j).obs2.x],[data.(name)(j).obs2.y],colors{1,mod(i,length(colors))+1});
-        legendList{2*j-1} = fnames{i};
-        legendList{2*j} = [fnames{i},'up'];
+        legendList{index} = fnames{i};
+        legendList{index+1} = [fnames{i},'up'];
+        
+        index = index + 2;
     end
 end
 

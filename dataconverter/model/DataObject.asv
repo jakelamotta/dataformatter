@@ -88,16 +88,9 @@ classdef DataObject < handle
             end
             
             mergedObj.setMatrix(outRow);
-            
-            if isempty(fieldnames(inObj.getOlfactoryData()))
-                mergedObj.addOlfactoryData(inObj.getOlfactoryData());
-            end
-            
-            if isempty(fieldnames(inObj.getOlfactoryData()))
-                mergedObj.addSpectroData(inObj.getSpectrosData());
-            end        
-            
-            this.appendObject(mergedObject);            
+            mergedObj.addOlfactoryData(inObj.getOlfactoryData());
+            mergedObj.addOlfactoryData
+                        
         end
                 
         function this = addOlfactoryData(this,inStruct,id_)

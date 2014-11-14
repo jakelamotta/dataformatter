@@ -85,23 +85,16 @@ classdef DataManager < handle
             if ~isempty(listOfIds{1,1})
                 for i=1:length(listOfIds)
                    id = listOfIds{1,i};
-%                    temp = DataObject();
-%                    tempMat = this.getUnfObject.getRowFromID(id);
-%                    
-%                    if isfield(this.getUnfObject.getOlfactoryData(),strrep(id,'.',''))
-%                        tempOlf = this.getUnfObject.getOlfactoryData().(strrep(id,'.',''));
-%                        temp.setOlfactoryData(tempOlf);
-%                    end
-%                    
-%                    if isfield(this.getUnfObject.getSpectroData(),strrep(id,'.',''))
-%                        tempSpectro = this.getUnfObject.getSpectroData().(strrep(id,'.',''));
-%                        temp.setSpectroData(tempSpectro);
-%                    end
-%                    
-%                    temp.setMatrix(tempMat);
-%                    this.getObject().combine(temp);
-                   row = this.combine(obj,id);
-                   this = this.setUnfObject(row); 
+                   temp = DataObject();
+                   tempMat = this.getUnfObject.getRowFromID(id);
+                   tempOlf = this.getUnfObject.getOlfactoryData().(strrep(id,'.',''));
+                   tempSpectro = this.getUnfObject.getSpectroData().(strrep(id,'.',''));
+                   temp.setMatrix(tempMat);
+                   temp.setOlfactoryData(tempOlf);
+                   temp.setSpectroData(tempSpectro);
+                   this.getObject().set
+                   %row = this.combine(obj,id);
+                   %this = this.setUnfObject(row); 
                 end
             end
             

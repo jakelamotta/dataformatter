@@ -3,7 +3,7 @@ classdef Filter
     %   Detailed explanation goes here
     
     properties
-        filered;
+        filtered;
     end
     
     methods (Access = public)
