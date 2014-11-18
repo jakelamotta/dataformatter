@@ -10,8 +10,8 @@ classdef BehaviorDataAdapter < DataAdapter
     methods (Access = public)
         
         function this = BehaviorDataAdapter()
-            [~,~,out] = xlsread('C:\Users\Kristian\Documents\GitHub\dataformatter\dataconverter\data\behavior_variables');
-            this.tempMatrix = out;
+            global matrixColumns;
+            this.tempMatrix = matrixColumns;
             this.dobj = DataObject();
         end
         
@@ -48,14 +48,14 @@ classdef BehaviorDataAdapter < DataAdapter
     methods (Access = private)
         
         function this = addVars(this,rawData)           
-            this.tempMatrix{2,17} = rawData{3,3};
-            this.tempMatrix{2,16} = rawData{3,2};
-            
-            this.tempMatrix{2,14} = rawData{4,2};
-            this.tempMatrix{2,15} = rawData{4,3};
-            
-            this.tempMatrix{2,6} = rawData{5,2};
-            this.tempMatrix{2,7} = rawData{5,3};           
+%             this.tempMatrix{2,17} = rawData{3,3};
+%             this.tempMatrix{2,16} = rawData{3,2};
+%             
+%             this.tempMatrix{2,14} = rawData{4,2};
+%             this.tempMatrix{2,15} = rawData{4,3};
+%             
+%             this.tempMatrix{2,6} = rawData{5,2};
+%             this.tempMatrix{2,7} = rawData{5,3};           
         end
         
     end

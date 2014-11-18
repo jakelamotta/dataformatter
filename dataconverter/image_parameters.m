@@ -25,4 +25,3 @@ p=polyfit(xx',yy,1);
 alpha=(-1)*p(1);
 % get a result of 6 parameters for 1 image
 parameters = [mean(stats.Contrast) mean(stats.Correlation) mean(stats.Energy) mean(stats.Homogeneity) ent alpha]
-

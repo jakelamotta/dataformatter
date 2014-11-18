@@ -1,5 +1,5 @@
-!dataconverter/data/*
-!dataconverter/test/*
+dataconverter/data/*
+dataconverter/test/*
 !dataconverter/data/behavior_variables.xlsx
 !dataconverter/config.mat
 

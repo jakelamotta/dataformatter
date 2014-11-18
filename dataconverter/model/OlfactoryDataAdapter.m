@@ -39,8 +39,7 @@ classdef OlfactoryDataAdapter < DataAdapter
             end
             
             obj = this.dobj;
-            toc
-            
+            toc            
         end
         
         function rawData = fileReader(this,p)
