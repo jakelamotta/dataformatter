@@ -48,11 +48,11 @@ classdef ImageDataAdapter < DataAdapter
                 yy=log(abs_av(freq2(10:10^2)));
                 p=polyfit(xx',yy,1);
                 alpha=(-1)*p(1);
+                
                 % get a result of 6 parameters for 1 image
                 parameters = {mean(stats.Contrast),mean(stats.Correlation),mean(stats.Energy),mean(stats.Homogeneity),ent alpha};
-                this.tempMatrix = [this.tempMatrix;parameters];
                 
-                %this.dobj.setID(id_);
+                this.tempMatrix = [this.tempMatrix;parameters];
             end
             
             this.dobj.setObservation(this.tempMatrix,id_);

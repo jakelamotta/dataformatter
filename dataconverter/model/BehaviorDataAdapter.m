@@ -4,7 +4,7 @@ classdef BehaviorDataAdapter < DataAdapter
     
     properties
         tempMatrix;
-        dobj;
+        varMap;
     end
     
     methods (Access = public)
@@ -13,11 +13,13 @@ classdef BehaviorDataAdapter < DataAdapter
             global matrixColumns;
             this.tempMatrix = matrixColumns;
             this.dobj = DataObject();
+            global varmap;
+            this.varMap = varmap;
         end
         
         function rawData = fileReader(this,path)
             try
-                [~,~,rawData] = xlsread(path,2);
+                [~,~,rawData] = xlsread(path);
             catch
                 errordlg('Incorrect path, excel file for behavior data could not be read');
             end
@@ -37,7 +39,7 @@ classdef BehaviorDataAdapter < DataAdapter
                path = paths{1,i};
                
                rawData = this.fileReader(path);
-               this = this.addVars(rawData);
+               rawData = this.parse(rawData);
                
                obj = this.dobj.setObservation(this.tempMatrix,id_);
            end            
@@ -46,19 +48,23 @@ classdef BehaviorDataAdapter < DataAdapter
     end
     
     methods (Access = private)
-        
-        function this = addVars(this,rawData)           
-%             this.tempMatrix{2,17} = rawData{3,3};
-%             this.tempMatrix{2,16} = rawData{3,2};
-%             
-%             this.tempMatrix{2,14} = rawData{4,2};
-%             this.tempMatrix{2,15} = rawData{4,3};
-%             
-%             this.tempMatrix{2,6} = rawData{5,2};
-%             this.tempMatrix{2,7} = rawData{5,3};           
-        end
-        
-    end
-    
+        function this = parse(this,rawData)           
+            nrOfRows = size(rawData);
+            
+            for i=1:nrOfRows(1)
+                if isnan(rawData{i,1})
+                    rawData{i,1} = '';
+                end
+            end
+            
+            idx = strfind(rawData(:,1),'Subject');
+            observations = cell(1,length(idx));
+            
+            for i=1:length(idx)-1
+                obs = [rawData(idx(i):idx(1+1),6),rawData(idx(i):idx(1+1),8:9)];
+                observations{i} = obs;
+            end
+        end        
+    end    
 end
 
