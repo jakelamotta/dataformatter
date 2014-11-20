@@ -7,6 +7,7 @@ classdef InputManager < handle
         objList;
         paths;
         dataManager;
+        adapter;
     end
     
     methods (Access = public)
@@ -25,22 +26,22 @@ classdef InputManager < handle
         %%accordingly. The adapterId is the type of adapter to be created
         function obj = getDataObject(this,adapterId,paths,inObj)
             
-            adapter = this.adapterFactory.createAdapter(adapterId);
+            this.adapter = this.adapterFactory.createAdapter(adapterId);
             
-            if ischar(adapter)
+            if ischar(this.adapter)
                 errordlg('The data adapter could not be created, the adapterfactory did not return a valid object');
             else
                 tic;
-                if strcmp(adapterId,'Weather')
+                if strcmp(adapterId,'Weather') || strcmp(adapterId,'Image')
                     spectro = inObj.getSpectroData();
-                    obj = adapter.getDataObject(paths,spectro,this);
+                    obj = this.adapter.getDataObject(paths,spectro,this);
                 else
-                    obj = adapter.getDataObject(paths);
+                    obj = this.adapter.getDataObject(paths);
                 end
                 toc
             end
         end        
-        
+                
         %%Takes a path as an input and finds all folders of the input type
         %%that are located in a subfolder of the input path
         function this = splitPaths(this,p,type)
@@ -75,6 +76,10 @@ classdef InputManager < handle
         
         function this = setDataManager(this,dm)
             this.dataManager = dm;
+        end
+        
+        function dm = getDataManager(this)
+            dm = this.dataManager;
         end
         
         function ps = getPaths(this)

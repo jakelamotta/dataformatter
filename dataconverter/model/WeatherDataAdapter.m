@@ -72,7 +72,7 @@ classdef WeatherDataAdapter < DataAdapter
                 end
                 
                 if strcmp('',time)
-                     time = inputManager.dataManager.getHandler().getTime();
+                     time = inputManager.getDataManager().getHandler().getTime();
                 end
                 
                 timeList = this.splitTime(time);

@@ -64,8 +64,8 @@ function draggingFcn(varargin)
         x_max = min(x,x_max);
         y_min = max(y,y_min);
     elseif x < avgX && y > avgY
-        x_min = max(x,x_max);
-        y_max = min(y,y_min);
+        x_min = max(x,x_min);
+        y_max = min(y,y_max);
     elseif x > avgX && y > avgY
         x_max = min(x,x_max);
         y_max = min(y,y_max);

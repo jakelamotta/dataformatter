@@ -3,14 +3,13 @@ classdef ImageDataAdapter < DataAdapter
     %   Detailed explanation goes here
     
     properties        
-        tempMatrix;
+        
     end
     
     methods (Access = public)
         
         function this = ImageDataAdapter()        
-            this.tempMatrix = {'Contrast','Correlation','Energy','homogenity','ent','alpha'};
-            this.dobj = DataObject();
+            this.tempMatrix = {'Contrast','Correlation','Energy',''ent','alpha'}
         end
         
         function obj = getDataObject(this,paths,varargin)
@@ -49,19 +48,19 @@ classdef ImageDataAdapter < DataAdapter
                 p=polyfit(xx',yy,1);
                 alpha=(-1)*p(1);
                 % get a result of 6 parameters for 1 image
-                parameters = {mean(stats.Contrast),mean(stats.Correlation),mean(stats.Energy),mean(stats.Homogeneity),ent alpha};
-                this.tempMatrix = [this.tempMatrix;parameters];
+                parameters = [mean(stats.Contrast) mean(stats.Correlation) mean(stats.Energy) mean(stats.Homogeneity) ent alpha]
                 
-                %this.dobj.setID(id_);
+                
+                
+                this.dobj.setID(id_);
             end
             
-            this.dobj.setObservation(this.tempMatrix,id_);
             obj = this.dobj;
             toc
         end
         
         function rawData = fileReader(this,path)
-            rawData = imread(path); % load image
+            rawData = imread('C:\Users\Public\Pictures\Sample Pictures\Chrysanthemum.jpg'); % load image
         end
         
     end    

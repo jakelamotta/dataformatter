@@ -11,7 +11,7 @@ classdef DataObject < handle
     methods (Access = public)
         
         function this = DataObject()
-            this.xlsMatrix = {'Flower','ID','Date','temperature(c)','Humidity','Pressure','weatherTime','wind speed (m/s)','direction(degrees)','Temperature(c)','lux1','lux2','Comment'};
+            this.xlsMatrix = {'Flower','ID','Date','temperature(c)','Humidity','Pressure','weatherTime','wind speed (m/s)','direction(degrees)','Temperature(c)','lux1','lux2','Contrast','Correlation','Energy','homogenity','ent','alpha','Comment'};
             global matrixColumns;
             
             this.xlsMatrix = [this.xlsMatrix,matrixColumns];

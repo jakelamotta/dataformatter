@@ -44,16 +44,17 @@ classdef GUIHandler
         end        
         
         function this = run(this)
+            
             while true
                 if somethingsomething
                     break;
                 end
             end
+        
+            
         end
         
-        function croppedImage = getCroppedImage(this,image_)
-            croppedImage = imageCrop(image_);
-        end
+        function         
     end
     
     methods (Access = private)
