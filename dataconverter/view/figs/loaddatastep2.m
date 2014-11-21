@@ -292,7 +292,7 @@ function updateSource(handles,type)
     end
         
     switch type
-        case 'Behaviour'
+        case 'Behavior'
             set(handles.behaveText,'String',fname);
         case 'Spectro'
             set(handles.spectroText,'String',['...',pname(end-15:end)]);

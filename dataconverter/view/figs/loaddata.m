@@ -132,7 +132,7 @@ if get(handles.okBtn,'UserData')
             negOrPos{2,4} = quantity;
             
             nrOfTargets = nrOfTargets + 1;
-        end        
+        end
     end
     
     targets = cell(1,nrOfTargets);

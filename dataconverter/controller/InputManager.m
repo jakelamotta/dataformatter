@@ -56,17 +56,33 @@ classdef InputManager < handle
             for i=1:numel(types)
                 type = char(types(i));
                 
+                noExcelFile = true;
+                
                 if ~ischar(sources.(type))
+                    
                     files = fieldnames(sources.(type));
+                    
                     for j=1:numel(files)
                         file = char(files(j));
+                        
+                        if strcmp(type,'Behavior')
+                            bFile = sources.(type).(file);
+                            if strcmp(bFile(end-3:end),'xlsx')
+                                noExcelFile = false;
+                            end
+                        end
+                        
                         success = success & this.saveToDir(sources.(type).(file),[target,type]);
                     end
                 else
                    success = success & this.saveToDir(sources.(type),[target,type]);
                 end
+                
+                if strcmp(type,'Behavior') && noExcelFile
+                   this.saveToDir(Utilities.getpath('template.xlsx'),[target,type]);
+                end
+                
             end
-            
         end
         
         %%

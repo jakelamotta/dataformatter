@@ -6,3 +6,4 @@ Bee
 Bumblebee
 Butterfly
 Other_fly
+Wasp

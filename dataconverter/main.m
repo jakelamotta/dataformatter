@@ -5,9 +5,11 @@ clear all;
 clear classes;
 
 setGlobalVariables();
+% p = {'C:\Users\Kristian\Downloads\behaviour test.xlsx'};
+% ad = BehaviorDataAdapter();
+% obj = ad.getDataObject(p);
+% obj;
 GUIHandler();
-global varmap
-global matrixColumns
 
 end
 
@@ -31,12 +33,12 @@ function setGlobalVariables()
 
     nrOfInsects = length(flies);
     matrixColumns = cell(1,length(flies)*2+3);
-    
+    flies = lower(flies);
     for i=1:nrOfInsects
-        varmap([flies{i},'d']) = [Utilities.padString(flies{i},'_',5),'_dur'];
-        varmap([flies{i},'f']) = [Utilities.padString(flies{i},'_',5),'_fre'];
-        matrixColumns{2*i-1} = [Utilities.padString(flies{i},'_',5),'_dur'];
-        matrixColumns{2*i} = [Utilities.padString(flies{i},'_',5),'_fre'];
+        varmap([strrep(flies{i},char([13,10]),''),'d']) = [Utilities.padString(strrep(flies{i},char([13,10]),''),'_',5),'_dur'];
+        varmap([strrep(flies{i},char([13,10]),''),'f']) = [Utilities.padString(strrep(flies{i},char([13,10]),''),'_',5),'_fre'];
+        matrixColumns{2*i-1} = [Utilities.padString(strrep(flies{i},char([13,10]),''),'_',5),'_dur'];
+        matrixColumns{2*i} = [Utilities.padString(strrep(flies{i},char([13,10]),''),'_',5),'_fre'];
     end
     
     matrixColumns{end-2} = 'multi_dur';
