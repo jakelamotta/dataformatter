@@ -5,11 +5,9 @@ clear all;
 clear classes;
 
 setGlobalVariables();
-%GUIHandler();
+GUIHandler();
 global varmap
 global matrixColumns
-matrixColumns
-varmap
 
 end
 
