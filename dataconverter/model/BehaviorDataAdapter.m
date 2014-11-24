@@ -54,8 +54,6 @@ classdef BehaviorDataAdapter < DataAdapter
                         
                         copyfile(toRemove,paths{1,i});
                         delete(toRemove);
-                        
-                        %system('(>&2 pause) >> test.txt');
                     end
 
                     path = paths{1,i};
@@ -66,8 +64,7 @@ classdef BehaviorDataAdapter < DataAdapter
                     obj = this.dobj.setObservation(this.tempMatrix,id_);
                 end
             end
-        end
-        
+        end        
     end
     
     methods (Access = private)

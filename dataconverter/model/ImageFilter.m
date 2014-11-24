@@ -1,19 +1,15 @@
 classdef ImageFilter < Filter
     %IMAGEFILTER Summary of this class goes here
-    %   Detailed explanation goes here
-    
+    %Detailed explanation goes here
     properties
+    
     end
     
     methods (Access = public)
         function filtered = filter(this,unfiltered,type,varargin)
-            dsrate = varargin{1};
             this.filtered = unfiltered;
-            this = this.downSample(dsrate);
-            this = this.addSpectrumPoints();
             
-            switch type
-                
+            switch type                
                 case 'nofilter'
                     
                 case 'average'                    
@@ -22,9 +18,5 @@ classdef ImageFilter < Filter
             
             filtered = this.filtered;
         end
-        
-        
     end
-    
 end
-

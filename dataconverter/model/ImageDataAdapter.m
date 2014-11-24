@@ -32,27 +32,31 @@ classdef ImageDataAdapter < DataAdapter
                 rawData = this.fileReader(paths{1,i});
                 %h = image(rawData);
                 
-                im = handler.getCroppedImage(rawData);
+                [im,keep] = handler.getCroppedImage(rawData);
                 
-                % calculate parameters
-                k=graycomatrix(im, 'offset', [0 1; -1 1; -1 0; -1 -1]);
-                stats = graycoprops(k,{'contrast','homogeneity','Correlation','Energy'});
-                ent = entropy(im);
+                if keep
+                    % calculate parameters
+                    k=graycomatrix(im, 'offset', [0 1; -1 1; -1 0; -1 -1]);
+                    stats = graycoprops(k,{'contrast','homogeneity','Correlation','Energy'});
+                    ent = entropy(im);
 
-                [M N] = size(im);
-                imfft = fftshift(fft2(im));
-                imabs = abs(imfft);
-                abs_av=rotavg(imabs);
-                freq2=0:N/2;
-                xx=log(freq2(10:10^2));
-                yy=log(abs_av(freq2(10:10^2)));
-                p=polyfit(xx',yy,1);
-                alpha=(-1)*p(1);
-                
-                % get a result of 6 parameters for 1 image
-                parameters = {mean(stats.Contrast),mean(stats.Correlation),mean(stats.Energy),mean(stats.Homogeneity),ent alpha};
-                
-                this.tempMatrix = [this.tempMatrix;parameters];
+                    [M N] = size(im);
+                    imfft = fftshift(fft2(im));
+                    imabs = abs(imfft);
+                    abs_av=rotavg(imabs);
+                    freq2=0:N/2;
+                    xx=log(freq2(10:10^2));
+                    yy=log(abs_av(freq2(10:10^2)));
+                    p=polyfit(xx',yy,1);
+                    alpha=(-1)*p(1);
+
+                    % get a result of 6 parameters for 1 image
+                    parameters = {mean(stats.Contrast),mean(stats.Correlation),mean(stats.Energy),mean(stats.Homogeneity),ent alpha};
+
+                    this.tempMatrix = [this.tempMatrix;parameters];
+                    
+                    imwrite(im,[paths{1,i}(1:end-4),'_cropped.jpg']);
+                end
             end
             
             this.dobj.setObservation(this.tempMatrix,id_);

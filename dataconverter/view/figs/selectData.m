@@ -204,7 +204,8 @@ function setTable(handles,data)
     t = uitable(h,'Units','normalized','Position',[.15 .55, .8 .25],'Data', defaultData,'Tag','myTable',...
         'ColumnName', [],'RowName',[],...
         'CellSelectionCallback',@cellSelect);
-    disp(get(t,'Position'));
+    set(t,'ColumnEditable',true);
+    %disp(get(t,'Position'));
     % create pushbutton to delete selected rows
     uicontrol(h,'Style','pushbutton','Position',[20,400,60,20],'String','Delete','Callback',{@deleteRow,handles});
     

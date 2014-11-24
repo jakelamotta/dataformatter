@@ -160,20 +160,6 @@ classdef DataObject < handle
             
             counter = 0;
             
-%             for i=1:this.getWidth()
-%                 
-%                 if strcmp(this.xlsMatrix{1,i},matrix{1,1})
-%                     for k=2:s(1)
-%                         appendCell{k,i} = matrix{k,1};
-%                         start = i+1;
-%                         counter = counter +1;
-%                     end
-%                     break;
-%                 end
-%                 counter = counter +1;
-%             end
-%             
-            
             for i=1:s(2)                
                 for j=start:this.getWidth()
                     
@@ -189,24 +175,9 @@ classdef DataObject < handle
                 end
             end
             
-            disp(['Loop ran for ',num2str(counter),' times']);
-            
+            %disp(['Loop ran for ',num2str(counter),' times']);
             [this.xlsMatrix,appendCell] = Utilities.padMatrix(this.xlsMatrix,appendCell);
-            
             this.xlsMatrix = [this.xlsMatrix;appendCell(2:end,:)];
-            
-%           for i=1:s(2)
-%               for j=1:this.getWidth()
-%                   for k=2:s(1);
-%                       this.xlsMatrix{k,2} = id;
-%                         
-%                       if strcmp(this.xlsMatrix{1,j},matrix{1,i})
-%                             this.xlsMatrix{k,j} = matrix{k,i};
-%                             
-%                         end
-%                     end
-%                 end
-%             end            
         end
         
         function s = getWidth(this)
@@ -252,25 +223,13 @@ classdef DataObject < handle
         function oout = getOlfactoryData(this)
             oout = this.olfactoryData;
         end
-        
-        
     end    
     
     methods (Access = private)                
         function this = initStructFields(this)
             this.spectroData = struct;
             this.olfactoryData = struct;
-%             this.spectroData.obs1.x = [];
-%             this.spectroData.obs1.y = [];
-%             this.spectroData.obs2.x = [];
-%             this.spectroData.obs2.y = [];
-%             this.spectroData.time = '';
-%             this.spectroData.id = '';
-%             
-%             this.olfactoryData.x = [];
-%             this.olfactoryData.y = [];
         end
-    end
-    
+    end    
 end
 

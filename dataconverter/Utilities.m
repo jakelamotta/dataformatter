@@ -5,10 +5,7 @@ classdef Utilities
     properties
     
     end
-    
-    
-    
-    
+       
     methods (Static)
         
         function [first,second] = padMatrix(first, second)
@@ -33,14 +30,12 @@ classdef Utilities
                 newMat = cell(height,diff);
                 second = [second,newMat];
                 second(1,:) = first(1,:);
-            end
-            
+            end            
         end
         
         function [path] = getpath(file)
             %Returns correct path for given file and type, only the relative paths are
             %hardcoded because they are not subjects of change
-            
             tmp = mfilename('fullpath'); %Returns path of current m-file
             
             prefixpy = [tmp(1:end-length(mfilename)),'data\'];
@@ -56,8 +51,7 @@ classdef Utilities
             while length(outStr) < len
                 outStr = [padWith,outStr];
             end
-        end
-        
+        end        
     end
 end
 

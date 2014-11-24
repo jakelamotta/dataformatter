@@ -22,7 +22,7 @@ function varargout = loaddata(varargin)
 
 % Edit the above text to modify the response to help loaddata
 
-% Last Modified by GUIDE v2.5 12-Nov-2014 10:58:25
+% Last Modified by GUIDE v2.5 24-Nov-2014 11:28:08
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -283,6 +283,7 @@ function pushbutton7_Callback(hObject, eventdata, handles)
 function initGuiElements(handles,varargin)
     
     set(handles.okBtn,'UserData',false);
+    set(handles.addBtn,'UserData',0);
     
     if exist('config.mat','file')
         load('config.mat');
@@ -335,7 +336,6 @@ function initGuiElements(handles,varargin)
 % hObject    handle to figure1 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
 
 
 % --- Executes when user attempts to close figure1.
@@ -431,8 +431,6 @@ function popupmenu5_Callback(hObject, eventdata, handles)
 
 % Hints: contents = cellstr(get(hObject,'String')) returns popupmenu5 contents as cell array
 %        contents{get(hObject,'Value')} returns selected item from popupmenu5
-set(handles.popupmenu3,'Visible','on');
-set(handles.popupmenu6,'Visible','on');
 
 % --- Executes during object creation, after setting all properties.
 function popupmenu5_CreateFcn(hObject, eventdata, handles)
@@ -446,8 +444,6 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
     set(hObject,'BackgroundColor','white');
 end
 
-
-
 % --- Executes on selection change in popupmenu6.
 function popupmenu6_Callback(hObject, eventdata, handles)
 % hObject    handle to popupmenu6 (see GCBO)
@@ -456,8 +452,6 @@ function popupmenu6_Callback(hObject, eventdata, handles)
 
 % Hints: contents = cellstr(get(hObject,'String')) returns popupmenu6 contents as cell array
 %        contents{get(hObject,'Value')} returns selected item from popupmenu6
-set(handles.popupmenu3,'Visible','on');
-set(handles.popupmenu7,'Visible','on');
 
 % --- Executes during object creation, after setting all properties.
 function popupmenu6_CreateFcn(hObject, eventdata, handles)
@@ -480,8 +474,6 @@ function popupmenu7_Callback(hObject, eventdata, handles)
 
 % Hints: contents = cellstr(get(hObject,'String')) returns popupmenu7 contents as cell array
 %        contents{get(hObject,'Value')} returns selected item from popupmenu7
-set(handles.popupmenu4,'Visible','on');
-set(handles.popupmenu8,'Visible','on');
 
 % --- Executes during object creation, after setting all properties.
 function popupmenu7_CreateFcn(hObject, eventdata, handles)
@@ -504,8 +496,6 @@ function popupmenu8_Callback(hObject, eventdata, handles)
 
 % Hints: contents = cellstr(get(hObject,'String')) returns popupmenu8 contents as cell array
 %        contents{get(hObject,'Value')} returns selected item from popupmenu8
-set(handles.popupmenu5,'Visible','on');
-set(handles.popupmenu9,'Visible','on');
 
 % --- Executes during object creation, after setting all properties.
 function popupmenu8_CreateFcn(hObject, eventdata, handles)
@@ -541,3 +531,27 @@ function popupmenu9_CreateFcn(hObject, eventdata, handles)
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
+
+
+% --- Executes on button press in addBtn.
+function addBtn_Callback(hObject, eventdata, handles)
+% hObject    handle to addBtn (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+    counter = get(hObject,'UserData');
+    
+    switch counter
+        case 0
+            set(handles.popupmenu3,'Visible','on');
+            set(handles.popupmenu7,'Visible','on');
+        case 1
+            set(handles.popupmenu4,'Visible','on');
+            set(handles.popupmenu8,'Visible','on');
+        case 2
+            set(handles.popupmenu5,'Visible','on');
+            set(handles.popupmenu9,'Visible','on');
+            set(hObject,'Enable','off');
+    end
+    
+    counter = counter + 1;
+    set(hObject,'UserData',counter);
