@@ -1,6 +1,7 @@
 dataconverter/data/*
 dataconverter/test/*
 !dataconverter/data/behavior_variables.xlsx
+!dataconverter/data/template.xlsx
 !dataconverter/config.mat
 
 
