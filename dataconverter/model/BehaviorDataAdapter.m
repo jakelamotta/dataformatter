@@ -72,8 +72,8 @@ classdef BehaviorDataAdapter < DataAdapter
             nrOfRows = size(rawData);
             
             for i=1:nrOfRows(1)
-                if isnan(rawData{i,1})
-                    rawData{i,1} = '';
+                if isnan(rawData{i,6})
+                    rawData{i,6} = '';
                 end
             end
             

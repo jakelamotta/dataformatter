@@ -69,14 +69,8 @@ classdef SpectroDataAdapter < DataAdapter
                             
                             tempData = rawData{1}(wli(obs):last);
                             
-                            
-                            %idx = strfind(tempData,'lux');
-                            %last = idx{1}(1)-4;
-                            
                             idx = strfind(tempData,'spectrumPoints');
                             first = idx+17;
-                            
-                            %this = this.doSomething(rawData);
                             
                             points = tempData(first:end);
                             points = regexp(points,',','split');
@@ -87,48 +81,18 @@ classdef SpectroDataAdapter < DataAdapter
                             y = zeros(size(temp));
                             
                             len_ = length(temp);
-                            %offset = 13;
                             
                             for k=1:len_
                                 
                                 
                                 x(k) = str2double(temp{k}(1));
                                 val1 = temp{k}(2);
-                                %cell
                                 y(k) = val1{1};
-                                
-                                %x(k) = temp{k}(1);
-                                %y(k) = temp{k}(2);
-                                %                        index = size(this.tempMatrix);
-                                %                        index = index(2)+1;
-                                %                        pairs = temp{k};
-                                %                        this.tempMatrix{1,k+offset} = pairs{1};%temp{k}(1);
-                                %                        this.tempMatrix{obs+1,k+offset} = pairs{2};%temp{k}(2);
                             end
                             
                             var1 = ['obs',(num2str(obs))];
                             tempStruct.(var1).x = x;
                             tempStruct.(var1).y = y;
-                            
-%                             winfo = tempData(1:first-20);
-%                             winfo = regexp(winfo,',','split');
-%                             winfo{1} = strrep(winfo{1},'waveLengthInfo":{','');
-%                             
-%                             offset = 9;
-%                             
-                            %                     for h=1:length(winfo)
-                            %                        temp = winfo{h};
-                            %                        temp = strrep(temp,'}','');
-                            %                        temp = regexp(temp,':','split');
-                            %
-                            %                        variable = temp{1}(2:end-1);
-                            %                        value = str2double(temp{2});
-                            %
-                            %                        %tempStruct.(num2str(obs)).(variable) = value;
-                            %
-                            %                         %this.tempMatrix{1,h+h*(obs-1)} = variable;
-                            %                         this.tempMatrix{2,h+length(winfo)*(obs-1)} = value;
-                            %                     end
                         end
                     %catch e
                     %    errordlg(['Spectrophotometer file was in an incorrect format. Matlab error output: ',e.message]);

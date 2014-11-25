@@ -3,7 +3,6 @@ classdef OlfactoryDataAdapter < DataAdapter
     %   Detailed explanation goes here
     
     properties
-        dobj;
     end
     
     methods

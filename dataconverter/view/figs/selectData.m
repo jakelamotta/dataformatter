@@ -204,8 +204,9 @@ function setTable(handles,data)
     t = uitable(h,'Units','normalized','Position',[.15 .55, .8 .25],'Data', defaultData,'Tag','myTable',...
         'ColumnName', [],'RowName',[],...
         'CellSelectionCallback',@cellSelect);
-    set(t,'ColumnEditable',true);
-    %disp(get(t,'Position'));
+    set(t,'Rowname','numbered');
+    set(t,'Columnname','numbered');
+    
     % create pushbutton to delete selected rows
     uicontrol(h,'Style','pushbutton','Position',[20,400,60,20],'String','Delete','Callback',{@deleteRow,handles});
     
@@ -221,6 +222,7 @@ fnames = fieldnames(data);
 numFnames = length(fnames);
 global colors;
 t = axes('Position',[.15 .25, .8 .25]);
+
 
 legendList = cell(1,numFnames*2);
 

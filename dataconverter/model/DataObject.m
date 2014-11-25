@@ -1,6 +1,8 @@
 classdef DataObject < handle
-    %DATAOBJECT Summary of this class goes here
-    %   Detailed explanation goes here
+    %DATAOBJECT - This class encapsulates the information of an
+    %observation, the xlsMatrix is implemented as an cell array as all
+    %cells do not contain numbers. This matrix is what is going to be
+    %written to the final excel-file. 
     
     properties (Access = private)
         xlsMatrix;
@@ -20,11 +22,6 @@ classdef DataObject < handle
             this.olfactoryData = struct;
         end
         
-        function this = setID(this,id)
-           height = this.getNumRows();
-           this.xlsMatrix{height+1,2} = id;
-        end
-        
         function this = addSpectroData(this,inStruct,id_)
             if ~isfield(this.spectroData,strrep(id_,'.',''))
                 id_ = strrep(id_,'.','');
@@ -33,10 +30,6 @@ classdef DataObject < handle
                 id_ = strrep(id_,'.','');
                 this.spectroData.(id_)(end+1) = inStruct;
             end
-        end
-        
-        function this = setSpectroData(this,inStruct)
-            this.spectroData = inStruct;
         end
         
         function this = appendObject(this,obj)
@@ -112,10 +105,6 @@ classdef DataObject < handle
             end
         end
         
-        function this = setOlfactory(this,inStruct)
-            this.olfactoryData = inStruct;
-        end
-        
         function row = getRowFromID(this,id)
             
             height = this.getNumRows();
@@ -151,6 +140,7 @@ classdef DataObject < handle
             this.setMatrix(mat);
         end
         
+        %%
         function this = setObservation(this,matrix,id)
             s = size(matrix);
             
@@ -179,6 +169,11 @@ classdef DataObject < handle
             [this.xlsMatrix,appendCell] = Utilities.padMatrix(this.xlsMatrix,appendCell);
             this.xlsMatrix = [this.xlsMatrix;appendCell(2:end,:)];
         end
+        
+        %%
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        %%%%%%%%%%%%%%%%%%%%%GETTERS AND SETTERS%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         
         function s = getWidth(this)
             size_ = size(this.xlsMatrix);
@@ -222,6 +217,19 @@ classdef DataObject < handle
         
         function oout = getOlfactoryData(this)
             oout = this.olfactoryData;
+        end
+        
+        function this = setOlfactory(this,inStruct)
+            this.olfactoryData = inStruct;
+        end
+        
+        function this = setID(this,id)
+           height = this.getNumRows();
+           this.xlsMatrix{height+1,2} = id;
+        end
+        
+        function this = setSpectroData(this,inStruct)
+            this.spectroData = inStruct;
         end
     end    
     

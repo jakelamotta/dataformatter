@@ -36,7 +36,7 @@ classdef ImageDataAdapter < DataAdapter
                 
                 if keep
                     % calculate parameters
-                    k=graycomatrix(im, 'offset', [0 1; -1 1; -1 0; -1 -1]);
+                    k=graycomatrix(im, 'offset', [0 1; -1 1; -1 0; -1 -1],'NumLevels',256);
                     stats = graycoprops(k,{'contrast','homogeneity','Correlation','Energy'});
                     ent = entropy(im);
 
@@ -45,8 +45,15 @@ classdef ImageDataAdapter < DataAdapter
                     imabs = abs(imfft);
                     abs_av=rotavg(imabs);
                     freq2=0:N/2;
-                    xx=log(freq2(10:10^2));
-                    yy=log(abs_av(freq2(10:10^2)));
+                    
+                    if length(freq2) < 10^2
+                        xx=log(freq2(10:length(freq2)));
+                        yy=log(abs_av(freq2(10:length(freq2))));
+                    else
+                        xx=log(freq2(10:10^2));
+                        yy=log(abs_av(freq2(10:10^2)));
+                    end
+                    
                     p=polyfit(xx',yy,1);
                     alpha=(-1)*p(1);
 
@@ -66,8 +73,7 @@ classdef ImageDataAdapter < DataAdapter
         
         function rawData = fileReader(this,path)
             rawData = imread(path); % load image
-        end
-        
+        end        
     end    
 end
 

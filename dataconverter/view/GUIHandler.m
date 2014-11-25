@@ -144,7 +144,7 @@ classdef GUIHandler
             this.exportBtn = uicontrol(this.mainWindow,'Style','pushbutton','String','Export','Position',[650 368 150 75],'Callback',@this.exportCallback);
             
             this.dataTable = uitable(this.mainWindow,'Position',[70 90 850 220]);%,'Callback',@this.tableCallback);
-            disp(get(this.dataTable,'ColumnFormat'));
+            
             this.file_ = uimenu(this.mainWindow,'Label','File');
             this.clear_ = uimenu(this.file_,'Label','Clear data','Callback',@this.clearCallback);
             this.exit_ = uimenu(this.file_,'Label','Exit');
@@ -155,16 +155,18 @@ classdef GUIHandler
         end
         
         function this = launchDialogue(this,id,varargin)
+            
             profile viewer;
             out_ = selectData(this.dataManager.getUnfObject(),id,this);
             type = out_.type;
             
-            if ~strcmp(type,'nofilter')
+            if ~strcmp(type,'nwofilter')
                 this = out_.handler;
                 input_ = out_.data;
                 this.dataManager = this.dataManager.applyFilter(id,type);
                 this.dataManager = this.dataManager.finalize();
             end
+            
         end
     end    
 end

@@ -22,7 +22,7 @@ function varargout = loaddatastep2(varargin)
 
 % Edit the above text to modify the response to help loaddatastep2
 
-% Last Modified by GUIDE v2.5 04-Nov-2014 14:54:16
+% Last Modified by GUIDE v2.5 25-Nov-2014 15:56:59
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -320,3 +320,13 @@ else
     % The GUI is no longer waiting, just close it
     delete(hObject);
 end
+
+
+% --- Executes on button press in templateBtn.
+function templateBtn_Callback(hObject, eventdata, handles)
+% hObject    handle to templateBtn (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+    
+    
+    
