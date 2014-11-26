@@ -12,7 +12,7 @@ classdef BehaviorFilter < Filter
             
             switch type
                 case 'average'                      
-                    this.filtered = filter@Filter(this,unfiltered,14,14+18);
+                    this.filtered = filter@Filter(this,unfiltered,5,this.filtered.getWidth());
             end        
             
             output = this.filtered;

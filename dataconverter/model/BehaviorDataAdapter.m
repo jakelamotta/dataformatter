@@ -41,7 +41,7 @@ classdef BehaviorDataAdapter < DataAdapter
                         errordlg('Incorrect path was passed to the file reader');
                     end
 
-                    if strfind(paths{1,i}(idx(end):end),'template.xlsx')
+                    if strfind(paths{1,i}(idx(end):end),'template1.xlsx')
                         system(['start ',paths{1,i}]);
                         hdg = helpdlg('Please fill in the template, close it and press OK','Information');
                         waitfor(hdg);
@@ -61,8 +61,9 @@ classdef BehaviorDataAdapter < DataAdapter
                     rawData = this.fileReader(path);
                     this = this.parse(rawData);
 
-                    obj = this.dobj.setObservation(this.tempMatrix,id_);
+                    
                 end
+                obj = this.dobj.setObservation(this.tempMatrix,id_);
             end
         end        
     end
@@ -70,7 +71,8 @@ classdef BehaviorDataAdapter < DataAdapter
     methods (Access = private)
         function this = parse(this,rawData)
             nrOfRows = size(rawData);
-            
+            global matrixColumns;
+            this.tempMatrix = matrixColumns;
             for i=1:nrOfRows(1)
                 if isnan(rawData{i,6})
                     rawData{i,6} = '';

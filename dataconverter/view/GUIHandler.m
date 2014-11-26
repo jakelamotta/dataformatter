@@ -160,7 +160,7 @@ classdef GUIHandler
             out_ = selectData(this.dataManager.getUnfObject(),id,this);
             type = out_.type;
             
-            if ~strcmp(type,'nwofilter')
+            if ~strcmp(type,'nofilter')
                 this = out_.handler;
                 input_ = out_.data;
                 this.dataManager = this.dataManager.applyFilter(id,type);

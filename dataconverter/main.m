@@ -33,7 +33,7 @@ function setGlobalVariables()
 
     nrOfInsects = length(flies);
     matrixColumns = cell(1,length(flies)*2+3);
-    flies = lower(flies);
+%    flies = lower(flies);
     for i=1:nrOfInsects
         varmap([strrep(flies{i},char([13,10]),''),'d']) = [Utilities.padString(strrep(flies{i},char([13,10]),''),'_',5),'_dur'];
         varmap([strrep(flies{i},char([13,10]),''),'f']) = [Utilities.padString(strrep(flies{i},char([13,10]),''),'_',5),'_fre'];

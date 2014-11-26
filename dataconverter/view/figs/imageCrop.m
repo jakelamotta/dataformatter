@@ -22,7 +22,7 @@ function varargout = imageCrop(varargin)
 
 % Edit the above text to modify the response to help imageCrop
 
-% Last Modified by GUIDE v2.5 20-Nov-2014 10:52:51
+% Last Modified by GUIDE v2.5 26-Nov-2014 12:08:00
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -58,13 +58,26 @@ handles.output = hObject;
 % Update handles structure
 guidata(hObject, handles);
 
-image_ = varargin{1};
+imageList = varargin{1}(:,2:end);
 p = varargin{2};
 set(handles.text1,'String',p);
-set(handles.okBtn,'UserData',false);
-set(handles.axes1,'UserData',image_);
+s = size(imageList);
 
-setImages(hObject,handles.axes1,NaN,image_);
+%keeps = cell(1,s(2));
+% 
+% for i=1:s(2)
+%     imageList{i} = false;
+% end
+
+set(handles.figure1,'UserData',imageList);
+set(handles.popupmenu1,'UserData',imageList);
+set(handles.popupmenu1,'String',imageList(2,:));
+set(handles.okBtn,'UserData',false);
+set(handles.axes1,'UserData',imageList{1,1});
+
+%set(handles.keepbox,'UserData',keeps);
+
+setImages(handles,imageList{1,1});
 
 % UIWAIT makes imageCrop wait for user response (see UIRESUME)
 uiwait(handles.figure1);
@@ -81,7 +94,8 @@ function varargout = imageCrop_OutputFcn(hObject, eventdata, handles)
 varargout{1} = '';
 
 if get(handles.okBtn,'UserData')
-    varargout{1} = get(handles.axes1,'UserData');
+    
+    varargout{1} = get(handles.popupmenu1,'UserData');
 end
 
 delete(hObject);
@@ -135,10 +149,11 @@ function showCroppedImage(handle)
     axis image;
 end
 
-function setImages(figHandle,axesOriginHandle,axesCroppedHandle,im)
+function setImages(handles,im)
 
-S.fH = figHandle;
-S.aH = axesOriginHandle;
+S.h = handles;
+S.fH = handles.figure1;
+S.aH = handles.axes1;
 %S.fH = figure('menubar','none');
 %im = imread( 'C:\Users\Public\Pictures\Sample Pictures\Chrysanthemum.jpg' );
 y_min = NaN;
@@ -177,8 +192,7 @@ set(S.fH, 'WindowButtonUpFcn', @stopDragFcn);
         
         pt = get(S.aH, 'CurrentPoint');
         x = pt(1,1);
-        y = pt(1,2);
-        
+        y = pt(1,2);        
         
         if x <= imageSize(2) && y <= imageSize(1)
         
@@ -237,7 +251,11 @@ set(S.fH, 'WindowButtonUpFcn', @stopDragFcn);
                    
                tempImage = im(floor(y_min):floor(y_min)+floor(avg),floor(x_min):floor(x_min)+floor(avg),:);
             end
+            
             set(S.aH,'UserData',rgb2gray(tempImage));
+            images = get(S.h.popupmenu1,'UserData');
+            images{1,get(S.h.popupmenu1,'Value')} = rgb2gray(tempImage); 
+            set(S.h.popupmenu1,'UserData',images);
         end
         
         hold off
@@ -246,4 +264,69 @@ set(S.fH, 'WindowButtonUpFcn', @stopDragFcn);
     function stopDragFcn(varargin)
         set(S.fH, 'WindowButtonMotionFcn', '');  %eliminate fcn on release
     end
+end
+
+
+% --- Executes on selection change in popupmenu1.
+function popupmenu1_Callback(hObject, eventdata, handles)
+% hObject    handle to popupmenu1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu1 contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from popupmenu1
+    index = get(hObject,'Value');
+    imageList = get(handles.figure1,'UserData');
+    
+    imshow(imageList{1,index},'Parent',handles.axes1);
+    setImages(handles,imageList{1,index})
+    
+    
+    
+    set(handles.axes1,'UserData',imageList{1,index});
+    
+    %keeps = get(handles.keepbox,'UserData');
+    %set(handles.keepbox,'Value',keeps{index});
+    set(handles.keepbox,'Value',imageList{3,index});
+    
+end
+
+% --- Executes during object creation, after setting all properties.
+function popupmenu1_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to popupmenu1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: popupmenu controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+end
+
+
+% --- Executes on button press in keepbox.
+function keepbox_Callback(hObject, eventdata, handles)
+% hObject    handle to keepbox (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of keepbox
+    list = get(handles.popupmenu1,'UserData');
+    index = get(handles.popupmenu1,'Value');
+
+    %keeps = get(hObject,'UserData');
+    %keeps{index} = get(hObject,'Value');
+    %set(hObject,'UserData',keeps);
+    list{3,index} = get(hObject,'Value');
+    
+% if get(hObject,'Value')
+%     list{3,index} = true;
+% else
+%     list{3,index} = false;
+% end
+
+
+set(handles.popupmenu1, 'UserData',list);
+
 end
