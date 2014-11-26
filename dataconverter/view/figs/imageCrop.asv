@@ -237,9 +237,9 @@ set(S.fH, 'WindowButtonUpFcn', @stopDragFcn);
                    
                tempImage = im(floor(y_min):floor(y_min)+floor(avg),floor(x_min):floor(x_min)+floor(avg),:);
             end
-            set(S.aH,'UserData',rgb2gray(tempImage));
+            size__ = tempImage;
+             set(S.aH,'UserData',rgb2gray(tempImage));
         end
-        
         hold off
     end
 

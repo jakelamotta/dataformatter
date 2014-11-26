@@ -51,9 +51,9 @@ classdef GUIHandler
             end
         end
         
-        function [croppedImage,keep] = getCroppedImage(this,image_)
+        function [croppedImage,keep] = getCroppedImage(this,image_,p)
             keep = true;
-            croppedImage = imageCrop(image_);
+            croppedImage = imageCrop(image_,p);
             if ischar(croppedImage)
                 keep = false;
             end

@@ -32,7 +32,7 @@ classdef ImageDataAdapter < DataAdapter
                 rawData = this.fileReader(paths{1,i});
                 %h = image(rawData);
                 
-                [im,keep] = handler.getCroppedImage(rawData);
+                [im,keep] = handler.getCroppedImage(rawData,paths{1,i});
                 
                 if keep
                     % calculate parameters
