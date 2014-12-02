@@ -10,7 +10,7 @@ classdef ImageDataAdapter < DataAdapter
         
         function this = ImageDataAdapter()        
             this.tempMatrix = {'Contrast','Correlation','Energy','homogenity','ent','alpha'};
-            this.dobj = DataObject();
+            this.dobj = Observation();
         end
         
         function obj = getDataObject(this,paths,varargin)

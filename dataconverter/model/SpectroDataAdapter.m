@@ -9,8 +9,8 @@ classdef SpectroDataAdapter < DataAdapter
     methods (Access = public)
         
         function this = SpectroDataAdapter()
-            this.dobj = DataObject();
-            this.tempMatrix = {'lux1','lux2'};
+            this.dobj = Observation();
+            this.tempMatrix = {'lux1','lux2','SpectroX','SpectroY','SpectroXUp','SpectroYUp'};
         end
         
         function rawData = fileReader(this,path)
@@ -20,7 +20,7 @@ classdef SpectroDataAdapter < DataAdapter
         function obj = getDataObject(this,paths)
             
             s = size(paths);
-            obj = DataObject();
+            obj = Observation();%Spectro();
             
             for i=1:s(2)
                 if strcmp(paths{1,i}(end-10:end),'rawData.txt')
@@ -90,18 +90,24 @@ classdef SpectroDataAdapter < DataAdapter
                                 y(k) = val1{1};
                             end
                             
-                            var1 = ['obs',(num2str(obs))];
-                            tempStruct.(var1).x = x;
-                            tempStruct.(var1).y = y;
+                            
+                            this.tempMatrix{2,2*obs+1} = x;
+                            this.tempMatrix{2,2+2*obs} = y;
+%                             var1 = ['obs',(num2str(obs))];
+%                             tempStruct.(var1).x = x;
+%                             tempStruct.(var1).y = y;                            
                         end
                     %catch e
                     %    errordlg(['Spectrophotometer file was in an incorrect format. Matlab error output: ',e.message]);
                     %end                
                 
                     this.dobj = this.dobj.setObservation(this.tempMatrix,id_);
-                    obj = this.dobj.addSpectroData(tempStruct,id_);%tempStruct.obs1.x,tempStruct.obs1.x,tempStruct.obs2.x,tempStruct.obs2.x,id_);
+                    %obj = this.dobj.addSpectroData(tempStruct,id_);%tempStruct.obs1.x,tempStruct.obs1.x,tempStruct.obs2.x,tempStruct.obs2.x,id_);
                 end
             end
+            
+        obj = this.dobj;
+        
         end
         
     end

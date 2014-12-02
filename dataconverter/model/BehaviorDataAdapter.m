@@ -13,7 +13,7 @@ classdef BehaviorDataAdapter < DataAdapter
         function this = BehaviorDataAdapter()
             global matrixColumns;
             this.tempMatrix = matrixColumns;
-            this.dobj = DataObject();
+            this.dobj = Observation();
             global varmap;
             this.varMap = varmap;
             s = size(this.tempMatrix);

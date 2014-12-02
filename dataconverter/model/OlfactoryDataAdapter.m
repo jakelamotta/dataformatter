@@ -8,7 +8,7 @@ classdef OlfactoryDataAdapter < DataAdapter
     methods
         
         function this = OlfactoryDataAdapter()
-            this.dobj = DataObject();
+            this.dobj = Observation();
         end
         
         function obj = getDataObject(this,paths)
@@ -33,7 +33,7 @@ classdef OlfactoryDataAdapter < DataAdapter
                 tempStruct.x = x;
                 tempStruct.y = y;
                 
-                this.dobj.addOlfactoryData(tempStruct,id_);
+               % this.dobj.addOlfactoryData(tempStruct,id_);
                 this.dobj.setID(id_);
             end
             

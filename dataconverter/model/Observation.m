@@ -10,8 +10,8 @@ classdef Observation < handle
     
     methods (Access = public)
         
-        function this = DataObject()
-            this.xlsMatrix = {'Flower','ID','Date','temperature(c)','Humidity','Pressure','weatherTime','wind speed (m/s)','direction(degrees)','Temperature(c)','lux1','lux2','Contrast','Correlation','Energy','homogenity','ent','alpha','Comment','Spectro','Olfactory'};
+        function this = Observation()
+            this.xlsMatrix = {'Flower','ID','Date','temperature(c)','Humidity','Pressure','weatherTime','wind speed (m/s)','direction(degrees)','Temperature(c)','Contrast','Correlation','Energy','homogenity','ent','alpha','Comment','lux1','lux2','SpectroX','SpectroY','SpectroXUp','SpectroYUp'};
             global matrixColumns;
             
             this.xlsMatrix = [this.xlsMatrix,matrixColumns];

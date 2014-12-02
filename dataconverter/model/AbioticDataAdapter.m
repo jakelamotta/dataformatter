@@ -9,7 +9,7 @@ classdef AbioticDataAdapter < DataAdapter
     methods (Access = public)
         
         function this = AbioticDataAdapter()
-            this.dobj = DataObject();
+            this.dobj = Observation();
             this.tempMatrix = {'Date','Pressure','temperature(c)','Humidity'};
         end
 %         

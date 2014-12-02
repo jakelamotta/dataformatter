@@ -52,6 +52,8 @@ classdef DataManager < handle
             newMat = [current.getMatrix();tempMat(rows,:)];
             current = current.setMatrix(newMat);
             id_ = current.getObjectID();
+            %current = current.setSpectroData(temp.getSpectroData());
+            %current = current.setOlfactory(temp.getOlfactoryData());
             this = this.setUnfObject(current);
         end
         
@@ -83,6 +85,21 @@ classdef DataManager < handle
             if ~isempty(listOfIds{1,1})
                 for i=1:length(listOfIds)
                    id = listOfIds{1,i};
+%                    temp = DataObject();
+%                    tempMat = this.getUnfObject.getRowFromID(id);
+%                    
+%                    if isfield(this.getUnfObject.getOlfactoryData(),strrep(id,'.',''))
+%                        tempOlf = this.getUnfObject.getOlfactoryData().(strrep(id,'.',''));
+%                        temp.setOlfactoryData(tempOlf);
+%                    end
+%                    
+%                    if isfield(this.getUnfObject.getSpectroData(),strrep(id,'.',''))
+%                        tempSpectro = this.getUnfObject.getSpectroData().(strrep(id,'.',''));
+%                        temp.setSpectroData(tempSpectro);
+%                    end
+%                    
+%                    temp.setMatrix(tempMat);
+%                    this.getObject().combine(temp);
                    row = this.combine(obj,id);
                    this = this.setUnfObject(row); 
                 end
@@ -140,6 +157,9 @@ classdef DataManager < handle
                 end
             end
             
+            newSpectro = mergestruct(combinee.getSpectroData(),obj.getSpectroData());
+            combined = combined.setSpectroData(newSpectro);
+            
             obj.deleteRowFromID(id);
             
             [temp,oldMat] = Utilities.padMatrix(temp,obj.getMatrix());
@@ -182,11 +202,11 @@ classdef DataManager < handle
         %%%%%%%%%%%%%%%%%%%%%GETTERS AND SETTERS%%%%%%%%%%%%%%%%%%%%%%%%%%%
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         function obj = getObject(this)
-            obj = this.observation;
+            obj = this.dataObject;
         end
         
         function this = setObject(this,obj)
-            this.observation = obj;
+            this.dataObject = obj;
         end
         
         function this = setUnfObject(this,obj)

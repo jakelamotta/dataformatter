@@ -11,22 +11,82 @@ classdef SpectroFilter < Filter
         function filtered = filter(this,unfiltered,type,varargin)
             dsrate = varargin{1};
             this.filtered = unfiltered;
-            this = this.downSample(dsrate);
-            this = this.addSpectrumPoints();
+            
+            %this = this.downSample(dsrate);
+            %this = this.addSpectrumPoints();
             
             switch type
-                
                 case 'nofilter'
                     
                 case 'average'                    
                     this.filtered = filter@Filter(this,this.filtered,10,this.filtered.getWidth());
             end
             
+            this.downSample2(dsrate);
+            this.expandSpectrumPoints();
+            
             filtered = this.filtered;
         end
     end
     
     methods (Access = private)
+        
+        function this = downSample2(this,dsrate)
+            matrix = this.filtered.getMatrix();
+            height = this.filtered.getNumRows();
+            
+            for i=2:height
+                y1 = matrix{i,21};
+                x1 = matrix{i,20};
+                y2 = matrix{i,23};
+                x2 = matrix{i,22};
+
+                x1new = round(linspace(380,600,dsrate));
+                x2new = round(linspace(380,600,dsrate));
+
+                y1 = interp1(x1,y1,x1new);
+                y2 = interp1(x2,y2,x2new);
+                
+                matrix{i,21} = y1;
+                matrix{i,23} = y2;
+                matrix{i,20} = x1new;
+                matrix{i,22} = x2new;                
+            end
+            
+            this.filtered.setMatrix(matrix);
+        end
+                
+        function this = expandSpectrumPoints(this)
+           matrix = this.filtered.getMatrix();
+           height = this.filtered.getNumRows();
+           
+           
+           y1 = matrix{2,20};
+           y2 = matrix{2,22};
+           
+           appendee = cell(height,2*length(y1));
+           
+           for j=2:height
+               row = matrix(j,:);
+               
+               x1 = row{21};               
+               x2 = row{23};
+               
+               for k=1:length(x1)
+                  if j==2
+                    appendee{1,2*k-1} = y1(k);
+                    appendee{1,2*k} = y2(k);
+                  end
+                  appendee{j,2*k-1} = x1(k);
+                  appendee{j,2*k} = x2(k);
+               end               
+           end
+           
+           matrix = [matrix(:,1:19),matrix(:,24:end)];
+           matrix = [matrix,appendee];
+           this.filtered.setMatrix(matrix);
+           
+        end
         
         function this = downSample(this,dsrate)
             

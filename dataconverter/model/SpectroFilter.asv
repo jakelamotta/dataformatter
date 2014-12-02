@@ -11,8 +11,8 @@ classdef SpectroFilter < Filter
         function filtered = filter(this,unfiltered,type,varargin)
             dsrate = varargin{1};
             this.filtered = unfiltered;
-            this = this.downSample(dsrate);
-            this = this.addSpectrumPoints();
+            %this = this.downSample(dsrate);
+            %this = this.addSpectrumPoints();
             
             switch type
                 
@@ -22,11 +22,53 @@ classdef SpectroFilter < Filter
                     this.filtered = filter@Filter(this,this.filtered,10,this.filtered.getWidth());
             end
             
+            
+            this = this.downSSample(dsrate);
+            this = this.expandSpectrumPoints();
+            
             filtered = this.filtered;
         end
     end
     
     methods (Access = private)
+        
+        function this = downSSample(this,dsrate)
+            
+            
+            
+        end
+                
+        function this = expandSpectrumPoints(this)
+           matrix = this.filtered.getMatrix();
+           height = this.filtered.getNumRows();
+           
+           
+           y1 = matrix{2,20};
+           y2 = matrix{2,22};
+           
+           appendee = cell(height,2*length(y1));
+           
+           for j=2:height
+               row = matrix(j,:);
+               
+               x1 = row{21};               
+               x2 = row{23};
+               
+               for k=1:length(x1)
+                  if j==2
+                    appendee{1,2*k-1} = y1(k);
+                    appendee{1,2*k} = y2(k);
+                  end
+                  appendee{j,2*k-1} = x1(k);
+                  appendee{j,2*k} = x2(k);
+               end               
+           end
+           
+           matrix = [matrix(:,1:19),matrix(:,24:end)];
+           matrix = [matrix,appendee];
+           this.filtered.setMatrix(matrix);
+           
+        end
         
         function this = downSample(this,dsrate)
             
@@ -59,22 +101,22 @@ classdef SpectroFilter < Filter
                     y1 = interp1(x1,y1,x1new);
                     y2 = interp1(x2,y2,x2new);
                     
-                    outStruct.obs1.x = [tempStruct(measurement).obs1.x;x1new];
-                    outStruct.obs1.y = [tempStruct(measurement).obs1.y;y1];
-                    tempStruct.obs2.x = [tempStruct(measurement).obs2.x;x2new];
-                    tempStruct.obs2.y = [tempStruct(measurement).obs2.y;y2];
+                    outStruct.obs1.x = [outStruct.obs1.x;x1new];
+                    outStruct.obs1.y = [outStruct.obs1.y;y1];
+                    outStruct.obs2.x = [outStruct.obs2.x;x2new];
+                    outStruct.obs2.y = [outStruct.obs2.y;y2];
 %                     tempStruct(measurement).obs1.x = x1new;
 %                     tempStruct(measurement).obs1.y = y1;
 %                     tempStruct(measurement).obs2.x = x2new;
 %                     tempStruct(measurement).obs2.y = y2;
                 end
                 
-                tempStruct.obs1.x = mean(tempStruct.obs1.x);
-                tempStruct.obs1.y = mean(tempStruct.obs1.y);
-                tempStruct.obs2.x = mean(tempStruct.obs2.x);
-                tempStruct.obs2.y = mean(tempStruct.obs2.y);
+                outStruct.obs1.x = mean(outStruct.obs1.x);
+                outStruct.obs1.y = mean(outStruct.obs1.y);
+                outStruct.obs2.x = mean(outStruct.obs2.x);
+                outStruct.obs2.y = mean(outStruct.obs2.y);
                 
-                newListOfStructs.(fnames{i}) = tempStruct;
+                newListOfStructs.(fnames{i}) = outStruct;
             end
             
             this.filtered.setSpectroData(newListOfStructs);
