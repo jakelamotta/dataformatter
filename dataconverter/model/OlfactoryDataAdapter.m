@@ -3,17 +3,22 @@ classdef OlfactoryDataAdapter < DataAdapter
     %   Detailed explanation goes here
     
     properties
+        tempMatrix;
     end
     
     methods
         
         function this = OlfactoryDataAdapter()
             this.dobj = Observation();
+            this.tempMatrix = {'OlfX','OlfY'};
         end
         
         function obj = getDataObject(this,paths)
             tic;
             size_ = size(paths);
+            
+            rows = cell(size_(2),2);
+            this.tempMatrix = [this.tempMatrix;rows];
             
             for i=1:size_(2)
                 idx = strfind(paths{1,i},'\');
@@ -29,12 +34,11 @@ classdef OlfactoryDataAdapter < DataAdapter
                 x = transpose(rawData(:,1));
                 y = transpose(rawData(:,2));
                 
-                tempStruct = struct;
-                tempStruct.x = x;
-                tempStruct.y = y;
+                this.tempMatrix{i+1,1} = x;
+                this.tempMatrix{i+1,2} = y;
                 
                % this.dobj.addOlfactoryData(tempStruct,id_);
-                this.dobj.setID(id_);
+                this.dobj.setObservation(this.tempMatrix,id_);
             end
             
             obj = this.dobj;
@@ -48,30 +52,6 @@ classdef OlfactoryDataAdapter < DataAdapter
     
     methods (Access = private)
         
-        function [outX,outY] = countSort(this,x,y)
-            size_ = ceil(max(x)*100);
-            
-            x_ = zeros(1,size_);
-            y_ = zeros(1,size_);
-            
-            len = length(x);
-            
-            for i=1:len
-                x_(round(x(i)*100)+1) = x(i);
-                y_(round(x(i)*100)+1) = y(i);
-            end
-            
-            outX = [];
-            outY = [];
-            
-            for i=1:length(x_)
-                if x_(i) ~= 0
-                    outX(end+1) = x_(i);
-                    outY(end+1) = y_(i);
-                end
-            end
-            
-        end
     end
     
 end

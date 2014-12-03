@@ -24,7 +24,7 @@ classdef InputManager < handle
         
         %%Function that creates a dataadapter and retrieves an object
         %%accordingly. The adapterId is the type of adapter to be created
-        function obj = getDataObject(this,adapterId,paths,inObj)
+        function obj = getObservation(this,adapterId,paths,inObj)
             
             this.adapter = this.adapterFactory.createAdapter(adapterId);
             
@@ -33,13 +33,15 @@ classdef InputManager < handle
             else
                 tic;
                 if strcmp(adapterId,'Weather') || strcmp(adapterId,'Image')
-                    spectro = inObj.getSpectroData();
-                    obj = this.adapter.getDataObject(paths,spectro,this);
+                    spectroTime = inObj.getSpectroTime();
+                    obj = this.adapter.getDataObject(paths,spectroTime,this);
                 else
                     obj = this.adapter.getDataObject(paths);
                 end
                 toc
             end
+            
+                        
         end        
                 
         %%Takes a path as an input and finds all folders of the input type

@@ -45,13 +45,13 @@ classdef WeatherDataAdapter < DataAdapter
            found = found & (abs(actualTime{1,4}+actualTime{1,5}/60 - (row{1,4}+row{1,5}/60)) <= deltaTime/60.);
             
         end
-        %%
         
+        %%
         function obj = getDataObject(this,paths,varargin)
             profile on;
             %time in format: multiple-20140821-104913
             size_ = size(paths);
-            spectro = varargin{1};
+            spectroTime = varargin{1};
             inputManager = varargin{2};
             
             for i=1:size_(2)              
@@ -65,8 +65,8 @@ classdef WeatherDataAdapter < DataAdapter
                 
                 %timeList = {};
                 
-                if isfield(spectro,strrep(id_,'.',''))
-                    time = spectro.(strrep(id_,'.','')).time;
+                if isfield(spectroTime,strrep(id_,'.',''))
+                    time = spectroTime.(strrep(id_,'.',''));
                 else
                     time = '';
                 end

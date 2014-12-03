@@ -40,7 +40,7 @@ classdef DataManager < handle
         
         %%
         function this = addObject(this,id,path)
-            temp = this.manager.getDataObject(id,path,this.getObject());
+            temp = this.manager.getObservation(id,path,this.getObject());
             current = this.getUnfObject();
             tempMat = temp.getMatrix();
             rows = [2];
@@ -102,7 +102,7 @@ classdef DataManager < handle
             
             unfObj = this.getUnfObject();
             fobj = this.getObject();
-            
+            fobj.setSpectroStruct(mergestruct(fobj.getSpectroTime(),unfObj.getSpectroTime()));
             if fobj.getNumRows() == 1
                 this.setObject(unfObj);
             else

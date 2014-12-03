@@ -243,52 +243,75 @@ function cancelBtn_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
     close;
     
-function updateSource(handles,type)
+function updateSource(handles,type,varargin)
+
     tempStruct = get(handles.output,'UserData');
     
-    if strcmp(type,'Spectro')
-        pname = uigetdir(Utilities.getpath(''));
-        fname = '';
-        %manager = InputManager();        
-    else
-        [fname,pname,~] = uigetfile('MultiSelect','on','*.*');
-    end
-    
-    if isfield(tempStruct,type)
-        source = tempStruct.(type);
-        numFieldNames = fieldnames(source);
-        numFieldNames = size(numFieldNames);
-        numFieldNames = numFieldNames(1);
-    
-    else
-        source = struct;
-        numFieldNames = 0;
-    end
-    
-    
-    if ischar(fname)
-        source.(['pat',num2str(numFieldNames+1)]) = [pname,fname];
-    else
-        size_ = size(fname);
-            
-        for i=1:size_(2)
-            temp = fname{1,i};
-            source.(['path',num2str(i+numFieldNames)]) = [pname,temp];
+    if ~isempty(varargin)
+        fname = varargin{1};
+        
+        if isfield(tempStruct,type)
+            source = tempStruct.(type);
+            numFieldNames = fieldnames(source);
+            numFieldNames = size(numFieldNames);
+            numFieldNames = numFieldNames(1);
+
+        else
+            source = struct;
+            numFieldNames = 0;
         end
-    end
-    
-    tempStruct.(type) = source;
-    set(handles.output,'UserData',tempStruct);
-    
-    fieldNames = fieldnames(source);
-    numFieldNames = size(fieldNames);
-    numFieldNames = numFieldNames(1);   
-    
-    fname = cell(numFieldNames,1);
-    
-    for i=1:numFieldNames
-        name = source.(fieldNames{i,1});
-        fname{i,1} = ['...',name(end-14:end)];
+        
+        source.(['pat',num2str(numFieldNames+1)]) = fname;
+        
+        tempStruct.(type) = source;
+        set(handles.output,'UserData',tempStruct);
+        
+        fname = 'template.xlsx';        
+    else
+        
+
+        if strcmp(type,'Spectro')
+            pname = uigetdir(Utilities.getpath(''));
+            fname = '';
+            %manager = InputManager();        
+        else
+            [fname,pname,~] = uigetfile('MultiSelect','on','*.*');
+        end
+
+        if isfield(tempStruct,type)
+            source = tempStruct.(type);
+            numFieldNames = fieldnames(source);
+            numFieldNames = size(numFieldNames);
+            numFieldNames = numFieldNames(1);
+        else
+            source = struct;
+            numFieldNames = 0;
+        end
+
+        if ischar(fname)
+            source.(['pat',num2str(numFieldNames+1)]) = [pname,fname];
+        else
+            size_ = size(fname);
+
+            for i=1:size_(2)
+                temp = fname{1,i};
+                source.(['path',num2str(i+numFieldNames)]) = [pname,temp];
+            end
+        end
+
+        tempStruct.(type) = source;
+        set(handles.output,'UserData',tempStruct);
+
+        fieldNames = fieldnames(source);
+        numFieldNames = size(fieldNames);
+        numFieldNames = numFieldNames(1);   
+
+        fname = cell(numFieldNames,1);
+
+        for i=1:numFieldNames
+            name = source.(fieldNames{i,1});
+            fname{i,1} = ['...',name(end-14:end)];
+        end    
     end
         
     switch type
@@ -327,6 +350,5 @@ function templateBtn_Callback(hObject, eventdata, handles)
 % hObject    handle to templateBtn (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-    
-    
+    updateSource(handles,'Behavior',Utilities.getpath('template.xlsx'));
     

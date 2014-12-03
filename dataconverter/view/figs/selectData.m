@@ -74,14 +74,19 @@ userdata.data = data;
 
 if strcmp(id,'Spectro')
     userdata.dp = handler.dataManager.getNrOfSpectroDP();
-    set(hObject,'UserData',userdata);
+    %set(hObject,'UserData',userdata);
 %     setGraph(handles,spectro);
-    setGraph(handles,data);
+    set(hObject,'UserData',userdata);
+    
+setGraph(handles,data,id);
 elseif strcmp(id,'Olfactory')
     userdata.dp = handler.getDataManager().getNrOfOlfactoryDP();
+    %setOlfGraph(handles,olfactory,type);
     set(hObject,'UserData',userdata);
-    setOlfGraph(handles,olfactory);
+    
+setGraph(handles,data,id);
 end
+
 
 set(hObject,'UserData',userdata);
 
@@ -199,7 +204,7 @@ end
 function setTable(handles,data)
     %h = figure('Position',[600 400 402 100],'numbertitle','off','MenuBar','none');
     h = handles.figure1;
-    defaultData = [data(:,1:19),data(:,24:end)];
+    defaultData = [data(:,1:21),data(:,28:end)];
     %defaultData = data;
     t = uitable(h,'Units','normalized','Position',[.15 .55, .8 .25],'Data', defaultData,'Tag','myTable',...
         'ColumnName', [],'RowName',[],...
@@ -214,7 +219,9 @@ function setTable(handles,data)
     %data = get(t,'Data');
 end
 
-function setGraph(h,data)
+function setGraph(h,data,type)
+
+
 
 handle = h.figure1;
 
@@ -225,25 +232,45 @@ global colors;
 t = axes('Position',[.15 .25, .8 .25]);
 
 
-%legendList = cell(1,height*2);
+
 
 index = 1;
 
-for i=1:height
+if strcmp(type,'Spectro')
+    
+legendList = cell(1,(height-1)*2);
+
+for i=2:height
     
     %legendList = [legendList,cell(1,2*(nrOfData-1))];
     
-    plot(t,[data{i,20}],[data{i,21}],colors{1,mod(i,length(colors))+1});
+    plot(t,[data{i,uint32(Constants.SpectroXPos)}],[data{i,uint32(Constants.SpectroYPos)}],colors{1,mod(i,length(colors))+1});
 
     hold on;
-    plot(t,[data{i,22}],[data{i,23}],colors{1,mod(i,length(colors))+1});
+    plot(t,[data{i,uint32(Constants.SpectroXUpPos)}],[data{i,uint32(Constants.SpectroYUpPos)}],colors{1,mod(i,length(colors))+1});
     legendList{index} = data{i,2};
     legendList{index+1} = [data{i,2},'up'];
         
     index = index + 2;
 end
 
-%legend(legendList);
+elseif strcmp(type,'Olfactory')
+    
+    legendList = cell(1,(height-1));
+    
+    for i=2:height
+    
+    %legendList = [legendList,cell(1,2*(nrOfData-1))];
+    
+    plot(t,[data{i,uint32(Constants.OlfXPos)}],[data{i,uint32(Constants.OlfYPos)}],colors{1,mod(i,length(colors))+1});
+    hold on;
+    legendList{index} = data{i,2};
+        
+    index = index + 1;
+    end
+end
+
+legend(legendList);
 
 %t = axes(handle,'Data',data);
 
@@ -260,7 +287,7 @@ if dp ~= 300
     set(edit_,'Enable','off')
 end
 
-button = uicontrol(handle,'Style','pushbutton','Position',[20 190 100 20],'String','Interpolate','Callback',{@downSample,toSend,t,handle});
+button = uicontrol(handle,'Style','pushbutton','Position',[20 190 100 20],'String','Interpolate','Callback',{@downSample,toSend,t,handle,type});
 disp(get(button,'Position'));
 
 % fnames = fieldnames(data);
@@ -314,78 +341,119 @@ disp(get(button,'Position'));
 % disp(get(button,'Position'));
 end
 
-function setOlfGraph(h,data)
-
-handle = h.figure1;
-
-fnames = fieldnames(data);
-numFnames = length(fnames);
-
-global colors;
-
-for i=1:numFnames
-    
-    name = fnames{i};
-    
-    t = axes('Position',[.15 .25, .8 .25]);
-    plot(t,[data.(name).x],[data.(name).y],colors{1,mod(i,length(colors))+1});
-    hold on;
-end
-
-legend(fnames);
-%t = axes(handle,'Data',data);
-
-toSend = data;
-
-userdata = get(handle,'UserData');
-handler = userdata.handler;
-dp = handler.getDataManager().getNrOfOlfactoryDP();
-
-edit_ = uicontrol(handle,'Style','edit','Tag','sampleedit','String',dp,'Position',[20 240 40 20]);
-uicontrol(handle,'Style','text','String','Nr of datapoints used','Position',[65 240 110 20]);
-
-if dp ~= 15000
-    set(edit_,'Enable','off')
-end
-
-button = uicontrol(handle,'Style','pushbutton','Position',[20 190 100 20],'String','Interpolate','Callback',{@downSampleOlf,toSend,t,handle});
-
-end
+% function setOlfGraph(h,data)
+% 
+% handle = h.figure1;
+% 
+% fnames = fieldnames(data);
+% numFnames = length(fnames);
+% 
+% global colors;
+% 
+% for i=1:numFnames
+%     
+%     name = fnames{i};
+%     
+%     t = axes('Position',[.15 .25, .8 .25]);
+%     plot(t,[data.(name).x],[data.(name).y],colors{1,mod(i,length(colors))+1});
+%     hold on;
+% end
+% 
+% legend(fnames);
+% %t = axes(handle,'Data',data);
+% 
+% toSend = data;
+% 
+% userdata = get(handle,'UserData');
+% handler = userdata.handler;
+% dp = handler.getDataManager().getNrOfOlfactoryDP();
+% 
+% edit_ = uicontrol(handle,'Style','edit','Tag','sampleedit','String',dp,'Position',[20 240 40 20]);
+% uicontrol(handle,'Style','text','String','Nr of datapoints used','Position',[65 240 110 20]);
+% 
+% if dp ~= 15000
+%     set(edit_,'Enable','off')
+% end
+% 
+% button = uicontrol(handle,'Style','pushbutton','Position',[20 190 100 20],'String','Interpolate','Callback',{@downSampleOlf,toSend,t,handle});
+% 
+% end
 
 function downSample(varargin)
-    inData = varargin{3};
-    
-    fnames = fieldnames(inData);
-    numFnames = length(fnames);
+    %
+    matrix = varargin{3};
+    t = varargin{4};
     hfig = varargin{5};
-        
-    for i=1:numFnames
-        data = inData.(fnames{i});
-        
-        x1 = [data.obs1.x];
-        y1 = [data.obs1.y];
-        x2 = [data.obs2.x];
-        y2 = [data.obs2.y];
+    type = varargin{6};
+    
+    s = size(matrix);
+    height = s(1);
+    h = findobj('Tag','sampleedit');
+    rate = get(h,'String');
+    dsrate = str2double(rate);
+    
+    if strcmp(type,'Spectro')
+        for i=2:height
+            y1 = matrix{i,uint32(Constants.SpectroYPos)};
+            x1 = matrix{i,uint32(Constants.SpectroXPos)};
+            y2 = matrix{i,uint32(Constants.SpectroYUpPos)};
+            x2 = matrix{i,uint32(Constants.SpectroXUpPos)};
 
-        t = varargin{4};
-        h = findobj('Tag','sampleedit');
-        rate = get(h,'String');
+            x1new = round(linspace(380,600,dsrate));
+            x2new = round(linspace(380,600,dsrate));
 
-        dbrate = str2double(rate);
-        x1new = linspace(380,600,dbrate);
-        x2new = linspace(380,600,dbrate);
+            y1 = interp1(x1,y1,x1new);
+            y2 = interp1(x2,y2,x2new);
 
-        y1 = interp1(x1,y1,x1new);
-        y2 = interp1(x2,y2,x2new);
+            plot(t,x1,matrix{i,23},'g');
+            hold on
+            plot(t,x2,matrix{i,25},'g');
+            plot(t,x1new,y1,'r');
+            plot(t,x2new,y2,'b');
+        end
+    else
+        for i=2:height
+            y1 = matrix{i,uint32(Constants.OlfXPos)};
+            x1 = matrix{i,uint32(Constants.OlfYPos)};
 
-        hold off
-        plot(t,x1,[data.obs1.y],'r');
-
-        hold on
-        plot(t,x2,[data.obs2.y],'r');
-        plot(t,x1new,y1,'r');
-        plot(t,x2new,y2,'y');
+            x1new = round(linspace(0,60,dsrate));
+            y1 = interp1(x1,y1,x1new);
+            plot(t,x1,matrix{i,21},'g');
+            hold on
+            plot(t,x1new,y1,'r');
+        end
     end
+%     %fnames = fieldnames(inData);
+%     %numFnames = length(fnames);
+%     %hfig = varargin{5};
+%         
+%     for i=1:numFnames
+%         data = inData.(fnames{i});
+%         
+%         x1 = [data.obs1.x];
+%         y1 = [data.obs1.y];
+%         x2 = [data.obs2.x];
+%         y2 = [data.obs2.y];
+% 
+%         t = varargin{4};
+%         h = findobj('Tag','sampleedit');
+%         rate = get(h,'String');
+% 
+%         dbrate = str2double(rate);
+%         x1new = linspace(380,600,dbrate);
+%         x2new = linspace(380,600,dbrate);
+% 
+%         y1 = interp1(x1,y1,x1new);
+%         y2 = interp1(x2,y2,x2new);
+% 
+%         hold off
+%         plot(t,x1,[data.obs1.y],'r');
+% 
+%         hold on
+%         plot(t,x2,[data.obs2.y],'r');
+%         plot(t,x1new,y1,'r');
+%         plot(t,x2new,y2,'y');
+%     end
     
     userdata = get(hfig,'UserData');
     
@@ -393,50 +461,50 @@ function downSample(varargin)
 
     handler.dataManager = handler.dataManager.setNrOfSpectroDP(userdata.dp); 
     userdata.handler = handler;
-    userdata.dp = dbrate;
+    userdata.dp = dsrate;
     
     set(hfig,'UserData',userdata);
-end
-
-function downSampleOlf(varargin)
-    inData = varargin{3};
-    
-    fnames = fieldnames(inData);
-    numFnames = length(fnames);
-    hfig = varargin{5};
-        
-    for i=1:numFnames        
-        data = inData.(fnames{i});
-        
-        x = [data.x];
-        y = [data.y];
-
-        t = varargin{4};
-        h = findobj('Tag','sampleedit');
-        rate = get(h,'String');
-
-        dbrate = str2double(rate);
-        xnew = linspace(min(x),max(x),dbrate);
-        
-        y = interp1(x,y,xnew,'cubic');
-        
-        hold off
-        plot(t,x,[data.y],'b');
-
-        hold on
-        plot(t,xnew,y,'r');        
-    end
-    
-    userdata = get(hfig,'UserData');
-    handler = userdata.handler;
-
-    handler.getDataManager().setNrOfOlfactoryDP(dbrate); 
-    %handler.dataManager = handler.dataManager.setNrOfOlfactoryDP(dbrate); 
-    userdata.handler = handler;
-    userdata.dp = dbrate;
-    
-    set(hfig,'UserData',userdata);
-end
+% end
+% 
+% function downSampleOlf(varargin)
+%     inData = varargin{3};
+%     
+%     fnames = fieldnames(inData);
+%     numFnames = length(fnames);
+%     hfig = varargin{5};
+%         
+%     for i=1:numFnames        
+%         data = inData.(fnames{i});
+%         
+%         x = [data.x];
+%         y = [data.y];
+% 
+%         t = varargin{4};
+%         h = findobj('Tag','sampleedit');
+%         rate = get(h,'String');
+% 
+%         dbrate = str2double(rate);
+%         xnew = linspace(min(x),max(x),dbrate);
+%         
+%         y = interp1(x,y,xnew,'cubic');
+%         
+%         hold off
+%         plot(t,x,[data.y],'b');
+% 
+%         hold on
+%         plot(t,xnew,y,'r');        
+%     end
+%     
+%     userdata = get(hfig,'UserData');
+%     handler = userdata.handler;
+% 
+%     handler.getDataManager().setNrOfOlfactoryDP(dbrate); 
+%     %handler.dataManager = handler.dataManager.setNrOfOlfactoryDP(dbrate); 
+%     userdata.handler = handler;
+%     userdata.dp = dbrate;
+%     
+%     set(hfig,'UserData',userdata);
+ end
 
 function deleteRow(varargin)
     handle = varargin{3};

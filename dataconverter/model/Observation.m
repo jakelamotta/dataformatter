@@ -6,18 +6,21 @@ classdef Observation < handle
     
     properties (Access = private)
         xlsMatrix;
+        spectroTime;
     end
     
     methods (Access = public)
         
+        %%
         function this = Observation()
-            this.xlsMatrix = {'Flower','ID','Date','temperature(c)','Humidity','Pressure','weatherTime','wind speed (m/s)','direction(degrees)','Temperature(c)','Contrast','Correlation','Energy','homogenity','ent','alpha','Comment','lux1','lux2','SpectroX','SpectroY','SpectroXUp','SpectroYUp'};
+            this.xlsMatrix = {'Flower','ID','DATE','Negative','Positive','temperature(c)','Humidity','Pressure','weatherTime','wind speed (m/s)','direction(degrees)','Temperature(c)','Contrast','Correlation','Energy','homogenity','ent','alpha','Comment','lux1','lux2','SpectroX','SpectroY','SpectroXUp','SpectroYUp','OlfX','OlfY'};
             global matrixColumns;
-            
             this.xlsMatrix = [this.xlsMatrix,matrixColumns];
+            this.spectroTime = struct;
         end
         
-        function this = appendObject(this,obj)
+        %%
+        function this = appendObservation(this,obj)
             matrix = obj.getMatrix();
             
             [this.xlsMatrix,matrix] = Utilities.padMatrix(this.xlsMatrix,matrix);
@@ -103,7 +106,7 @@ classdef Observation < handle
                     if strcmp(this.xlsMatrix{1,j},matrix{1,i})
                         for k=2:s(1);
                             counter = counter +1;
-                            appendCell{k,2} = id;
+                            appendCell{k,uint32(Constants.IdPos)} = id;
                             appendCell{k,j} = matrix{k,i};
                         end
                         break;
@@ -121,6 +124,18 @@ classdef Observation < handle
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         %%%%%%%%%%%%%%%%%%%%%GETTERS AND SETTERS%%%%%%%%%%%%%%%%%%%%%%%%%%%
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        
+        function spectroTime = getSpectroTime(this)
+            spectroTime = this.spectroTime;
+        end
+        
+        function this = setSpectroTime(this,id,time_)
+           this.spectroTime.(strrep(id,'.','')) = time_; 
+        end
+        
+        function this = setSpectroStruct(this,inStruct)
+           this.spectroTime = inStruct; 
+        end
         
         function s = getWidth(this)
             size_ = size(this.xlsMatrix);
@@ -162,13 +177,6 @@ classdef Observation < handle
            height = this.getNumRows();
            this.xlsMatrix{height+1,2} = id;
         end
-    end    
-    
-    methods (Access = private)                
-        function this = initStructFields(this)
-            this.spectroData = struct;
-            this.olfactoryData = struct;
-        end
-    end    
+    end
 end
 

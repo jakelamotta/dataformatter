@@ -49,10 +49,11 @@ classdef SpectroDataAdapter < DataAdapter
                     wli = strfind(rawData,'spectrumPoints');
                     wli = wli{1};
                     
-                    tempStruct = struct;
-                    tempStruct.id = id_;
-                    tempStruct.time = timeString;
-                    
+%                     tempStruct = struct;
+%                     tempStruct.id = id_;
+%                     tempStruct.time = timeString;
+%                    
+                    this.dobj.setSpectroTime(id_,timeString);
                     %try
                         for obs=1:length(wli)
                             idx = strfind(rawData,'lux');

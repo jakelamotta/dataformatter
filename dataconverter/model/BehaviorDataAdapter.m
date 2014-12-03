@@ -11,13 +11,17 @@ classdef BehaviorDataAdapter < DataAdapter
     methods (Access = public)
         
         function this = BehaviorDataAdapter()
+            %Call to superclass constructor
+            this@DataAdapter();
+            
             global matrixColumns;
-            this.tempMatrix = matrixColumns;
+            this.tempMatrix = [this.genData,matrixColumns];
             this.dobj = Observation();
             global varmap;
             this.varMap = varmap;
             s = size(this.tempMatrix);
             this.size_ = s(2);
+            
         end
         
         function rawData = fileReader(this,path)
@@ -40,14 +44,14 @@ classdef BehaviorDataAdapter < DataAdapter
                     catch
                         errordlg('Incorrect path was passed to the file reader');
                     end
-
+                    
                     if strfind(paths{1,i}(idx(end):end),'template1.xlsx')
                         system(['start ',paths{1,i}]);
                         hdg = helpdlg('Please fill in the template, close it and press OK','Information');
                         waitfor(hdg);
                         
                         toRemove = paths{1,i};
-                        newFileName = 'autoNamedfile.xlsx';
+                        newFileName = [id_,'.xlsx'];
                         
                         paths{1,i} = paths{1,i}(1:end-13);
                         paths{1,i} = [paths{1,i},newFileName];
@@ -69,10 +73,13 @@ classdef BehaviorDataAdapter < DataAdapter
     end
     
     methods (Access = private)
+        
         function this = parse(this,rawData)
             nrOfRows = size(rawData);
-            global matrixColumns;
-            this.tempMatrix = matrixColumns;
+            %global matrixColumns;
+            
+            %this.tempMatrix = matrixColumns;
+            
             for i=1:nrOfRows(1)
                 if isnan(rawData{i,6})
                     rawData{i,6} = '';
