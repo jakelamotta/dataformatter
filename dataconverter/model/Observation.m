@@ -26,13 +26,21 @@ classdef Observation < handle
             this.setMatrix([this.xlsMatrix;matrix(2:end,:)]);
         end
         
+        %%
+        function this = mergeObservations(this,rowNr1,rowNr2)
+        
+        this.getWidth();
+            
+                  
+        end
+        
         %%Function for merging a row
         function this = combine(this,inObj)
             inRow = inObj.getMatrix();
             
             id = inRow{2,2};
             
-            mergedObj = DataObject();
+            mergedObj = Observation();
             
             outRow = this.getRowFromID(id);
             this.deleteRowFromID(id);

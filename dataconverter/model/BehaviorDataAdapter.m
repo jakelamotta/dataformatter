@@ -65,9 +65,9 @@ classdef BehaviorDataAdapter < DataAdapter
                     rawData = this.fileReader(path);
                     this = this.parse(rawData);
 
-                    
-                end
                 obj = this.dobj.setObservation(this.tempMatrix,id_);
+                end
+                
             end
         end        
     end

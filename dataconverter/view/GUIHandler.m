@@ -142,7 +142,7 @@ classdef GUIHandler
             this.importBtn = uicontrol(this.mainWindow,'Style','pushbutton','String','Import data', 'Position',[250 380 120 50],'Callback',@this.importCallback);
             this.manageBtn = uicontrol(this.mainWindow,'Style','pushbutton','String','Manage data','Position',[400 380 120 50],'Callback',@this.manageCallback);
             this.exportBtn = uicontrol(this.mainWindow,'Style','pushbutton','String','Export','Position',[650 368 150 75],'Callback',@this.exportCallback);
-            
+            %this.mergeBtn = uicontrol(this.mainWindow,'Style','pushbutton','String','Merge','Position',[5200 380 900 50],'Callback',@this.merge);
             this.dataTable = uitable(this.mainWindow,'Position',[70 90 850 220]);%,'Callback',@this.tableCallback);
             
             this.file_ = uimenu(this.mainWindow,'Label','File');
