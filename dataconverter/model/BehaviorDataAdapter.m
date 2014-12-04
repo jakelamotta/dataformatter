@@ -20,8 +20,7 @@ classdef BehaviorDataAdapter < DataAdapter
             global varmap;
             this.varMap = varmap;
             s = size(this.tempMatrix);
-            this.size_ = s(2);
-            
+            this.size_ = s(2);            
         end
         
         function rawData = fileReader(this,path)
@@ -38,7 +37,7 @@ classdef BehaviorDataAdapter < DataAdapter
             for i=1:s(2)
                 if strfind(paths{1,i}(end-3:end),'xls')
                     idx = strfind(paths{1,i},'\');
-
+                    this.tempMatrix = this.tempMatrix(1,:);
                     try
                         id_ = paths{1,i}(idx(end-2)+1:idx(end-1)-1);
                     catch
