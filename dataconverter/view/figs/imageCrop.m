@@ -281,14 +281,11 @@ function popupmenu1_Callback(hObject, eventdata, handles)
     imshow(imageList{1,index},'Parent',handles.axes1);
     setImages(handles,imageList{1,index})
     
-    
-    
     set(handles.axes1,'UserData',imageList{1,index});
     
     %keeps = get(handles.keepbox,'UserData');
     %set(handles.keepbox,'Value',keeps{index});
-    set(handles.keepbox,'Value',imageList{3,index});
-    
+    set(handles.keepbox,'Value',imageList{3,index});    
 end
 
 % --- Executes during object creation, after setting all properties.
@@ -299,9 +296,9 @@ function popupmenu1_CreateFcn(hObject, eventdata, handles)
 
 % Hint: popupmenu controls usually have a white background on Windows.
 %       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
+    if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+        set(hObject,'BackgroundColor','white');
+    end
 end
 
 
@@ -310,23 +307,9 @@ function keepbox_Callback(hObject, eventdata, handles)
 % hObject    handle to keepbox (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
 % Hint: get(hObject,'Value') returns toggle state of keepbox
-    list = get(handles.popupmenu1,'UserData');
+    list = get(handles.figure1,'UserData');
     index = get(handles.popupmenu1,'Value');
-
-    %keeps = get(hObject,'UserData');
-    %keeps{index} = get(hObject,'Value');
-    %set(hObject,'UserData',keeps);
     list{3,index} = get(hObject,'Value');
-    
-% if get(hObject,'Value')
-%     list{3,index} = true;
-% else
-%     list{3,index} = false;
-% end
-
-
-set(handles.popupmenu1, 'UserData',list);
-
+    set(handles.figure1, 'UserData',list);
 end

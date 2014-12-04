@@ -22,13 +22,11 @@ classdef Observation < handle
         %%
         function this = appendObservation(this,obj)
             matrix = obj.getMatrix();
-            
             [this.xlsMatrix,matrix] = Utilities.padMatrix(this.xlsMatrix,matrix);
-            
             this.setMatrix([this.xlsMatrix;matrix(2:end,:)]);
         end
         
-        %%Function for merging a row 
+        %%Function for merging a row
         function this = combine(this,inObj)
             inRow = inObj.getMatrix();
             
@@ -51,10 +49,10 @@ classdef Observation < handle
             end
             
             mergedObj.setMatrix(outRow);
-                        
-            this.appendObject(mergedObject);            
+            this.appendObject(mergedObject);
         end
         
+        %%
         function row = getRowFromID(this,id)
             
             height = this.getNumRows();
@@ -73,6 +71,7 @@ classdef Observation < handle
             end           
         end
         
+        %%
         function this = deleteRowFromID(this,id)
             mat = this.getMatrix();
             height = this.getNumRows();
@@ -120,11 +119,11 @@ classdef Observation < handle
             this.xlsMatrix = [this.xlsMatrix;appendCell(2:end,:)];
         end
         
+        
         %%
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         %%%%%%%%%%%%%%%%%%%%%GETTERS AND SETTERS%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%        
         function spectroTime = getSpectroTime(this)
             spectroTime = this.spectroTime;
         end

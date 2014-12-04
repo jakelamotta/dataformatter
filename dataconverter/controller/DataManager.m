@@ -51,7 +51,7 @@ classdef DataManager < handle
             
             newMat = [current.getMatrix();tempMat(rows,:)];
             current = current.setMatrix(newMat);
-            id_ = current.getObjectID();
+            current.setSpectroStruct(temp.getSpectroTime());
             this = this.setUnfObject(current);
         end
         
