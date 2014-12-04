@@ -30,8 +30,20 @@ classdef Observation < handle
         function this = mergeObservations(this,rowNr1,rowNr2)
         
         this.getWidth();
-            
-                  
+        mergeable = true;
+        
+        for i=3:this.getWidth()
+            mergeable = mergeable & (this.xlsMatrix{rowNr1,i} == this.xlsMatrix{rowNr2,i});
+            if ~mergeable
+                break;
+            end
+        end
+        
+        if mergeable
+            this.xlsMatrix{rowNr1,5} = [this.xlsMatrix{rowNr1,5},' ',this.xlsMatrix{rowNr2,5}]; 
+        end
+        
+        this.deleteRowFromID(this.xlsMatrix(rowNr2,uint32(Constants.IdPos)));        
         end
         
         %%Function for merging a row
@@ -107,6 +119,7 @@ classdef Observation < handle
             
             counter = 0;
             
+            
             for i=1:s(2)                
                 for j=start:this.getWidth()
                     
@@ -122,7 +135,6 @@ classdef Observation < handle
                 end
             end
             
-            %disp(['Loop ran for ',num2str(counter),' times']);
             [this.xlsMatrix,appendCell] = Utilities.padMatrix(this.xlsMatrix,appendCell);
             this.xlsMatrix = [this.xlsMatrix;appendCell(2:end,:)];
         end

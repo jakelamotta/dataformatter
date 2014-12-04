@@ -52,7 +52,8 @@ classdef Filter < handle
         
     end
     
-    methods (Access = private)        
+    methods (Access = private)
+        
         
         function row = average(this,rows)
            
@@ -65,16 +66,13 @@ classdef Filter < handle
                 temp = 0;
                 
                 for j=1:s(1)
-                    if isnumeric(rows{j,i})
-                        temp = temp+rows{j,i};
-                    else
-                        temp = temp+str2double(rows{j,i});
-                    end
+                    temp = temp+rows{j,i};
                 end
                 avg = temp/s(1);
                 row{i} = avg;
             end
-        end        
+        end
+        
     end
     
 end

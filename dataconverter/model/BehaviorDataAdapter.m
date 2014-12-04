@@ -40,7 +40,7 @@ classdef BehaviorDataAdapter < DataAdapter
                     this.tempMatrix = this.tempMatrix(1,:);
                     try
                         id_ = paths{1,i}(idx(end-2)+1:idx(end-1)-1);
-                    catch
+                    catch e
                         errordlg('Incorrect path was passed to the file reader');
                     end
                     
@@ -75,9 +75,6 @@ classdef BehaviorDataAdapter < DataAdapter
         
         function this = parse(this,rawData)
             nrOfRows = size(rawData);
-            %global matrixColumns;
-            
-            %this.tempMatrix = matrixColumns;
             
             for i=1:nrOfRows(1)
                 if isnan(rawData{i,6})
@@ -102,8 +99,7 @@ classdef BehaviorDataAdapter < DataAdapter
             for i=1:length(idx)-1
                 obs = [rawData(idx{i}:idx{i+1}-1,6),rawData(idx{i}:idx{i+1}-1,8:9)];
                 obsSize = size(obs);
-                %disp(i);
-                %disp(rawData(idx{i}:idx{i+1}-1,6));
+                
                 for k=2:obsSize(1)
                     if ~isnan(obs{k,1})
                         
@@ -126,8 +122,7 @@ classdef BehaviorDataAdapter < DataAdapter
             
             obs = [rawData(idx{i}:end,6),rawData(idx{i}:end,8:9)];
             obsSize = size(obs);
-            %disp(i);
-            %disp(rawData(idx{i}:idx{i+1}-1,6));
+            
             for k=2:obsSize(1)
                 if ~isnan(obs{k,1})
                     

@@ -124,9 +124,7 @@ classdef WeatherDataAdapter < DataAdapter
                         temp{1,j}(5) = {weatherDate};
                         this.tempMatrix = [this.tempMatrix;temp{1,j}(5:8)];
                     end
-                    
                     s = size(this.tempMatrix);
-                    
                 end
                 
                 this.dobj = this.dobj.setObservation(this.tempMatrix,id_);

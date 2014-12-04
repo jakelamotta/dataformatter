@@ -13,7 +13,7 @@ classdef WeatherFilter < Filter
             
             switch type
                 case 'average'                      
-                    this.filtered = filter@Filter(this,unfiltered,10,13);
+                    this.filtered = filter@Filter(this,unfiltered,10,12);
             end        
             
             output = this.filtered;
