@@ -26,24 +26,34 @@ classdef Observation < handle
             this.setMatrix([this.xlsMatrix;matrix(2:end,:)]);
         end
         
+        function this = fillWithZeros(this)
+            for i=4:this.getWidth()
+                for j=2:this.getNumRows()
+                    if isemtpy(this.xlsMatrix{j,i})
+                        this.xlsMatrix{j,i} = 0;
+                    end
+                end
+            end
+        end
+                
         %%
         function this = mergeObservations(this,rowNr1,rowNr2)
         
-        this.getWidth();
-        mergeable = true;
-        
-        for i=3:this.getWidth()
-            mergeable = mergeable & (this.xlsMatrix{rowNr1,i} == this.xlsMatrix{rowNr2,i});
-            if ~mergeable
-                break;
+            this.getWidth();
+            mergeable = true;
+
+            for i=3:this.getWidth()
+                mergeable = mergeable & (this.xlsMatrix{rowNr1,i} == this.xlsMatrix{rowNr2,i});
+                if ~mergeable
+                    break;
+                end
             end
-        end
-        
-        if mergeable
-            this.xlsMatrix{rowNr1,5} = [this.xlsMatrix{rowNr1,5},' ',this.xlsMatrix{rowNr2,5}]; 
-        end
-        
-        this.deleteRowFromID(this.xlsMatrix(rowNr2,uint32(Constants.IdPos)));        
+
+            if mergeable
+                this.xlsMatrix{rowNr1,5} = [this.xlsMatrix{rowNr1,5},' ',this.xlsMatrix{rowNr2,5}]; 
+            end
+
+            this.deleteRowFromID(this.xlsMatrix(rowNr2,uint32(Constants.IdPos)));        
         end
         
         %%Function for merging a row

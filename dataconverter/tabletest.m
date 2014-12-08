@@ -61,8 +61,6 @@ guidata(hObject, handles);
 a = {'a','b','c';1,2,3};
 set(handles.uitable1,'data',a);
 
-jtable = handles.uitable1.getTable;
-
 
 % UIWAIT makes tabletest wait for user response (see UIRESUME)
 % uiwait(handles.figure1);

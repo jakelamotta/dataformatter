@@ -150,11 +150,11 @@ classdef GUIHandler
         function this = initGUI(this)
             scrsz = get(0,'ScreenSize');            
             this.mainWindow = figure('Name','Title','DockControls','off','NumberTitle','off','Position',[scrsz(3)/8 scrsz(4)/8 scrsz(3)/1.9 scrsz(4)/2.3],'MenuBar','None','ToolBar','None');
-            
-            this.loadBtn = uicontrol(this.mainWindow,'Style','pushbutton','String','Load Data','Position',[100 380 120 50],'Callback',@this.loadCallback);
-            this.importBtn = uicontrol(this.mainWindow,'Style','pushbutton','String','Import data', 'Position',[250 380 120 50],'Callback',@this.importCallback);
-            this.manageBtn = uicontrol(this.mainWindow,'Style','pushbutton','String','Manage data','Position',[400 380 120 50],'Callback',@this.manageCallback);
-            this.exportBtn = uicontrol(this.mainWindow,'Style','pushbutton','String','Export','Position',[650 368 150 75],'Callback',@this.exportCallback);
+            disp(scrsz);
+            this.loadBtn = uicontrol(this.mainWindow,'Style','pushbutton','String','Load Data','Position',[scrsz(3)/19.2 scrsz(4)/2.84 scrsz(3)/16 scrsz(4)/21.6],'Callback',@this.loadCallback);
+            this.importBtn = uicontrol(this.mainWindow,'Style','pushbutton','String','Import data', 'Position',[scrsz(3)/7.68 scrsz(4)/2.84 scrsz(3)/16 scrsz(4)/21.6],'Callback',@this.importCallback);
+            this.manageBtn = uicontrol(this.mainWindow,'Style','pushbutton','String','Manage data','Position',[scrsz(3)/4.8 scrsz(4)/2.84 scrsz(3)/16 scrsz(4)/21.6],'Callback',@this.manageCallback);
+            this.exportBtn = uicontrol(this.mainWindow,'Style','pushbutton','String','Export','Position',[scrsz(3)/2.95 scrsz(3)/19.2 150 75],'Callback',@this.exportCallback);
             this.mergeBtn = uicontrol(this.mainWindow,'Style','pushbutton','String','Merge','Position',[940 275 50 25],'Callback',@this.mergeCallback);
             this.dataTable = uitable(this.mainWindow,'Position',[70 90 850 220],'CellSelectionCallback',@this.tableCallback);
             

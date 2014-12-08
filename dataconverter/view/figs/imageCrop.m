@@ -123,6 +123,11 @@ function pushbutton3_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)    
     showCroppedImage(handles);
+    list = get(handles.popupmenu1,'UserData');
+    index = get(handles.popupmenu1,'Value');
+    set(handles.keepbox,'Value',true);
+    list{3,index} = true;
+    set(handles.popupmenu1, 'UserData',list);
 end
 % --- Executes when user attempts to close figure1.
 function figure1_CloseRequestFcn(hObject, eventdata, handles)
@@ -277,6 +282,7 @@ function popupmenu1_Callback(hObject, eventdata, handles)
 %        contents{get(hObject,'Value')} returns selected item from popupmenu1
     index = get(hObject,'Value');
     imageList = get(handles.figure1,'UserData');
+    list = get(handles.figure1,'UserData');
     
     imshow(imageList{1,index},'Parent',handles.axes1);
     setImages(handles,imageList{1,index})
@@ -285,7 +291,7 @@ function popupmenu1_Callback(hObject, eventdata, handles)
     
     %keeps = get(handles.keepbox,'UserData');
     %set(handles.keepbox,'Value',keeps{index});
-    set(handles.keepbox,'Value',imageList{3,index});    
+    set(handles.keepbox,'Value',list{3,index});    
 end
 
 % --- Executes during object creation, after setting all properties.
@@ -308,8 +314,8 @@ function keepbox_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 % Hint: get(hObject,'Value') returns toggle state of keepbox
-    list = get(handles.figure1,'UserData');
+    list = get(handles.popupmenu1,'UserData');
     index = get(handles.popupmenu1,'Value');
     list{3,index} = get(hObject,'Value');
-    set(handles.figure1, 'UserData',list);
+    set(handles.popupmenu1, 'UserData',list);
 end

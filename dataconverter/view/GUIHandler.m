@@ -21,18 +21,20 @@ classdef GUIHandler
         panel1;
         dialogues;
         mergeBtn;
+        scrsz
     end
     
     methods (Access = public)
         
         function this = GUIHandler()
+            this.scrsz = get(0,'ScreenSize');    
             this.inputManager = InputManager();
             this.dataManager = DataManager(this.inputManager,this);
             this.inputManager.setDataManager(this.dataManager);
             this.organizer = Organizer();    
             this.initGUI();
             this.dialogues = containers.Map();
-            
+                    
         end
         
         function manager = getDataManager(this)
@@ -80,7 +82,7 @@ classdef GUIHandler
             
             if ~strcmp(fp(6:end),' -') && ~isnumeric(fp)
                 if this.dataManager.store(fp)
-                    this.dataTable = uitable(this.mainWindow,'Position',[70 90 850 220]);
+                    this.dataTable = uitable(this.mainWindow,'Position',[this.scrsz(3)/27.4286 this.scrsz(4)/12.0 this.scrsz(3)/2.2588 this.scrsz(4)/4.9091]);
                     this.dataManager = this.dataManager.clearAll();%clearObj();
                 else
                     errordlg('Exporting could not be performed, please try again','Error!');
@@ -148,15 +150,15 @@ classdef GUIHandler
         end
         
         function this = initGUI(this)
-            scrsz = get(0,'ScreenSize');            
-            this.mainWindow = figure('Name','Title','DockControls','off','NumberTitle','off','Position',[scrsz(3)/8 scrsz(4)/8 scrsz(3)/1.9 scrsz(4)/2.3],'MenuBar','None','ToolBar','None');
+            sz = this.scrsz;
             
-            this.loadBtn = uicontrol(this.mainWindow,'Style','pushbutton','String','Load Data','Position',[100 380 120 50],'Callback',@this.loadCallback);
-            this.importBtn = uicontrol(this.mainWindow,'Style','pushbutton','String','Import data', 'Position',[250 380 120 50],'Callback',@this.importCallback);
-            this.manageBtn = uicontrol(this.mainWindow,'Style','pushbutton','String','Manage data','Position',[400 380 120 50],'Callback',@this.manageCallback);
-            this.exportBtn = uicontrol(this.mainWindow,'Style','pushbutton','String','Export','Position',[650 368 150 75],'Callback',@this.exportCallback);
-            this.mergeBtn = uicontrol(this.mainWindow,'Style','pushbutton','String','Merge','Position',[940 275 50 25],'Callback',@this.mergeCallback);
-            this.dataTable = uitable(this.mainWindow,'Position',[70 90 850 220],'CellSelectionCallback',@this.tableCallback);
+            this.mainWindow = figure('Name','Title','DockControls','off','NumberTitle','off','Position',[sz(3)/8 sz(4)/8 sz(3)/1.9 sz(4)/2.3],'MenuBar','None','ToolBar','None');
+            this.loadBtn = uicontrol(this.mainWindow,'Style','pushbutton','String','Load Data','Position',[sz(3)/19.2 sz(4)/2.84 sz(3)/16 sz(4)/21.6],'Callback',@this.loadCallback);
+            this.importBtn = uicontrol(this.mainWindow,'Style','pushbutton','String','Import data', 'Position',[sz(3)/7.68 sz(4)/2.84 sz(3)/16 sz(4)/21.6],'Callback',@this.importCallback);
+            this.manageBtn = uicontrol(this.mainWindow,'Style','pushbutton','String','Manage data','Position',[sz(3)/4.8 sz(4)/2.84 sz(3)/16 sz(4)/21.6],'Callback',@this.manageCallback);
+            this.exportBtn = uicontrol(this.mainWindow,'Style','pushbutton','String','Export','Position',[sz(3)/2.95 sz(4)/2.9348 sz(3)/12.8 sz(4)/14.4],'Callback',@this.exportCallback);
+            this.mergeBtn = uicontrol(this.mainWindow,'Style','pushbutton','String','Merge','Position',[sz(3)/2.0426 sz(4)/3.9273 sz(3)/38.4 sz(4)/43.2],'Callback',@this.mergeCallback);
+            this.dataTable = uitable(this.mainWindow,'Position',[sz(3)/27.4286 sz(4)/12.0 sz(3)/2.2588 sz(4)/4.9091],'CellSelectionCallback',@this.tableCallback);
             
             %jtable = this.dataTable.getTable();
             this.file_ = uimenu(this.mainWindow,'Label','File');
@@ -165,7 +167,7 @@ classdef GUIHandler
         end
         
         function this = updateGUI(this)
-            this.dataTable = uitable(this.mainWindow,'data',this.dataManager.getObject().getMatrix(),'Position',[70 90 850 220]);
+            this.dataTable = uitable(this.mainWindow,'data',this.dataManager.getObject().getMatrix(),'Position',[this.scrsz(3)/27.4286 this.scrsz(4)/12.0 this.scrsz(3)/2.2588 this.scrsz(4)/4.9091]);
         end
         
         function this = launchDialogue(this,id,varargin)
@@ -175,11 +177,10 @@ classdef GUIHandler
             
             if ~strcmp(type,'nofilter')
                 this = out_.handler;
-                input_ = out_.data;
+                %input_ = out_.data;
                 this.dataManager = this.dataManager.applyFilter(id,type);
                 this.dataManager = this.dataManager.finalize();
-            end
-            
+            end            
         end
     end    
 end
