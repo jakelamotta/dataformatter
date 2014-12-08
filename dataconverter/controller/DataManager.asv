@@ -81,19 +81,12 @@ classdef DataManager < handle
             end
             
             if ~isempty(listOfIds{1,1})
-                rows = Observation();
                 for i=1:length(listOfIds)
                    id = listOfIds{1,i};
                    row = this.combine(obj,id);
-                   this.getUnfObject().deleteRowFromID(id);
-                   %this = this.setUnfObject(this.getUnfObject().appendObservation(rows));
-                   r = row.getRowFromID(id);
-                   temp = Observation();
-                   temp.setMatrix(r);
-                   rows = rows.appendObservation(temp);
+                   this = ;
                    %this = this.setUnfObject(row); 
                 end
-                this = this.setUnfObject(this.getUnfObject().appendObservation(rows));
             end
             
             this.merge();

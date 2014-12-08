@@ -57,7 +57,7 @@ classdef Observation < handle
         end
         
         %%Function for merging a row
-        function this = combine(this,inObj)
+        function this = csombine(this,inObj)
             inRow = inObj.getMatrix();
             
             id = inRow{2,2};
