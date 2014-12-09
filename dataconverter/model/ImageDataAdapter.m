@@ -37,7 +37,6 @@ classdef ImageDataAdapter < DataAdapter
                 end
                 
                 rawData = this.fileReader(paths{1,i});
-                %h = image(rawData);
                 images.(strrep(id_,'.','')) = [images.(strrep(id_,'.','')),{rawData;paths{1,i}(idx(end)+1:end);false}];
             end
             

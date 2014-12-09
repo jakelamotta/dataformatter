@@ -20,7 +20,7 @@ classdef XLSWriter
         
         function success = appendXLS(this,fname,obj)
             toSave = obj;
-            
+            obj.sortById();
             try
                 if exist(fname,'file');
                     [~,~,old] = xlsread(fname);

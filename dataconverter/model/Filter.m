@@ -61,10 +61,12 @@ classdef Filter < handle
             row{1} = rows{1,1};
             row{2} = rows{1,2};
             row{3} = rows{1,3};
+                        
             for i=colStart:s(2)
                 temp = 0;
                 
                 for j=1:s(1)
+                    
                     if isnumeric(rows{j,i})
                         temp = temp+rows{j,i};
                     else

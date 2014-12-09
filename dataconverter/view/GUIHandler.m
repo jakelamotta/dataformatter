@@ -22,6 +22,7 @@ classdef GUIHandler
         dialogues;
         mergeBtn;
         scrsz
+        panel
     end
     
     methods (Access = public)
@@ -153,7 +154,9 @@ classdef GUIHandler
             sz = this.scrsz;
             
             this.mainWindow = figure('Name','Title','DockControls','off','NumberTitle','off','Position',[sz(3)/8 sz(4)/8 sz(3)/1.9 sz(4)/2.3],'MenuBar','None','ToolBar','None');
-            this.loadBtn = uicontrol(this.mainWindow,'Style','pushbutton','String','Load Data','Position',[sz(3)/19.2 sz(4)/2.84 sz(3)/16 sz(4)/21.6],'Callback',@this.loadCallback);
+%            this.panel = uibuttongroup(this.mainWindow,'Position',[(sz(3)/8)-50 (sz(4)/8)-50 (sz(3)/1.9)-50 (sz(4)/2.3)-50]);            
+            
+           this.loadBtn = uicontrol(this.mainWindow,'Style','pushbutton','String','Load Data','Position',[sz(3)/19.2 sz(4)/2.84 sz(3)/16 sz(4)/21.6],'Callback',@this.loadCallback);
             this.importBtn = uicontrol(this.mainWindow,'Style','pushbutton','String','Import data', 'Position',[sz(3)/7.68 sz(4)/2.84 sz(3)/16 sz(4)/21.6],'Callback',@this.importCallback);
             this.manageBtn = uicontrol(this.mainWindow,'Style','pushbutton','String','Manage data','Position',[sz(3)/4.8 sz(4)/2.84 sz(3)/16 sz(4)/21.6],'Callback',@this.manageCallback);
             this.exportBtn = uicontrol(this.mainWindow,'Style','pushbutton','String','Export','Position',[sz(3)/2.95 sz(4)/2.9348 sz(3)/12.8 sz(4)/14.4],'Callback',@this.exportCallback);

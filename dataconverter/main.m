@@ -37,8 +37,8 @@ function setGlobalVariables()
     for i=1:nrOfInsects
         varmap([strrep(flies{i},char([13,10]),''),'d']) = [Utilities.padString(strrep(flies{i},char([13,10]),''),'_',5),'_dur'];
         varmap([strrep(flies{i},char([13,10]),''),'f']) = [Utilities.padString(strrep(flies{i},char([13,10]),''),'_',5),'_fre'];
-        matrixColumns{2*i-1} = [Utilities.padString(strrep(flies{i},char([13,10]),''),'_',5),'_dur'];
-        matrixColumns{2*i} = [Utilities.padString(strrep(flies{i},char([13,10]),''),'_',5),'_fre'];
+        matrixColumns{2*i-1} = [Utilities.padString(strrep(flies{i},char([13,10]),''),'_',5),'_fre'];
+        matrixColumns{2*i} = [Utilities.padString(strrep(flies{i},char([13,10]),''),'_',5),'_dur'];
     end
     
     matrixColumns{end-2} = 'multi_dur';

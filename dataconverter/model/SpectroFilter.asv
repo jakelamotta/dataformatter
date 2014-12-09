@@ -78,14 +78,12 @@ classdef SpectroFilter < Filter
                x2 = row{uint32(Constants.SpectroYUpPos)};
                
                for k=1:length(x1)
-                  
                   if j==2
-                    appendee{1,k} = [num2str(y1(k)),'_f'];
-                    appendee{1,k+length(x1)} = [num2str(y2(k)),'_u'];
+                    appendee{1,k} = y1(k);
+                    appendee{1,k+} = y2(k);
                   end
-                  
-                  appendee{j,k} = x1(k);
-                  appendee{j,k+length(x1)} = x2(k);
+                  appendee{j,2*k-1} = x1(k);
+                  appendee{j,2*k} = x2(k);
                end               
            end
            

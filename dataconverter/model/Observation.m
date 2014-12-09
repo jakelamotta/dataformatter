@@ -56,30 +56,46 @@ classdef Observation < handle
             this.deleteRowFromID(this.xlsMatrix(rowNr2,uint32(Constants.IdPos)));        
         end
         
+        function this = sortById(this)
+            matrix = this.getMatrix();
+            matrix = matrix.sortrows(matrix,2);
+            this.setMatrix(matrix);
+        end
+        
         %%Function for merging a row
-        function this = csombine(this,inObj)
-            inRow = inObj.getMatrix();
+        function this = combine(this,id)
+            mergeObj = Observation();
+            matrix = this.getMatrix();
             
-            id = inRow{2,2};
+            row = [matrix(1,:);cell(1,this.getWidth())];            
             
-            mergedObj = Observation();
-            
-            outRow = this.getRowFromID(id);
-            this.deleteRowFromID(id);
-            
-            [outRow,inRow] = Utilities.padMatrix(outRow,inRow);
-            
-            nrOfCols = size(outRow);
-            nrOfCols = nrOfCols(2);
-            
-            for i=1:nrOfCols
-                if xor(isempty(outRow{2,i}),isempty(inRow{2,i}))
-                    outRow{2,i} = [outRow{2,i},inRow{2,i}];
+            for j=2:this.getNumRows()
+                if strcmp(id,matrix{j,2})
+                    for i=1:this.getWidth()
+                        if isempty(row{2,i})
+                            row{2,i} = matrix{j,i};
+                        end
+                    end
                 end
             end
             
-            mergedObj.setMatrix(outRow);
-            this.appendObject(mergedObject);
+            while (this.isObservation(id))
+                this.deleteRowFromID(id);
+            end
+            
+            mergeObj.setMatrix(row);
+            this.appendObservation(mergeObj);
+            
+        end
+        
+        function isObs = isObservation(this,id)
+           isObs = false;
+           for i=2:this.getNumRows()
+               isObs = strcmp(id,this.xlsMatrix{i,2});
+               if isObs
+                   break;
+               end
+           end
         end
         
         %%
@@ -109,7 +125,6 @@ classdef Observation < handle
             for i=2:height
                 if strcmp(strrep(id,'.',''),strrep(mat{i,2},'.',''))
                     rowNr = i;
-                    break;
                 end
             end
             

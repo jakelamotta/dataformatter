@@ -26,20 +26,20 @@ classdef OlfactoryFilter < Filter
            height = this.filtered.getNumRows();
            
            
-           y1 = matrix{2,uint32(Constants.SpectroXPos)};
+           y1 = matrix{2,uint32(Constants.OlfXPos)};
            
            appendee = cell(height,length(y1));
            
            for j=2:height
                row = matrix(j,:);
                
-               x1 = row{uint32(Constants.SpectroYPos)};               
+               x1 = row{uint32(Constants.OlfYPos)};               
                
                for k=1:length(x1)
                   if j==2
-                    appendee{1,k-1} = y1(k);
+                    appendee{1,k} = y1(k);
                   end
-                  appendee{j,k-1} = x1(k);
+                  appendee{j,k} = x1(k);
                end               
            end
            
@@ -58,7 +58,7 @@ classdef OlfactoryFilter < Filter
             
             for i=2:height
                 y1 = matrix{i,y1pos};
-                y2 = matrix{i,y2pos};
+                x1 = matrix{i,x1newpos};
                 
                 x1new = round(linspace(380,600,dsrate));
                 
@@ -69,34 +69,6 @@ classdef OlfactoryFilter < Filter
             end
             
             this.filtered.setMatrix(matrix);
-%             
-%             listOfStructs = this.filtered.getOlfactoryData();
-%             fnames = fieldnames(listOfStructs);
-%             numFnames = length(fnames);
-%             
-%             newListOfStructs = struct;
-%             
-%             for i=1:numFnames
-%             
-%             
-%                 tempStruct = listOfStructs.(fnames{i});
-% 
-% 
-%                 x = [tempStruct.x];
-%                 y = [tempStruct.y];
-% 
-%                 xnew = round(linspace(0,60,dsrate));
-%                 
-%                 y = interp1(x,y,xnew);
-%                 
-%                 tempStruct.x = xnew;
-%                 tempStruct.y = y;
-%                 
-%                 newListOfStructs.(fnames{i}) = tempStruct;
-%             end
-%             
-%             this.filtered.setOlfactory(newListOfStructs);
-%             this.addOlfactoryPoints();
         end
         
         function this = addOlfactoryPoints(this)
@@ -117,7 +89,6 @@ classdef OlfactoryFilter < Filter
 
                 tempMatrix = this.filtered.getRowFromID(fnames{j});
                 this.filtered.deleteRowFromID(fnames{j});
-                %tempMatrix = this.filtered.getMatrix();
                 s = size(tempMatrix);
 
                 height = s(1);
