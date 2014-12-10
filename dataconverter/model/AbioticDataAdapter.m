@@ -35,7 +35,7 @@ classdef AbioticDataAdapter < DataAdapter
                 end
                 
                 this.dobj = this.dobj.setObservation(this.tempMatrix,id_);                    
-            
+                this.tempMatrix = {'Date','Pressure','temperature(c)','Humidity'};
             end
             
             obj = this.dobj;
@@ -68,10 +68,6 @@ classdef AbioticDataAdapter < DataAdapter
                 elem = str2double(temp);
             end
         end
-        
-        
-        
     end
-    
 end
 

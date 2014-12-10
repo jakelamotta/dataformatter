@@ -73,6 +73,8 @@ classdef BehaviorDataAdapter < DataAdapter
     
     methods (Access = private)
         
+        %%Extract the time of the video clip from the behavior file, will
+        %%return a list if there are multiple observations in one file. 
         function time = findTotTime(this,rawData)
             totTime = rawData(:,14);
             totTime = totTime(~cellfun('isempty',totTime));    
@@ -86,6 +88,7 @@ classdef BehaviorDataAdapter < DataAdapter
             time = min_+sec;            
         end
         
+        %%
         function this = parse(this,rawData)
             nrOfRows = size(rawData);
             
@@ -113,46 +116,31 @@ classdef BehaviorDataAdapter < DataAdapter
             toAppend = cell(length(idx),this.size_);
             this.tempMatrix = [this.tempMatrix;toAppend];
             disp(length(idx))
-            for i=1:length(idx)-1
-                obs = [rawData(idx{i}:idx{i+1}-1,6),rawData(idx{i}:idx{i+1}-1,8:9)];
+            
+            for i=1:length(idx)
+                
+                if i == length(idx)
+                    obs = [rawData(idx{i}:end,6),rawData(idx{i}:end,8:9)];
+                else
+                    obs = [rawData(idx{i}:idx{i+1}-1,6),rawData(idx{i}:idx{i+1}-1,8:9)];
+                end
+                
                 obsSize = size(obs);
                 
                 for k=2:obsSize(1)
-                    if ~isnan(obs{k,1})
+                    if ~isempty(obs{k,1})
                         
                         var1 = this.varMap([obs{k,1},'d']);
                         var2 = this.varMap([obs{k,1},'f']);
                         
                         for j=1:this.size_
                             if strcmp(this.tempMatrix{1,j},var1)
-                                this.tempMatrix{i+1,j} = str2double(obs{i+1,2})/time;
+                                this.tempMatrix{i+1,j} = obs{k,2}/time;
                             end
                             
                             if strcmp(this.tempMatrix{1,j},var2)
-                                this.tempMatrix{i+1,j} = str2double(obs{i+1,3})/time;
+                                this.tempMatrix{i+1,j} = obs{k,3}/time;
                             end
-                        end
-                    end
-                end
-            end
-            
-            i = length(idx);
-            
-            obs = [rawData(idx{i}:end,6),rawData(idx{i}:end,8:9)];
-            obsSize = size(obs);
-            
-            for k=2:obsSize(1)
-                if ~isnan(obs{k,1})
-                    disp(obs{k,1});
-                    var1 = this.varMap([obs{k,1},'f']);
-                    var2 = this.varMap([obs{k,1},'d']);
-                    for j=1:this.size_
-                        if strcmp(this.tempMatrix{1,j},var1)
-                            this.tempMatrix{i+1,j} = obs{i+1,2}/time;
-                        end
-                        
-                        if strcmp(this.tempMatrix{1,j},var2)
-                            this.tempMatrix{i+1,j} = obs{i+1,3}/time;
                         end
                     end
                 end

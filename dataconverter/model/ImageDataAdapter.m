@@ -52,9 +52,9 @@ classdef ImageDataAdapter < DataAdapter
                 if cont
                     s = size(ims);
                     
-                    for i=1:s(2) 
-                        im = ims{1,i};
-                        keep = ims{3,i};
+                    for h=1:s(2) 
+                        im = ims{1,h};
+                        keep = ims{3,h};
                         if keep
                             % calculate parameters
                             k=graycomatrix(im, 'offset', [0 1; -1 1; -1 0; -1 -1],'NumLevels',256);
@@ -82,14 +82,14 @@ classdef ImageDataAdapter < DataAdapter
                             parameters = {mean(stats.Contrast),mean(stats.Correlation),mean(stats.Energy),mean(stats.Homogeneity),ent alpha};
 
                             this.tempMatrix = [this.tempMatrix;parameters];
-
+                            this.dobj.setObservation(this.tempMatrix,fnames{i});
+                            this.tempMatrix = {'Contrast','Correlation','Energy','homogenity','ent','alpha'};
                             imwrite(im,[paths{1,i}(1:end-4),'_cropped.jpg']);
                         end 
                     end
                 end
             end
             
-            this.dobj.setObservation(this.tempMatrix,id_);
             obj = this.dobj;
             toc
         end
