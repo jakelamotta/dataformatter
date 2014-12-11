@@ -80,6 +80,10 @@ classdef BehaviorDataAdapter < DataAdapter
             totTime = totTime(~cellfun('isempty',totTime));    
             time = totTime{1};
             
+            if ~isnumeric(time)
+                time = str2double(time);
+            end
+            
             sec = mod(time,1);
             min_ = time-sec;
             
