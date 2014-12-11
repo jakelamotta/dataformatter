@@ -130,8 +130,8 @@ classdef BehaviorDataAdapter < DataAdapter
                 for k=2:obsSize(1)
                     if ~isempty(obs{k,1})
                         
-                        var1 = this.varMap([obs{k,1},'d']);
-                        var2 = this.varMap([obs{k,1},'f']);
+                        var1 = this.varMap([obs{k,1},'f']);
+                        var2 = this.varMap([obs{k,1},'d']);
                         
                         for j=1:this.size_
                             if strcmp(this.tempMatrix{1,j},var1)

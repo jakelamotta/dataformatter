@@ -28,7 +28,7 @@ classdef ImageDataAdapter < DataAdapter
                 try
                     id_ = paths{1,i}(idx(end-2)+1:idx(end-1)-1);
                     
-                    if ~isfield(images,id_)
+                    if ~isfield(images,strrep(id_,'.',''))
                         images.(strrep(id_,'.','')) = {[];[];[]};
                     end
                     

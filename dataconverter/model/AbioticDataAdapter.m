@@ -16,6 +16,7 @@ classdef AbioticDataAdapter < DataAdapter
         function obj = getDataObject(this,paths)
             
             s = size(paths);
+            
             for i=1:s(2)
                 idx = strfind(paths{1,i},'\');
                 try
@@ -31,7 +32,11 @@ classdef AbioticDataAdapter < DataAdapter
                 temp = cellfun(@this.createDob,rawData,'UniformOutput',false);
                 
                 for k=1:length(temp)
-                   this.tempMatrix = [this.tempMatrix;temp{1,k}];
+                   [h,w] = size(temp{1,k});
+                   
+                   if w == 4
+                       this.tempMatrix = [this.tempMatrix;temp{1,k}];
+                   end
                 end
                 
                 this.dobj = this.dobj.setObservation(this.tempMatrix,id_);                    
@@ -39,14 +44,11 @@ classdef AbioticDataAdapter < DataAdapter
             end
             
             obj = this.dobj;
-            
         end
         
         function temp = createDob(this, inRow)
             row = regexp(inRow,[char(9),';',char(9)],'split');
-            
             temp = cellfun(@AbioticDataAdapter.handleRow,row,'UniformOutput',false);
-            
             %temp = cellfun(@str2num,row,'UniformOutput',false);%[this.tempMatrix;cellfun(@str2num,row,'UniformOutput',false)];
         end
         
