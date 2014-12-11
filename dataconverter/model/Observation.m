@@ -13,9 +13,9 @@ classdef Observation < handle
         
         %%
         function this = Observation()
-            this.xlsMatrix = {'Flower','ID','DATE','Negative','Positive','temperature(c)','Humidity','Pressure','/weatherTime','wind speed (m/s)','direction(degrees)','Temperature(c)','Contrast','Correlation','Energy','homogenity','ent','alpha','Comment','SpectroX','SpectroY','SpectroXUp','SpectroYUp','OlfX','OlfY'};
+            this.xlsMatrix = {'Flower','ID','DATE','/SpectroTime','/weatherTime','Negative','Positive','temperature(c)','Humidity','Pressure','wind speed (m/s)','direction(degrees)','Temperature(c)','Contrast','Correlation','Energy','homogenity','ent','alpha','Comment','SpectroX','SpectroY','SpectroXUp','SpectroYUp','OlfX','OlfY'};
             global matrixColumns;
-            this.xlsMatrix = [this.xlsMatrix,matrixColumns,{'lux_flower','lux_up','SpectroTime'}];
+            this.xlsMatrix = [this.xlsMatrix,matrixColumns,{'lux_flower','lux_up'}];
             %this.spectroTime = struct;
         end
         
@@ -97,8 +97,7 @@ classdef Observation < handle
             end
             
             mergeObj.setMatrix(row);
-            this.appendObservation(mergeObj);
-            
+            this.appendObservation(mergeObj);            
         end
         
         function isObs = isObservation(this,id)
@@ -156,8 +155,7 @@ classdef Observation < handle
             start = 1;
             
             counter = 0;
-            
-            
+                        
             for i=1:s(2)                
                 for j=start:this.getWidth()
                     
@@ -185,7 +183,7 @@ classdef Observation < handle
         function spectroTime = getSpectroTime(this,id)
             spectroTime = '';
             for i=4:this.getWidth()
-                if strcmp(this.xlsMatrix{1,i},'SpectroTime')
+                if strcmp(this.xlsMatrix{1,i},'/SpectroTime')
                     for j=2:this.getNumRows()
                         if strcmp(id,this.xlsMatrix{j,2})
                             spectroTime = this.xlsMatrix{j,i};

@@ -10,7 +10,7 @@ classdef SpectroDataAdapter < DataAdapter
         
         function this = SpectroDataAdapter()
             this.dobj = Observation();
-            this.tempMatrix = {'lux_flower','lux_up','SpectroX','SpectroY','SpectroXUp','SpectroYUp','SpectroTime'};
+            this.tempMatrix = {'lux_flower','lux_up','SpectroX','SpectroY','SpectroXUp','SpectroYUp','/SpectroTime'};
         end
         
         function rawData = fileReader(this,path)
@@ -104,7 +104,7 @@ classdef SpectroDataAdapter < DataAdapter
                     %end                
                 
                     this.dobj = this.dobj.setObservation(this.tempMatrix,id_);
-                    this.tempMatrix = {'lux_flower','lux_up','SpectroX','SpectroY','SpectroXUp','SpectroYUp','SpectroTime'};
+                    this.tempMatrix = {'lux_flower','lux_up','SpectroX','SpectroY','SpectroXUp','SpectroYUp','/SpectroTime'};
                     %obj = this.dobj.addSpectroData(tempStruct,id_);%tempStruct.obs1.x,tempStruct.obs1.x,tempStruct.obs2.x,tempStruct.obs2.x,id_);
                 end
             end

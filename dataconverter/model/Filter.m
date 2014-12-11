@@ -58,10 +58,15 @@ classdef Filter < handle
            
             s = size(rows);
             row = cell(1,s(2));
-            row{1} = rows{1,1};
-            row{2} = rows{1,2};
-            row{3} = rows{1,3};
             
+%             row{1} = rows{1,1};
+%             row{2} = rows{1,2};
+%             row{3} = rows{1,3};
+            
+            for i=1:5
+                row{i} = rows{1,i};
+            end
+
             for i=colStart:s(2)
                 temp = 0;
                 
@@ -84,6 +89,7 @@ classdef Filter < handle
                     row{i} = temp;
                 end
             end
+            disp(row);
         end        
     end
     

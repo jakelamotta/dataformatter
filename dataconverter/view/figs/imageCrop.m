@@ -282,7 +282,7 @@ function popupmenu1_Callback(hObject, eventdata, handles)
 %        contents{get(hObject,'Value')} returns selected item from popupmenu1
     index = get(hObject,'Value');
     imageList = get(handles.figure1,'UserData');
-    list = get(handles.figure1,'UserData');
+    list = get(handles.popupmenu1,'UserData');
     
     imshow(imageList{1,index},'Parent',handles.axes1);
     setImages(handles,imageList{1,index})
@@ -306,7 +306,6 @@ function popupmenu1_CreateFcn(hObject, eventdata, handles)
         set(hObject,'BackgroundColor','white');
     end
 end
-
 
 % --- Executes on button press in keepbox.
 function keepbox_Callback(hObject, eventdata, handles)
