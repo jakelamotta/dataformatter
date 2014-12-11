@@ -70,15 +70,19 @@ classdef Filter < handle
                     if isnumeric(rows{j,i})
                         temp = temp+rows{j,i};
                     else
-                        try
+                        if ~isnan(str2double(rows{j,i}))
                             temp = temp+str2double(rows{j,i});
-                        catch e
+                        else
                             temp = rows{j,i};
                         end
                     end
                 end
-                avg = temp/s(1);
-                row{i} = avg;
+                if isnumeric(temp)
+                    avg = temp/s(1);
+                    row{i} = avg;
+                else
+                    row{i} = temp;
+                end
             end
         end        
     end

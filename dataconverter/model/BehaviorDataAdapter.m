@@ -98,7 +98,7 @@ classdef BehaviorDataAdapter < DataAdapter
                 end
                 
                 if isnan(rawData{i,15})
-                    rawData{i,14} = '';
+                    rawData{i,15} = '';
                 end                
             end
             time = this.findTotTime(rawData);

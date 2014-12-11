@@ -56,9 +56,22 @@ classdef Observation < handle
             this.deleteRowFromID(this.xlsMatrix(rowNr2,uint32(Constants.IdPos)));        
         end
         
+        function hasMultiples = hasMultiples(this)
+            
+            this.sortById();
+            hasMultiples = false;
+            
+            for i=3:this.getNumRows()
+               if strcmp(this.xlsMatrix{i,2},this.xlsMatrix{i-1,2})
+                   hasMultiples = true;
+                   break;
+               end
+            end
+        end
+        
         function this = sortById(this)
             matrix = this.getMatrix();
-            matrix = matrix.sortrows(matrix,2);
+            matrix = sortrows(matrix,2);
             this.setMatrix(matrix);
         end
         

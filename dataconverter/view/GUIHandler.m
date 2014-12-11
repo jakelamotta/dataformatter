@@ -124,9 +124,9 @@ classdef GUIHandler
                 %    errordlg(['Something went wrong when trying to parse the ',type,' data file. Error message: ',ex.message],'Parse error');
                 %end
 
-                s = size(this.dataManager.getUnfObject().getMatrix());
+                %s = size(this.dataManager.getUnfObject().getMatrix());
 
-                if s(1) > 2 || strcmp(type,'Spectro') || strcmp(type,'Olfactory')
+                if this.dataManager.getUnfObject.hasMultiples() || strcmp(type,'Spectro') || strcmp(type,'Olfactory')
                     this = this.launchDialogue(type);
                 else
                     this.dataManager.finalize();

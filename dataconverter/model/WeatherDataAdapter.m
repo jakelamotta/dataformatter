@@ -135,6 +135,7 @@ classdef WeatherDataAdapter < DataAdapter
                 end
                 
                 this.dobj = this.dobj.setObservation(this.tempMatrix,id_);
+                this.tempMatrix = {'/weatherTime','wind speed (m/s)','direction(degrees)','Temperature(c)'};
             end
             
             obj = this.dobj;

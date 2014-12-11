@@ -6,17 +6,17 @@ classdef Observation < handle
     
     properties (Access = private)
         xlsMatrix;
-        spectroTime;
+        %spectroTime;
     end
     
     methods (Access = public)
         
         %%
         function this = Observation()
-            this.xlsMatrix = {'Flower','ID','DATE','Negative','Positive','temperature(c)','Humidity','Pressure','weatherTime','wind speed (m/s)','direction(degrees)','Temperature(c)','Contrast','Correlation','Energy','homogenity','ent','alpha','Comment','SpectroX','SpectroY','SpectroXUp','SpectroYUp','OlfX','OlfY'};
+            this.xlsMatrix = {'Flower','ID','DATE','Negative','Positive','temperature(c)','Humidity','Pressure','/weatherTime','wind speed (m/s)','direction(degrees)','Temperature(c)','Contrast','Correlation','Energy','homogenity','ent','alpha','Comment','SpectroX','SpectroY','SpectroXUp','SpectroYUp','OlfX','OlfY'};
             global matrixColumns;
             this.xlsMatrix = [this.xlsMatrix,matrixColumns,{'lux_flower','lux_up','SpectroTime'}];
-            this.spectroTime = struct;
+            %this.spectroTime = struct;
         end
         
         %%
@@ -54,6 +54,19 @@ classdef Observation < handle
             end
 
             this.deleteRowFromID(this.xlsMatrix(rowNr2,uint32(Constants.IdPos)));        
+        end
+        
+        function hasMultiples = hasMultiples(this)
+            
+            this.sortById();
+            hasMultiples = false;
+            
+            for i=3:this.getNumRows()
+               if strcmp(this.xlsMatrix{i,2},this.xlsMatrix{i-1,2})
+                   hasMultiples = true;
+                   break;
+               end
+            end
         end
         
         function this = sortById(this)
@@ -170,30 +183,33 @@ classdef Observation < handle
         %%%%%%%%%%%%%%%%%%%%%GETTERS AND SETTERS%%%%%%%%%%%%%%%%%%%%%%%%%%%
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%        
         function spectroTime = getSpectroTime(this,id)
-            
+            spectroTime = '';
             for i=4:this.getWidth()
                 if strcmp(this.xlsMatrix{1,i},'SpectroTime')
                     for j=2:this.getNumRows()
-                        if strcmp(id,this.xlsMatrix{j,i})spectroTime = this.xlsMatrix(2:end)
+                        if strcmp(id,this.xlsMatrix{j,2})
+                            spectroTime = this.xlsMatrix{j,i};
+                        end
+                    end
+                end
+            end
             %spectroTime = this.spectroTime;
         end
-        
-        function this = setSpectroTime(this,id,time_)
-           this.spectroTime.(strrep(id,'.','')) = time_; 
+%         
+%         function this = setSpectroTime(this,id,time_)
+%            this.spectroTime.(strrep(id,'.','')) = time_; 
+%         end
+%         
+%         function this = setSpectroStruct(this,inStruct)
+%            this.spectroTime = inStruct; 
+%         end
+%         
+        function width = getWidth(this)
+            [h,width] = size(this.xlsMatrix);
         end
         
-        function this = setSpectroStruct(this,inStruct)
-           this.spectroTime = inStruct; 
-        end
-        
-        function s = getWidth(this)
-            size_ = size(this.xlsMatrix);
-            s = size_(2);
-        end
-        
-        function s = getNumRows(this)
-            size_ = size(this.xlsMatrix);
-            s = size_(1);
+        function height = getNumRows(this)
+            [height,w] = size(this.xlsMatrix);
         end
         
         function id = getObjectID(this)
