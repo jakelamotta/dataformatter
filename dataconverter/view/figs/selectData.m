@@ -204,7 +204,7 @@ end
 function setTable(handles,data)
     %h = figure('Position',[600 400 402 100],'numbertitle','off','MenuBar','none');
     h = handles.figure1;
-    defaultData = [data(:,1:21),data(:,28:end)];
+    defaultData = [data(:,1:uint32(Constants.SpectroXPos)-1),data(:,uint32(Constants.OlfYPos)+1:end)];
     %defaultData = data;
     t = uitable(h,'Units','normalized','Position',[.15 .55, .8 .25],'Data', defaultData,'Tag','myTable',...
         'ColumnName', [],'RowName',[],...

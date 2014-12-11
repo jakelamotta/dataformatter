@@ -40,6 +40,7 @@ classdef WeatherDataAdapter < DataAdapter
            for i=1:length(row)
                row{1,i} = str2double(row{1,i});
            end
+           
            found = (actualTime{1,1} == row{1,1}) & (actualTime{1,2} == row{1,2});
            found = (actualTime{1,3} == row{1,3}) & found;
            found = found & (abs(actualTime{1,4}+actualTime{1,5}/60 - (row{1,4}+row{1,5}/60)) <= deltaTime/60.);
@@ -51,7 +52,7 @@ classdef WeatherDataAdapter < DataAdapter
             profile on;
             %time in format: multiple-20140821-104913
             size_ = size(paths);
-            spectroTime = varargin{1};
+            inObj = varargin{1};
             inputManager = varargin{2};
             
             for i=1:size_(2)              
@@ -64,15 +65,21 @@ classdef WeatherDataAdapter < DataAdapter
                 end
                 
                 %timeList = {};
+                spectroTime = inObj.getSpectroTime(id_);
                 
-                if isfield(spectroTime,strrep(id_,'.',''))
-                    time = spectroTime.(strrep(id_,'.',''));
-                else
+                if isempty(spectroTime)
                     time = '';
+                else
+                    time = spectroTime;
                 end
+%                 if isfield(spectroTime,strrep(id_,'.',''))
+%                     time = spectroTime.(strrep(id_,'.',''));
+%                 else
+%                     time = '';
+%                 end
                 
                 if strcmp('',time)
-                     time = inputManager.getDataManager().getHandler().getTime();
+                     time = inputManager.getDataManager().getHandler().getTime(id_);
                 end
                 
                 timeList = this.splitTime(time);
@@ -96,11 +103,11 @@ classdef WeatherDataAdapter < DataAdapter
                     dayDiff = timeList{1,3}-str2double(t_temp{1,3});
 
                     %144 is the number of 10 minutes interval per day
-                    start = start+dayDiff*144;  
+                    start = start+dayDiff*144;
+                    
                     %Safety mesure to not miss the day due to missing data
-                    %points etc. The number is arbitrary but seemingly works
-                    start = start-50;
-                
+                    %points etc. The number is somewhat arbitrary
+                    start = start-50;                
                 else
                     start = 1;
                 end

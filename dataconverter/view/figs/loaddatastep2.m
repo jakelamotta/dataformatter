@@ -311,7 +311,7 @@ function updateSource(handles,type,varargin)
         for i=1:numFieldNames
             name = source.(fieldNames{i,1});
             fname{i,1} = ['...',name(end-14:end)];
-        end    
+        end
     end
         
     switch type

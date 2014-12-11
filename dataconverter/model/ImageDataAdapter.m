@@ -15,14 +15,15 @@ classdef ImageDataAdapter < DataAdapter
         
         function obj = getDataObject(this,paths,varargin)
             tic;
-            size_ = size(paths);
+            
+            [h,w] = size(paths);
             
             inputManager = varargin{2};
             handler = inputManager.getDataManager().getHandler();
             
             images = struct;
             
-            for i=1:size_(2)
+            for i=1:w
                 idx = strfind(paths{1,i},'\');
                 
                 try

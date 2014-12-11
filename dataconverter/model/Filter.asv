@@ -61,7 +61,12 @@ classdef Filter < handle
             row{1} = rows{1,1};
             row{2} = rows{1,2};
             row{3} = rows{1,3};
+%             
+%             for i=1:colStart-1
+%                 row{i} = rows{2,i};
+%             endDet 
             
+                        
             for i=colStart:s(2)
                 temp = 0;
                 

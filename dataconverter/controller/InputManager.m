@@ -33,8 +33,8 @@ classdef InputManager < handle
             else
                 tic;
                 if strcmp(adapterId,'Weather') || strcmp(adapterId,'Image')
-                    spectroTime = inObj.getSpectroTime();
-                    obj = this.adapter.getDataObject(paths,spectroTime,this);
+                    %spectroTime = inObj.getSpectroTime();
+                    obj = this.adapter.getDataObject(paths,inObj,this);
                 else
                     obj = this.adapter.getDataObject(paths);
                 end

@@ -45,8 +45,8 @@ classdef GUIHandler
            manager = this.dataManager; 
         end
         
-        function time_ = getTime(this)
-            time_ = weatherQuest;
+        function time_ = getTime(this,id)
+            time_ = weatherQuest(id);
             time_ = ['multiple-',time_];
         end        
         

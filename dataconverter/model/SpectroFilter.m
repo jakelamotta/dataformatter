@@ -12,9 +12,6 @@ classdef SpectroFilter < Filter
             dsrate = varargin{1};
             this.filtered = unfiltered;
             
-            %this = this.downSample(dsrate);
-            %this = this.addSpectrumPoints();
-            
             switch type
                 case 'nofilter'
                     
@@ -65,9 +62,11 @@ classdef SpectroFilter < Filter
            matrix = this.filtered.getMatrix();
            height = this.filtered.getNumRows();
            
+           spectroXpos = uint32(Constants.SpectroXPos);
+           spectroXuppos = uint32(Constants.SpectroXUpPos);
            
-           y1 = matrix{2,uint32(Constants.SpectroXPos)};
-           y2 = matrix{2,uint32(Constants.SpectroXUpPos)};
+           y1 = matrix{2,spectroXpos};
+           y2 = matrix{2,spectroXuppos};
            
            appendee = cell(height,2*length(y1));
            
@@ -89,8 +88,9 @@ classdef SpectroFilter < Filter
                end               
            end
            
-           matrix = [matrix(:,1:21),matrix(:,28:end)];
+           matrix = [matrix(:,1:spectroXpos-1),matrix(:,uint32(Constants.OlfYPos)+1:end)];
            matrix = [matrix,appendee];
+           
            this.filtered.setMatrix(matrix);
         end
     end

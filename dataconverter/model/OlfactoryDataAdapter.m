@@ -39,6 +39,7 @@ classdef OlfactoryDataAdapter < DataAdapter
                 
                % this.dobj.addOlfactoryData(tempStruct,id_);
                 this.dobj.setObservation(this.tempMatrix,id_);
+                this.tempMatrix = {'OlfX','OlfY'};
             end
             
             obj = this.dobj;

@@ -51,7 +51,7 @@ classdef DataManager < handle
             
             newMat = [current.getMatrix();tempMat(rows,:)];
             current = current.setMatrix(newMat);
-            current.setSpectroStruct(temp.getSpectroTime());
+%            current.setSpectroStruct(temp.getSpectroTime());
             this = this.setUnfObject(current);
         end
         
@@ -116,7 +116,7 @@ classdef DataManager < handle
             
             unfObj = this.getUnfObject();
             fobj = this.getObject();
-            fobj.setSpectroStruct(mergestruct(fobj.getSpectroTime(),unfObj.getSpectroTime()));
+%            fobj.setSpectroStruct(mergestruct(fobj.getSpectroTime(),unfObj.getSpectroTime()));
             fobj.appendObservation(unfObj);
             this.setObject(fobj);
 %             if fobj.getNumRows() == 1

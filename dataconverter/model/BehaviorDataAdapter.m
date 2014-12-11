@@ -76,7 +76,7 @@ classdef BehaviorDataAdapter < DataAdapter
         %%Extract the time of the video clip from the behavior file, will
         %%return a list if there are multiple observations in one file. 
         function time = findTotTime(this,rawData)
-            totTime = rawData(:,14);
+            totTime = rawData(:,15);
             totTime = totTime(~cellfun('isempty',totTime));    
             time = totTime{1};
             
@@ -97,7 +97,7 @@ classdef BehaviorDataAdapter < DataAdapter
                     rawData{i,6} = '';
                 end
                 
-                if isnan(rawData{i,14})
+                if isnan(rawData{i,15})
                     rawData{i,14} = '';
                 end                
             end

@@ -6,17 +6,17 @@ classdef Observation < handle
     
     properties (Access = private)
         xlsMatrix;
-        %spectroTime;
+        spectroTime;
     end
     
     methods (Access = public)
         
         %%
         function this = Observation()
-            this.xlsMatrix = {'Flower','ID','DATE','Negative','Positive','temperature(c)','Humidity','Pressure','/weatherTime','wind speed (m/s)','direction(degrees)','Temperature(c)','Contrast','Correlation','Energy','homogenity','ent','alpha','Comment','SpectroX','SpectroY','SpectroXUp','SpectroYUp','OlfX','OlfY'};
+            this.xlsMatrix = {'Flower','ID','DATE','Negative','Positive','temperature(c)','Humidity','Pressure','weatherTime','wind speed (m/s)','direction(degrees)','Temperature(c)','Contrast','Correlation','Energy','homogenity','ent','alpha','Comment','SpectroX','SpectroY','SpectroXUp','SpectroYUp','OlfX','OlfY'};
             global matrixColumns;
             this.xlsMatrix = [this.xlsMatrix,matrixColumns,{'lux_flower','lux_up','SpectroTime'}];
-            %this.spectroTime = struct;
+            this.spectroTime = struct;
         end
         
         %%
@@ -170,33 +170,30 @@ classdef Observation < handle
         %%%%%%%%%%%%%%%%%%%%%GETTERS AND SETTERS%%%%%%%%%%%%%%%%%%%%%%%%%%%
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%        
         function spectroTime = getSpectroTime(this,id)
-            spectroTime = '';
+            
             for i=4:this.getWidth()
                 if strcmp(this.xlsMatrix{1,i},'SpectroTime')
                     for j=2:this.getNumRows()
-                        if strcmp(id,this.xlsMatrix{j,2})
-                            spectroTime = this.xlsMatrix{j,i};
-                        end
-                    end
-                end
-            end
+                        if strcmp(id,this.xlsMatrix{j,i})spectroTime = this.xlsMatrix(2:end)
             %spectroTime = this.spectroTime;
         end
-%         
-%         function this = setSpectroTime(this,id,time_)
-%            this.spectroTime.(strrep(id,'.','')) = time_; 
-%         end
-%         
-%         function this = setSpectroStruct(this,inStruct)
-%            this.spectroTime = inStruct; 
-%         end
-%         
-        function width = getWidth(this)
-            [h,width] = size(this.xlsMatrix);
+        
+        function this = setSpectroTime(this,id,time_)
+           this.spectroTime.(strrep(id,'.','')) = time_; 
         end
         
-        function height = getNumRows(this)
-            [height,w] = size(this.xlsMatrix);
+        function this = setSpectroStruct(this,inStruct)
+           this.spectroTime = inStruct; 
+        end
+        
+        function s = getWidth(this)
+            size_ = size(this.xlsMatrix);
+            s = size_(2);
+        end
+        
+        function s = getNumRows(this)
+            size_ = size(this.xlsMatrix);
+            s = size_(1);
         end
         
         function id = getObjectID(this)

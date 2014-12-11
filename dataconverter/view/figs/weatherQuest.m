@@ -54,9 +54,10 @@ function weatherQuest_OpeningFcn(hObject, eventdata, handles, varargin)
 
 % Choose default command line output for weatherQuest
 handles.output = hObject;
-
+id = varargin{1};
 % Update handles structure
 guidata(hObject, handles);
+set(handles.text1,'String',['Enter time for retrieving weather data for ',id]);
 set(handles.okBtn,'UserData',false);
 % UIWAIT makes weatherQuest wait for user response (see UIRESUME)
 uiwait(handles.figure1);
