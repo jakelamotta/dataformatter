@@ -10,7 +10,11 @@ classdef AbioticDataAdapter < DataAdapter
         
         function this = AbioticDataAdapter()
             this.dobj = Observation();
-            this.tempMatrix = {'Date','Pressure','temperature(c)','Humidity'};
+            this.tempMatrix = {'Date','CO2','temperature(c)','Humidity'};
+        end
+        
+        function this = addValues(this,idx,p)
+            this.tempMatrix = addValues@DataAdapter(this,p,idx,this.tempMatrix);
         end
 %         
         function obj = getDataObject(this,paths)
@@ -19,6 +23,7 @@ classdef AbioticDataAdapter < DataAdapter
             
             for i=1:s(2)
                 idx = strfind(paths{1,i},'\');
+                
                 try
                     id_ = paths{1,i}(idx(end-2)+1:idx(end-1)-1);
                 catch e
@@ -26,6 +31,8 @@ classdef AbioticDataAdapter < DataAdapter
                 end
                 
                 path = paths{1,i};
+                
+                
                 
                 rawData = this.fileReader(path);
                 
@@ -38,7 +45,7 @@ classdef AbioticDataAdapter < DataAdapter
                        this.tempMatrix = [this.tempMatrix;temp{1,k}];
                    end
                 end
-                
+                this = this.addValues(idx,path);
                 this.dobj = this.dobj.setObservation(this.tempMatrix,id_);                    
                 this.tempMatrix = {'Date','Pressure','temperature(c)','Humidity'};
             end

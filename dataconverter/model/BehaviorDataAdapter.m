@@ -31,6 +31,10 @@ classdef BehaviorDataAdapter < DataAdapter
             end
         end
         
+        function this = addValues(this,idx,p)
+            this.tempMatrix = addValues@DataAdapter(this,p,idx,this.tempMatrix);
+        end
+        
         function obj = getDataObject(this,paths)
             s = size(paths);
             
@@ -63,7 +67,9 @@ classdef BehaviorDataAdapter < DataAdapter
 
                     rawData = this.fileReader(path);
                     this = this.parse(rawData);
-
+                    
+                this = this.addValues(idx,paths{1,i});
+                
                 obj = this.dobj.setObservation(this.tempMatrix,id_);
                 end
                 

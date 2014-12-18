@@ -20,28 +20,24 @@ classdef DataAdapter
             this.genData = {'Flower','DATE','Negative','Positive';};
         end
         
-        function matrix = addValues(this,path,idx,matrix)
-            [h,w] = size(matrix);
-            g = [{'Flower','DATE','Negative','Positive'};cell(h-1,4)];
+        function g = addValues(this,path,idx,matrix)
             
-            %[g,matrix] = Utilities.padMatrix(g,matrix);
-            matrix = [g,matrix];
+            g = {'Flower','DATE','Negative','Positive';};
+            
+            [g,matrix] = 
             
             date_ = path(idx(end-5):idx(end-4));
             
-            
-            
-            %           date_ = paths{1,i}(idx(end-5):idx(end-4));
-             flower = path(idx(end-4):idx(end-3));
-             negOrPos = path(idx(end-3):idx(end-2));
+%           date_ = paths{1,i}(idx(end-5):idx(end-4));
+%             flower = paths{1,i}(idx(end-4):idx(end-3));
+%             negOrPos = paths{1,i}(idx(end-3):idx(end-2));
 %             this.tempMatrix{i+1,1} = flower;
 %             this.tempMatrix{i+1,3} = date_;
-%           
-            for i=2:h
-                matrix{i,1} = flower(2:end-1);
-                matrix{i,2} = date_(2:end-1);
-                matrix{i,3} = strcmp(negOrPos,'Negative');
-                matrix{i,4} = ~strcmp(negOrPos,'Negative');
+%             
+            if strcmp(negOrPos,'Negative')
+                g{2,3} = 1;
+            else
+                g{2,4} = negOrPos;
             end
         end
         

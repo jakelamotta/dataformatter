@@ -14,6 +14,10 @@ classdef WeatherDataAdapter < DataAdapter
             this.tempMatrix = {'/weatherTime','wind speed (m/s)','direction(degrees)','Temperature(c)'};
         end
         
+        function this = addValues(this,idx,p)
+            this.tempMatrix = addValues@DataAdapter(this,p,idx,this.tempMatrix);
+        end
+        
         %%
         function timeList = splitTime(this,time)
             start = strfind(time,'2');
@@ -133,6 +137,9 @@ classdef WeatherDataAdapter < DataAdapter
                     end
                     s = size(this.tempMatrix);
                 end
+                
+                
+                this = this.addValues(idx,paths{1,i});
                 
                 this.dobj = this.dobj.setObservation(this.tempMatrix,id_);
                 this.tempMatrix = {'/weatherTime','wind speed (m/s)','direction(degrees)','Temperature(c)'};

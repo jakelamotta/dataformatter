@@ -13,6 +13,10 @@ classdef ImageDataAdapter < DataAdapter
             this.dobj = Observation();
         end
         
+        function this = addValues(this,idx,p)
+            this.tempMatrix = addValues@DataAdapter(this,p,idx,this.tempMatrix);
+        end
+        
         function obj = getDataObject(this,paths,varargin)
             tic;
             
@@ -83,6 +87,9 @@ classdef ImageDataAdapter < DataAdapter
                             parameters = {mean(stats.Contrast),mean(stats.Correlation),mean(stats.Energy),mean(stats.Homogeneity),ent alpha};
 
                             this.tempMatrix = [this.tempMatrix;parameters];
+                            
+                            this = this.addValues(idx,paths{1,i});
+                            
                             this.dobj.setObservation(this.tempMatrix,fnames{i});
                             this.tempMatrix = {'Contrast','Correlation','Energy','homogenity','ent','alpha'};
                             imwrite(im,[paths{1,i}(1:end-4),'_cropped.jpg']);
@@ -90,6 +97,7 @@ classdef ImageDataAdapter < DataAdapter
                     end
                 end
             end
+            
             
             obj = this.dobj;
             toc
