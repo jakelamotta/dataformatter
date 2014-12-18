@@ -40,8 +40,8 @@ classdef DataAdapter
             for i=2:h
                 matrix{i,1} = flower(2:end-1);
                 matrix{i,2} = date_(2:end-1);
-                matrix{i,3} = strcmp(negOrPos,'Negative');
-                matrix{i,4} = ~strcmp(negOrPos,'Negative');
+                matrix{i,3} = strcmp(negOrPos,'negative')*1;
+                matrix{i,4} = ~strcmp(negOrPos,'negative')*1;
             end
         end
         

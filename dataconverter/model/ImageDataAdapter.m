@@ -33,8 +33,8 @@ classdef ImageDataAdapter < DataAdapter
                 try
                     id_ = paths{1,i}(idx(end-2)+1:idx(end-1)-1);
                     
-                    if ~isfield(images,strrep(id_,'.',''))
-                        images.(strrep(id_,'.','')) = {[];[];[]};
+                    if ~isfield(images,strrep(id_,'.','_'))
+                        images.(strrep(id_,'.','_')) = {[];[];[]};
                     end
                     
                 catch e
@@ -42,7 +42,7 @@ classdef ImageDataAdapter < DataAdapter
                 end
                 
                 rawData = this.fileReader(paths{1,i});
-                images.(strrep(id_,'.','')) = [images.(strrep(id_,'.','')),{rawData;paths{1,i}(idx(end)+1:end);false}];
+                images.(strrep(id_,'.','_')) = [images.(strrep(id_,'.','_')),{rawData;paths{1,i}(idx(end)+1:end);false}];
             end
             
             fnames = fieldnames(images);
@@ -90,7 +90,7 @@ classdef ImageDataAdapter < DataAdapter
                             
                             this = this.addValues(idx,paths{1,i});
                             
-                            this.dobj.setObservation(this.tempMatrix,fnames{i});
+                            this.dobj.setObservation(this.tempMatrix,strrep(fnames{i},'_','.'));
                             this.tempMatrix = {'Contrast','Correlation','Energy','homogenity','ent','alpha'};
                             imwrite(im,[paths{1,i}(1:end-4),'_cropped.jpg']);
                         end 

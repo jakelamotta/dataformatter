@@ -24,6 +24,8 @@ classdef GUIHandler
         scrsz
         panel
         tableSize;
+        sortDateBtn;
+        sortIdBtn;
     end
     
     methods (Access = public)
@@ -142,7 +144,14 @@ classdef GUIHandler
         end
         
         function this = mergeCallback(this,varargin)
-            this.dataManager.getObject().mergeObservations(2,3);
+            %this.dataManager.getObject().mergeObservations(2,3);
+            this.dataManager.getObject().sortByDate();
+            this = this.updateGUI();                
+        end
+        
+        function this = sortIdCallback(this,varargin)
+            %this.dataManager.getObject().mergeObservations(2,3);
+            this.dataManager.getObject().sortById();
             this = this.updateGUI();                
         end
         
@@ -162,7 +171,8 @@ classdef GUIHandler
             this.importBtn = uicontrol(this.mainWindow,'Style','pushbutton','String','Import data', 'Position',[sz(3)/7.68 sz(4)/1.84 sz(3)/16 sz(4)/21.6],'Callback',@this.importCallback);
             this.manageBtn = uicontrol(this.mainWindow,'Style','pushbutton','String','Manage data','Position',[sz(3)/4.8 sz(4)/1.84 sz(3)/16 sz(4)/21.6],'Callback',@this.manageCallback);
             this.exportBtn = uicontrol(this.mainWindow,'Style','pushbutton','String','Export','Position',[sz(3)/2.95 sz(4)/1.8848 sz(3)/12.8 sz(4)/14.4],'Callback',@this.exportCallback);
-            this.mergeBtn = uicontrol(this.mainWindow,'Style','pushbutton','String','Merge','Position',[sz(3)/1.6226 sz(4)/2.4273 sz(3)/38.4 sz(4)/35.2],'Callback',@this.mergeCallback);
+            this.sortDateBtn = uicontrol(this.mainWindow,'Style','pushbutton','String','Sort by date','Position',[sz(3)/1.6226 sz(4)/2.3273 sz(3)/29.0 sz(4)/35.2],'Callback',@this.mergeCallback);
+            this.sortIdBtn = uicontrol(this.mainWindow,'Style','pushbutton','String','Sort by id','Position',[sz(3)/1.6226 sz(4)/2.6273 sz(3)/29.0 sz(4)/35.2],'Callback',@this.sortIdCallback);
             this.dataTable = uitable(this.mainWindow,'Position',this.tableSize,'CellSelectionCallback',@this.tableCallback);
             
             %jtable = this.dataTable.getTable();

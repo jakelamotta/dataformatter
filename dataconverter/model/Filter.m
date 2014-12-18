@@ -63,7 +63,7 @@ classdef Filter < handle
 %             row{2} = rows{1,2};
 %             row{3} = rows{1,3};
             
-            for i=1:5
+            for i=1:7
                 row{i} = rows{1,i};
             end
 

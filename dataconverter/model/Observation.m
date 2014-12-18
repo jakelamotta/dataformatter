@@ -81,6 +81,19 @@ classdef Observation < handle
             this.setMatrix(matrix);
         end
         
+        function this = sortByDate(this)
+            matrix = this.getMatrix();
+            
+            data = matrix(2:end,:);
+            topRow = matrix(1,:);
+            
+            data = sortrows(data,3);
+            
+            matrix = [topRow;data];
+            this.setMatrix(matrix);
+        end
+            
+        
         %%Function for merging a row
         function this = combine(this,id)
             mergeObj = Observation();
