@@ -26,7 +26,6 @@ classdef SpectroDataAdapter < DataAdapter
                 if strcmp(paths{1,i}(end-10:end),'rawData.txt')
                     
                     idx = strfind(paths{1,i},'\');
-                    
                     timeStringStart = strfind(paths{1,i},'multiple');
                     
                     if isempty(timeStringStart)

@@ -71,7 +71,13 @@ classdef Observation < handle
         
         function this = sortById(this)
             matrix = this.getMatrix();
-            matrix = sortrows(matrix,2);
+            
+            data = matrix(2:end,:);
+            topRow = matrix(1,:);
+            
+            data = sortrows(data,2);
+            
+            matrix = [topRow;data];
             this.setMatrix(matrix);
         end
         
