@@ -1,27 +1,7 @@
-function [data,blank] = olftest(p_data,p_blank)
-data = xlsread(p_data);
-data = data(:,3);
-blank = csvread(p_blank,3,0);
-blank = blank(:,3);
+function [data,blank] = olftest()
 
-indices_data = find(data > 2000000);
-indices_blank = find(blank > 2000000);
-
-avg_data = mean(data(indices_data(1:end)));
-avg_blank = mean(blank(indices_blank(1:end)));
-
-ampldiff = avg_data/avg_blank;
-blank = blank*ampldiff;
-
-[peak_data,posd] = findpeaks(data);
-[peak_blank,posb] = findpeaks(blank);
-
-
-
-
-data(indices_data(1:end)) = NaN;
-
-
+p1 = 'C:\Users\Kristian\Downloads\olf\4plot_site2_2.csv.xlsx';
+p2 = 'C:\Users\Kristian\Downloads\olf\4plot_site2_3.csv.xlsx';
 
 end
 

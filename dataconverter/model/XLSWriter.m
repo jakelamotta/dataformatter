@@ -22,7 +22,7 @@ classdef XLSWriter
             toSave = obj;
             obj.sortById();
             try
-                if exist(fname,'file');
+                if exist([fname,'.xlsx'],'file');
                     [~,~,old] = xlsread(fname);
 
                     toAppend = obj.getMatrix();
