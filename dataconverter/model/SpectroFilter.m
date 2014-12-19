@@ -11,7 +11,8 @@ classdef SpectroFilter < Filter
         function filtered = filter(this,unfiltered,type,varargin)
             dsrate = varargin{1};
             this.filtered = unfiltered;
-            
+            this.downSample2(dsrate);
+            this.expandSpectrumPoints();
             switch type
                 case 'nofilter'
                     
@@ -19,8 +20,7 @@ classdef SpectroFilter < Filter
                     this.filtered = filter@Filter(this,this.filtered,10,this.filtered.getWidth());
             end
             
-            this.downSample2(dsrate);
-            this.expandSpectrumPoints();
+            
             
             filtered = this.filtered;
         end
@@ -88,7 +88,7 @@ classdef SpectroFilter < Filter
                end               
            end
            
-           matrix = [matrix(:,1:spectroXpos-1),matrix(:,uint32(Constants.OlfYPos)+1:end)];
+           %matrix = [matrix(:,1:spectroXpos-1),matrix(:,uint32(Constants.OlfYPos)+1:end)];
            matrix = [matrix,appendee];
            
            this.filtered.setMatrix(matrix);

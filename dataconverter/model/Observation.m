@@ -13,10 +13,9 @@ classdef Observation < handle
         
         %%
         function this = Observation()
-            this.xlsMatrix = {'Flower','ID','DATE','/SpectroTime','/weatherTime','Negative','Positive','temperature(c)','Humidity','CO2','wind speed (m/s)','direction(degrees)','Temperature(c)','Contrast','Correlation','Energy','homogenity','ent','alpha','Comment','SpectroX','SpectroY','SpectroXUp','SpectroYUp','OlfX','OlfY'};
+            this.xlsMatrix = {'Flower','ID','DATE','/SpectroTime','/weatherTime','Negative','Positive','temperature(c)','Humidity','CO2','wind speed (m/s)','direction(degrees)','Temperature(c)','Contrast','Correlation','Energy','homogenity','ent','alpha','Comment'};
             global matrixColumns;
-            this.xlsMatrix = [this.xlsMatrix,matrixColumns,{'lux_flower','lux_up'}];
-            %this.spectroTime = struct;
+            this.xlsMatrix = [this.xlsMatrix,matrixColumns,{'lux_flower','lux_up','SpectroX','SpectroY','SpectroXUp','SpectroYUp','OlfX','OlfY'}];
         end
         
         %%
@@ -209,18 +208,9 @@ classdef Observation < handle
                         end
                     end
                 end
-            end
-            %spectroTime = this.spectroTime;
+            end            
         end
-%         
-%         function this = setSpectroTime(this,id,time_)
-%            this.spectroTime.(strrep(id,'.','')) = time_; 
-%         end
-%         
-%         function this = setSpectroStruct(this,inStruct)
-%            this.spectroTime = inStruct; 
-%         end
-%         
+        
         function width = getWidth(this)
             [h,width] = size(this.xlsMatrix);
         end

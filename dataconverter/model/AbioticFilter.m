@@ -12,7 +12,7 @@ classdef AbioticFilter < Filter
             
             switch type
                 case 'average'                    
-                    this.filtered = filter@Filter(this,unfiltered,6,9);
+                    this.filtered = filter@Filter(this,unfiltered,6,10);
             end
             
             output = this.filtered;

@@ -167,8 +167,8 @@ classdef GUIHandler
             
             this.mainWindow = figure('Name','Title','DockControls','off','NumberTitle','off','Position',[sz(3)/8 sz(4)/8 sz(3)/1.5 sz(4)/1.5],'MenuBar','None','ToolBar','None');
 %           this.panel = uibuttongroup(this.mainWindow,'Position',[(sz(3)/8)-50 (sz(4)/8)-50 (sz(3)/1.9)-50 (sz(4)/2.3)-50]);            
-            this.loadBtn = uicontrol(this.mainWindow,'Style','pushbutton','String','Load Data','Position',[sz(3)/19.2 sz(4)/1.84 sz(3)/16 sz(4)/21.6],'Callback',@this.loadCallback);
-            this.importBtn = uicontrol(this.mainWindow,'Style','pushbutton','String','Import data', 'Position',[sz(3)/7.68 sz(4)/1.84 sz(3)/16 sz(4)/21.6],'Callback',@this.importCallback);
+            this.loadBtn = uicontrol(this.mainWindow,'Style','pushbutton','String','Import Data','Position',[sz(3)/19.2 sz(4)/1.84 sz(3)/16 sz(4)/21.6],'Callback',@this.loadCallback);
+            this.importBtn = uicontrol(this.mainWindow,'Style','pushbutton','String','Load data', 'Position',[sz(3)/7.68 sz(4)/1.84 sz(3)/16 sz(4)/21.6],'Callback',@this.importCallback);
             this.manageBtn = uicontrol(this.mainWindow,'Style','pushbutton','String','Manage data','Position',[sz(3)/4.8 sz(4)/1.84 sz(3)/16 sz(4)/21.6],'Callback',@this.manageCallback);
             this.exportBtn = uicontrol(this.mainWindow,'Style','pushbutton','String','Export','Position',[sz(3)/2.95 sz(4)/1.8848 sz(3)/12.8 sz(4)/14.4],'Callback',@this.exportCallback);
             this.sortDateBtn = uicontrol(this.mainWindow,'Style','pushbutton','String','Sort by date','Position',[sz(3)/1.6226 sz(4)/2.3273 sz(3)/29.0 sz(4)/35.2],'Callback',@this.mergeCallback);

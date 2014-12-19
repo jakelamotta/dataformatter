@@ -12,9 +12,16 @@ classdef OlfactoryFilter < Filter
             this.filtered = unfiltered;
             
             
-            
             this.downSample(dsrate);
             this.expandSpectrumPoints();
+            
+            this.filtered = filter@Filter(this,this.filtered,10,this.filtered.getWidth());
+            
+            matrix = this.filtered.getMatrix();
+            
+            matrix = [matrix(:,1:uint32(Constants.SpectroXPos)-1),matrix(:,uint32(Constants.OlfYPos)+1:end)];
+            this.filtered.setMatrix(matrix); 
+            
             filtered = this.filtered;
         end        
     end
@@ -43,7 +50,7 @@ classdef OlfactoryFilter < Filter
                end               
            end
            
-           matrix = [matrix(:,1:21),matrix(:,28:end)];
+           %matrix = [matrix(:,1:21),matrix(:,28:end)];
            matrix = [matrix,appendee];
            this.filtered.setMatrix(matrix);           
         end
@@ -106,9 +113,7 @@ classdef OlfactoryFilter < Filter
             [newMatrix,oldMat] = Utilities.padMatrix(newMatrix,this.filtered.getMatrix());
             finalMatrix = [oldMat;newMatrix(2:end,:)];
             this.filtered = this.filtered.setMatrix(finalMatrix);            
-        end
-        
-    end
-    
+        end        
+    end    
 end
 

@@ -45,7 +45,11 @@ classdef Filter < handle
             end
             
             averaged = [firstRow;averaged];
+            
+            averaged = [averaged(:,1:uint32(Constants.SpectroXPos)-1),averaged(:,uint32(Constants.OlfYPos)+1:end)];
+            
             this.filtered.setMatrix(averaged);
+                        
             
             output = this.filtered;
         end

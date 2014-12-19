@@ -7,14 +7,14 @@ classdef Constants < uint32
        IdPos (2)
        
        %%Column position of Spectro arrays
-       SpectroXPos (21)
-       SpectroYPos (22)
-       SpectroXUpPos (23)
-       SpectroYUpPos (24)
+       SpectroXPos (44)
+       SpectroYPos (45)
+       SpectroXUpPos (46)
+       SpectroYUpPos (47)
        
        %%Column position of Olfactory arrays
-       OlfXPos (25)
-       OlfYPos (26)
+       OlfXPos (48)
+       OlfYPos (49)
     end
 end
 

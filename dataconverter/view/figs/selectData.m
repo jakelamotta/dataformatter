@@ -241,9 +241,6 @@ if strcmp(type,'Spectro')
 legendList = cell(1,(height-1)*2);
 
 for i=2:height
-    
-    %legendList = [legendList,cell(1,2*(nrOfData-1))];
-    
     plot(t,[data{i,uint32(Constants.SpectroXPos)}],[data{i,uint32(Constants.SpectroYPos)}],colors{1,mod(i,length(colors))+1});
 
     hold on;
@@ -259,9 +256,7 @@ elseif strcmp(type,'Olfactory')
     legendList = cell(1,(height-1));
     
     for i=2:height
-    
-    %legendList = [legendList,cell(1,2*(nrOfData-1))];
-    
+        
     plot(t,[data{i,uint32(Constants.OlfXPos)}],[data{i,uint32(Constants.OlfYPos)}],colors{1,mod(i,length(colors))+1});
     hold on;
     legendList{index} = data{i,2};
@@ -271,8 +266,6 @@ elseif strcmp(type,'Olfactory')
 end
 
 legend(legendList);
-
-%t = axes(handle,'Data',data);
 
 toSend = data;
 
@@ -290,94 +283,8 @@ end
 button = uicontrol(handle,'Style','pushbutton','Position',[20 190 100 20],'String','Interpolate','Callback',{@downSample,toSend,t,handle,type});
 disp(get(button,'Position'));
 
-% fnames = fieldnames(data);
-% numFnames = length(fnames);
-% global colors;
-% t = axes('Position',[.15 .25, .8 .25]);
-% 
-% 
-% legendList = cell(1,numFnames*2);
-% 
-% index = 1;
-% 
-% for i=1:numFnames
-%     
-%     name = fnames{i};
-%     
-%     nrOfData = length(data.(name));
-%     
-%     legendList = [legendList,cell(1,2*(nrOfData-1))];
-%     
-%     for j=1:nrOfData
-%         plot(t,[data.(name)(j).obs1.x],[data.(name)(j).obs1.y],colors{1,mod(i,length(colors))+1});
-% 
-%         hold on;
-%         plot(t,[data.(name)(j).obs2.x],[data.(name)(j).obs2.y],colors{1,mod(i,length(colors))+1});
-%         legendList{index} = fnames{i};
-%         legendList{index+1} = [fnames{i},'up'];
-%         
-%         index = index + 2;
-%     end
-% end
-% 
-% legend(legendList);
-% 
-% %t = axes(handle,'Data',data);
-% 
-% toSend = data;
-% 
-% userdata = get(handle,'UserData');
-% handler = userdata.handler;
-% dp = handler.dataManager.getNrOfSpectroDP();
-% 
-% edit_ = uicontrol(handle,'Style','edit','Tag','sampleedit','String',dp,'Position',[20 240 40 20]);
-% uicontrol(handle,'Style','text','String','Nr of datapoints used','Position',[65 240 110 20]);
-% 
-% if dp ~= 300
-%     set(edit_,'Enable','off')
-% end
-% 
-% button = uicontrol(handle,'Style','pushbutton','Position',[20 190 100 20],'String','Interpolate','Callback',{@downSample,toSend,t,handle});
-% disp(get(button,'Position'));
 end
 
-% function setOlfGraph(h,data)
-% 
-% handle = h.figure1;
-% 
-% fnames = fieldnames(data);
-% numFnames = length(fnames);
-% 
-% global colors;
-% 
-% for i=1:numFnames
-%     
-%     name = fnames{i};
-%     
-%     t = axes('Position',[.15 .25, .8 .25]);
-%     plot(t,[data.(name).x],[data.(name).y],colors{1,mod(i,length(colors))+1});
-%     hold on;
-% end
-% 
-% legend(fnames);
-% %t = axes(handle,'Data',data);
-% 
-% toSend = data;
-% 
-% userdata = get(handle,'UserData');
-% handler = userdata.handler;
-% dp = handler.getDataManager().getNrOfOlfactoryDP();
-% 
-% edit_ = uicontrol(handle,'Style','edit','Tag','sampleedit','String',dp,'Position',[20 240 40 20]);
-% uicontrol(handle,'Style','text','String','Nr of datapoints used','Position',[65 240 110 20]);
-% 
-% if dp ~= 15000
-%     set(edit_,'Enable','off')
-% end
-% 
-% button = uicontrol(handle,'Style','pushbutton','Position',[20 190 100 20],'String','Interpolate','Callback',{@downSampleOlf,toSend,t,handle});
-% 
-% end
 
 function downSample(varargin)
     %
@@ -405,9 +312,9 @@ function downSample(varargin)
             y1 = interp1(x1,y1,x1new);
             y2 = interp1(x2,y2,x2new);
 
-            plot(t,x1,matrix{i,23},'g');
+            plot(t,x1,matrix{i,uint32(Constants.SpectroYPos)},'g');
             hold on
-            plot(t,x2,matrix{i,25},'g');
+            plot(t,x2,matrix{i,uint32(Constants.SpectroYUpPos)},'g');
             plot(t,x1new,y1,'r');
             plot(t,x2new,y2,'b');
         end

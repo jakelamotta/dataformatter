@@ -6,6 +6,7 @@ classdef BehaviorDataAdapter < DataAdapter
         tempMatrix;
         varMap;
         size_;
+        cols;
     end
     
     methods (Access = public)
@@ -15,7 +16,8 @@ classdef BehaviorDataAdapter < DataAdapter
             this@DataAdapter();
             
             global matrixColumns;
-            this.tempMatrix = [this.genData,matrixColumns];
+            this.cols = matrixColumns;
+            this.tempMatrix = [this.genData,this.cols];
             this.dobj = Observation();
             global varmap;
             this.varMap = varmap;
@@ -71,6 +73,7 @@ classdef BehaviorDataAdapter < DataAdapter
                 this = this.addValues(idx,paths{1,i});
                 
                 obj = this.dobj.setObservation(this.tempMatrix,id_);
+                this.tempMatrix = [this.genData,this.cols];
                 end
                 
             end
