@@ -78,39 +78,28 @@ classdef Filter < handle
                 for j=1:s(1)
                     
                     if isnumeric(rows{j,i})
-                        if ~isempty(rows{j,i})
-                            if rows{j,i} ~= 0
-                                temp = temp+rows{j,i};
-                                counter = counter+1;
-                            end
+                        if rows{j,i} ~= 0 && ~isempty(rows{j,i})
+                            temp+rows{j,i};
+                            counter = counter+1;
                         end
-                      
                     else
                         if ~isnan(str2double(rows{j,i}))
                             v = str2double(rows{j,i});
-                            if v ~= 0 && ~isempty(v)
-                                temp = temp+v;
-                                counter = counter+1;
-                            end
-%                         elseif ~isempty(rows{j,i})
-%                             temp = rows{j,i};
+                            if v ~= 0 && ~isempty(s{j,i})
+                            temp = temp+v;
+                        elseif ~isempty(rows{j,i})
+                            temp = rows{j,i};
                         end
                     end
                 end
                 if isnumeric(temp)
-                    if ~isempty(temp)
-                        if temp ~= 0
-                            avg = temp/counter;
-                            row{i} = avg;
-                        end
-                    else
-                        row{i} = temp;
-                    end
+                    avg = temp/counter;
+                    row{i} = avg;
                 else
                     row{i} = temp;
                 end
             end
-            
+            disp(row);
         end        
     end
     

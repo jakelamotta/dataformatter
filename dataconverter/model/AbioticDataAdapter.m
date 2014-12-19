@@ -47,7 +47,7 @@ classdef AbioticDataAdapter < DataAdapter
                 end
                 this = this.addValues(idx,path);
                 this.dobj = this.dobj.setObservation(this.tempMatrix,id_);                    
-                this.tempMatrix = {'Date','Pressure','temperature(c)','Humidity'};
+                this.tempMatrix = {'Date','CO2','temperature(c)','Humidity'};
             end
             
             obj = this.dobj;
