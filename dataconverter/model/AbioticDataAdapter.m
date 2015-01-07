@@ -17,6 +17,8 @@ classdef AbioticDataAdapter < DataAdapter
             this.tempMatrix = addValues@DataAdapter(this,p,idx,this.tempMatrix);
         end
 %         
+        %%Function that takes a list of file paths and retrieve a data
+        %%object with data from these files
         function obj = getDataObject(this,paths)
             
             s = size(paths);
@@ -25,6 +27,8 @@ classdef AbioticDataAdapter < DataAdapter
                 idx = strfind(paths{1,i},'\');
                 
                 try
+                    %%The observation id is found in the filepath one step
+                    %%above the type folder
                     id_ = paths{1,i}(idx(end-2)+1:idx(end-1)-1);
                 catch e
                     errordlg('Incorrect path was passed to the file reader');
@@ -32,8 +36,7 @@ classdef AbioticDataAdapter < DataAdapter
                 
                 path = paths{1,i};
                 
-                
-                
+                %%Retrieve data from the file
                 rawData = this.fileReader(path);
                 
                 temp = cellfun(@this.createDob,rawData,'UniformOutput',false);
@@ -45,6 +48,7 @@ classdef AbioticDataAdapter < DataAdapter
                        this.tempMatrix = [this.tempMatrix;temp{1,k}];
                    end
                 end
+                
                 this = this.addValues(idx,path);
                 this.dobj = this.dobj.setObservation(this.tempMatrix,id_);                    
                 this.tempMatrix = {'Date','CO2','temperature(c)','Humidity'};
@@ -59,6 +63,8 @@ classdef AbioticDataAdapter < DataAdapter
             %temp = cellfun(@str2num,row,'UniformOutput',false);%[this.tempMatrix;cellfun(@str2num,row,'UniformOutput',false)];
         end
         
+        %%Filereader that uses the parent class filereader, for debugging
+        %%this look in DataAdapter class
         function rawData = fileReader(this, path)
             rawData = fileReader@DataAdapter(this,path);
         end

@@ -96,6 +96,7 @@ classdef WeatherDataAdapter < DataAdapter
                 
                 t_temp = temp{1,1};
                 
+                %%Finds the optimal starting point to minimize search time
                 if ~isempty(timeList)
                     if timeList{1,2} == str2double(t_temp{1,2})
                         start = 1;
@@ -116,6 +117,9 @@ classdef WeatherDataAdapter < DataAdapter
                     start = 1;
                 end
                 
+                %%The correct weather data is fetched from the list by
+                %%using the input time and comparing it to the weather data
+                %%time. 
                 for j=start:length(temp)
                     
                     if ~isempty(timeList)
@@ -149,6 +153,7 @@ classdef WeatherDataAdapter < DataAdapter
             profile viewer;
         end
         
+        %%Uses the generic filreader of the parent class.
         function rawData = fileReader(this, path)
               rawData = fileReader@DataAdapter(this,path);   
         end

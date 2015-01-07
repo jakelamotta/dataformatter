@@ -6,7 +6,6 @@ classdef Observation < handle
     
     properties (Access = private)
         xlsMatrix;
-        %spectroTime;
     end
     
     methods (Access = public)
@@ -18,13 +17,16 @@ classdef Observation < handle
             this.xlsMatrix = [this.xlsMatrix,matrixColumns,{'lux_flower','lux_up','SpectroX','SpectroY','SpectroXUp','SpectroYUp','OlfX','OlfY'}];
         end
         
-        %%
+        %%Adding an observation to another, it doesnt consider copies or
+        %ids but simply appends the rows from the input observation to the
+        %to the current
         function this = appendObservation(this,obj)
             matrix = obj.getMatrix();
             [this.xlsMatrix,matrix] = Utilities.padMatrix(this.xlsMatrix,matrix);
             this.setMatrix([this.xlsMatrix;matrix(2:end,:)]);
         end
         
+        %%Adds zeroes to any empty cell in the Observation cell array
         function this = fillWithZeros(this)
             for i=4:this.getWidth()
                 for j=2:this.getNumRows()
@@ -37,7 +39,6 @@ classdef Observation < handle
                 
         %%
         function this = mergeObservations(this,rowNr1,rowNr2)
-        
             this.getWidth();
             mergeable = true;
 
@@ -55,8 +56,9 @@ classdef Observation < handle
             this.deleteRowFromID(this.xlsMatrix(rowNr2,uint32(Constants.IdPos)));        
         end
         
-        function hasMultiples = hasMultiples(this)
-            
+        %%Boolean function that checks if there are multiples of any id in
+        %%the observation matrix
+        function hasMultiples = hasMultiples(this)            
             this.sortById();
             hasMultiples = false;
             
@@ -68,6 +70,7 @@ classdef Observation < handle
             end
         end
         
+        %%Sorts the observation matrix by ID
         function this = sortById(this)
             matrix = this.getMatrix();
             
@@ -80,6 +83,16 @@ classdef Observation < handle
             this.setMatrix(matrix);
         end
         
+        function this = doAverage(this)
+            this.sortById();
+            matrix = this.getMatrix();            
+            
+            
+            
+            this.setMatrix(matrix);
+        end
+        
+        %%Sorts the observation matrix by date
         function this = sortByDate(this)
             matrix = this.getMatrix();
             
@@ -118,6 +131,8 @@ classdef Observation < handle
             this.appendObservation(mergeObj);            
         end
         
+        %%Boolean function that checks if the input ID already exists as an
+        %%observation
         function isObs = isObservation(this,id)
            isObs = false;
            for i=2:this.getNumRows()
@@ -128,7 +143,7 @@ classdef Observation < handle
            end
         end
         
-        %%
+        %%Function that returns a single row corresponding to the input ID
         function row = getRowFromID(this,id)
             
             height = this.getNumRows();
@@ -147,7 +162,7 @@ classdef Observation < handle
             end           
         end
         
-        %%
+        %%Function that deletes a single row corresponding to the input ID
         function this = deleteRowFromID(this,id)
             mat = this.getMatrix();
             height = this.getNumRows();
@@ -164,7 +179,9 @@ classdef Observation < handle
             this.setMatrix(mat);
         end
         
-        %%
+        %%Function that takes a cell array and an ID as input, the elements
+        %%of the cell array are indvidually mapped to columns in the
+        %%observation matrix. All are set to the same row with ID id.
         function this = setObservation(this,matrix,id)
             s = size(matrix);
             

@@ -50,11 +50,18 @@ classdef BehaviorDataAdapter < DataAdapter
                         errordlg('Incorrect path was passed to the file reader');
                     end
                     
+                    %%If there is no prefilled behavior file the user needs
+                    %%to fill it manually.
                     if strfind(paths{1,i}(idx(end):end),'template1.xlsx')
+                        %Open the file in execel
                         system(['start ',paths{1,i}]);
+                        
+                        %Dialog that stops program flow until the user is
+                        %done
                         hdg = helpdlg('Please fill in the template, close it and press OK','Information');
                         waitfor(hdg);
                         
+                        %Rename template1 and continue execution as normal
                         toRemove = paths{1,i};
                         newFileName = [id_,'.xlsx'];
                         
@@ -101,9 +108,12 @@ classdef BehaviorDataAdapter < DataAdapter
             time = min_+sec;            
         end
         
-        %%
+        %%Function that parse the data of the behavior file.
+        %%Input:
+        %%Rawdata - data from excel file
         function this = parse(this,rawData)
             nrOfRows = size(rawData);
+            
             
             for i=1:nrOfRows(1)
                 if isnan(rawData{i,6})

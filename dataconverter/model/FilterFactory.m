@@ -1,6 +1,5 @@
 classdef FilterFactory
-    %FILTERFACTORY Summary of this class goes here
-    %   Detailed explanation goes here
+    %FILTERFACTORY 
     
     properties
         filters;

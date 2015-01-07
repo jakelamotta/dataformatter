@@ -18,8 +18,10 @@ function setGlobalVariables()
     global colors;
     global varmap;
 
+    %varMap is a hashtable for creating variable names for behavior data...
     varmap = containers.Map();
-
+    
+    %...using a predefined insects-file.
     fid = fopen(Utilities.getpath('insects.txt'),'r');
     line = fgets(fid);
     flies = cell(1,1);
@@ -33,7 +35,9 @@ function setGlobalVariables()
 
     nrOfInsects = length(flies);
     matrixColumns = cell(1,length(flies)*2+3);
+    
 %    flies = lower(flies);
+
     for i=1:nrOfInsects
         varmap([strrep(flies{i},char([13,10]),''),'d']) = [Utilities.padString(strrep(flies{i},char([13,10]),''),'_',5),'_dur'];
         varmap([strrep(flies{i},char([13,10]),''),'f']) = [Utilities.padString(strrep(flies{i},char([13,10]),''),'_',5),'_fre'];
@@ -46,12 +50,4 @@ function setGlobalVariables()
     matrixColumns{end} = 'nofly';
     
     colors = {'black','blue','yellow','green'};
-
-%     type  = expQuest();
-% 
-%     if strfind(type,'Behavior')
-%         [a,b,matrixColumns] = xlsread(Utilities.getpath('behavior_variables.xls'));
-%     elseif strfind(type,'Pollination')
-%         [a,b,matrixColumns] = xlsread(Utilities.getpath('behavior_variables.xls'));
-%     end
 end

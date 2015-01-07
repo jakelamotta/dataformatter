@@ -1,6 +1,6 @@
 classdef Utilities
-    %UTILITIES Summary of this class goes here
-    %   Detailed explanation goes here
+    %UTILITIES Utility class contaning som static methods for generic tasks
+    %that are useful for many different classes
     
     properties
     
@@ -8,30 +8,54 @@ classdef Utilities
        
     methods (Static)
         
-        %%
+
         function [first,second] = padMatrix(first, second)
-            lenFirst = size(first);
-            lenSecond = size(second);
-            lenFirst = lenFirst(2);
-            lenSecond = lenSecond(2);
+%             lenFirst = size(first);
+%             lenSecond = size(second);
+%             lenFirst = lenFirst(2);
+%             lenSecond = lenSecond(2);
+%             
+%             if lenFirst < lenSecond
+%                 diff = abs(lenFirst-lenSecond);
+%                 s = size(first);
+%                 height = s(1);
+%                 
+%                 newMat = cell(height,diff);
+%                 first = [first,newMat];
+%                 first(1,:) = second(1,:);
+%             elseif lenFirst > lenSecond
+%                 diff = abs(lenFirst-lenSecond);
+%                 s = size(second);
+%                 height = s(1);
+%                 
+%                 newMat = cell(height,diff);
+%                 second = [second,newMat];
+%                 second(1,:) = first(1,:);
+%             end
+% %             
+            [h1,w1] = size(first);
+            [h2,w2] = size(second);
             
-            if lenFirst < lenSecond
-                diff = abs(lenFirst-lenSecond);
-                s = size(first);
-                height = s(1);
-                
-                newMat = cell(height,diff);
+            diff = abs(w1-w2);
+            
+            if w1 < w2
+                newMat = cell(h1,diff);
                 first = [first,newMat];
                 first(1,:) = second(1,:);
-            elseif lenFirst > lenSecond
-                diff = abs(lenFirst-lenSecond);
-                s = size(second);
-                height = s(1);
-                
-                newMat = cell(height,diff);
+            elseif w1 > w2
+                newMat = cell(h2,diff);
                 second = [second,newMat];
                 second(1,:) = first(1,:);
-            end            
+            end
+%             
+%             diff = abs(h1-h2);
+%             newMat = cell(diff,max(w1,w2));
+%                 
+%             if h1 < h2
+%                 first = [first;newMat];
+%             elseif h1 > h2
+%                 second = [second;newMat];
+%             end
         end
         
         %%
@@ -49,7 +73,8 @@ classdef Utilities
             %Time in format 'yyyymmddhhmm'
         end
         
-        %%
+        %%Pad a string with the input string padWidth so that the input is
+        %%of length len
         function outStr = padString(inVal,padWith,len)
             outStr = inVal;
             while length(outStr) < len

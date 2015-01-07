@@ -13,14 +13,13 @@ classdef SpectroFilter < Filter
             this.filtered = unfiltered;
             this.downSample2(dsrate);
             this.expandSpectrumPoints();
+            
             switch type
                 case 'nofilter'
                     
                 case 'average'                    
                     this.filtered = filter@Filter(this,this.filtered,10,this.filtered.getWidth());
             end
-            
-            
             
             filtered = this.filtered;
         end

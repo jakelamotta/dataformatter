@@ -1,6 +1,8 @@
 classdef GUIHandler
-    %GUIHANDLER Summary of this class goes here
-    %   Detailed explanation goes here
+    %GUIHANDLER Class for handling the GUI. It is responsible for
+    %communicating with the underlying data handling via the DataManager
+    %class. It also makes sure that the correct gui file is launched at
+    %when needed.
     
     properties (Access = public)
         dataManager;
@@ -43,23 +45,6 @@ classdef GUIHandler
             this.dialogues = containers.Map();
         end
         
-        function manager = getDataManager(this)
-           manager = this.dataManager; 
-        end
-        
-        function time_ = getTime(this,id)
-            time_ = weatherQuest(id);
-            time_ = ['multiple-',time_];
-        end        
-        
-        function this = run(this)
-            while true
-                if somethingsomething
-                    break;
-                end
-            end
-        end
-        
         function [croppedImage,keep] = getCroppedImage(this,image_,p)
             keep = true;
             croppedImage = imageCrop(image_,p);
@@ -67,12 +52,22 @@ classdef GUIHandler
                 keep = false;
             end
         end
+        
+        function manager = getDataManager(this)
+           manager = this.dataManager; 
+        end
+        
+        function time_ = getTime(this,id)
+            time_ = weatherQuest(id);
+            time_ = ['multiple-',time_];
+        end
     end
     
     methods (Access = private)
         
+        %%Callback function called when the user presses the import data
+        %%button
         function this = loadCallback(this,varargin)           
-            
             this.organizer = this.organizer.launchGUI();
             
             if iscell(this.organizer.target)
@@ -83,6 +78,8 @@ classdef GUIHandler
             end
         end
         
+        %%Callback function called when the user presses the "Export"
+        %%button
         function this = exportCallback(this,varargin)
             fp = exportWindow();         
             
@@ -96,6 +93,8 @@ classdef GUIHandler
             end
         end
         
+        %%Callback function called when the user presses the "Manage data"
+        %%button
         function this = manageCallback(this, varargin)
             userdata = manageData(this.dataManager.getObject());            
             
@@ -106,6 +105,8 @@ classdef GUIHandler
             this.updateGUI();
         end
                 
+        %%Callback functin called when the user presses the "Load data"
+        %%button
         function this = importCallback(this,varargin)
             importInfo = importWindow();
             profile on;
@@ -138,17 +139,23 @@ classdef GUIHandler
             end
         end
         
+        %%Callback functin called when the user presses the "Clear data"
+        %%option in the file menu
         function this = clearCallback(this,varargin)
             this.dataManager = this.dataManager.clearAll();
             this = this.updateGUI();
         end
         
+        %%Callback functin called when the user presses the "Sort by date"
+        %%button
         function this = mergeCallback(this,varargin)
             %this.dataManager.getObject().mergeObservations(2,3);
             this.dataManager.getObject().sortByDate();
             this = this.updateGUI();                
         end
         
+        %%Callback functin called when the user presses the "Sort by id"
+        %%button
         function this = sortIdCallback(this,varargin)
             %this.dataManager.getObject().mergeObservations(2,3);
             this.dataManager.getObject().sortById();
@@ -162,6 +169,8 @@ classdef GUIHandler
             jtable.setColumnSelectionInterval(0,jtable.getColumnCount());            
         end
         
+        %%Function that sets upp all the gui elements. Each position is
+        %%relative to the screensize to make the application more flexible.
         function this = initGUI(this)
             sz = this.scrsz;
             
@@ -175,15 +184,16 @@ classdef GUIHandler
             this.sortIdBtn = uicontrol(this.mainWindow,'Style','pushbutton','String','Sort by id','Position',[sz(3)/1.6226 sz(4)/2.6273 sz(3)/29.0 sz(4)/35.2],'Callback',@this.sortIdCallback);
             this.dataTable = uitable(this.mainWindow,'Position',this.tableSize,'CellSelectionCallback',@this.tableCallback);
             
-            %jtable = this.dataTable.getTable();
             this.file_ = uimenu(this.mainWindow,'Label','File');
             this.clear_ = uimenu(this.file_,'Label','Clear data','Callback',@this.clearCallback);
             this.exit_ = uimenu(this.file_,'Label','Exit');
         end
         
+        %%Function that updates the datatable
         function this = updateGUI(this)
             this.dataTable = uitable(this.mainWindow,'data',this.dataManager.getObject().getMatrix(),'Position',this.tableSize);
         end
+        
         
         function this = launchDialogue(this,id,varargin)
             profile viewer;

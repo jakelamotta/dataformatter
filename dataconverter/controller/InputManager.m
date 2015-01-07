@@ -51,6 +51,7 @@ classdef InputManager < handle
             this = this.recSearch(p,type);         
         end
         
+        %%
         function success = organize(this,sources,target)
             success = true;
             types = fieldnames(sources);

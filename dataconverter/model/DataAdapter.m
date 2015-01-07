@@ -39,6 +39,8 @@ classdef DataAdapter
             end
         end
         
+        %%Generic filereader used to get rawdata from txt files, applicable
+        %%for most of the different data types
         function rawData = fileReader(this, path)
             try
                 fid = fopen(path,'r');

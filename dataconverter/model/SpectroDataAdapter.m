@@ -149,16 +149,10 @@ classdef SpectroDataAdapter < DataAdapter
             
             x = row{1};
             x = x(3:end-1);
-            %x = str2double(x);
             
             y = row{2};
             y = str2double(y(1:end-1));
             temp = {x,y};
-            
-            
-            %temp = cellfun(@AbioticDataAdapter.handleRow,row,'UniformOutput',false);
-            
-            %temp = cellfun(@str2num,row,'UniformOutput',false);%[this.tempMatrix;cellfun(@str2num,row,'UniformOutput',false)];
         end
         
         function this = doSomething(this,rawData)

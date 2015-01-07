@@ -1,6 +1,8 @@
 classdef DataManager < handle
-    %DATAMANAGER Summary of this class goes here
-    %Detailed explanation goes here
+    %DATAMANAGER A central class that is responsible for talking to most
+    %parts of the system. Its the datamanager that is the link between the
+    %GUI and all the underlying data handling. It passes any command from
+    %the user to the correct class instance 
     
     properties (Access = private)
         xlsWriter;
@@ -32,7 +34,7 @@ classdef DataManager < handle
             this.olfactoryDP = 15000;
         end
         
-        %% Clears all data from the session
+        %% Clears all data from the session any information that isnt saved to excel is lost
         function this = clearAll(this)
             this = this.setUnfObject(Observation());
             this = this.setObject(Observation());
@@ -55,7 +57,7 @@ classdef DataManager < handle
             this = this.setUnfObject(current);
         end
         
-        %%
+        %%Applies a filter according to input type
         function this = applyFilter(this,id,type)
             row = this.getUnfObject();
             filter = this.filterFactory.createFilter(id);
@@ -64,7 +66,6 @@ classdef DataManager < handle
           
         %%
         function this = finalize(this)
-            
             obj = this.getUnfObject();
             objID = obj.getObjectID();
             
@@ -80,25 +81,13 @@ classdef DataManager < handle
                 end
             end
             
-            
-            %
-            
             if ~isempty(listOfIds{1,1})
                 this.getObject().appendObservation(this.getUnfObject());
                 
                 for i=1:length(listOfIds)
                    id = listOfIds{1,i};
                    this.getObject().combine(id);
-                   %row = this.combine(obj,id);
-                   %this.getUnfObject().deleteRowFromID(id);
-                   %this = this.setUnfObject(this.getUnfObject().appendObservation(rows));
-                   %r = row.getRowFromID(id);
-                   %temp = Observation();
-                   %temp.setMatrix(r);
-                   %rows = rows.appendObservation(temp);
-                   %this = this.setUnfObject(row); 
                 end
-                %this = this.setUnfObject(this.getUnfObject().appendObservation(rows));
             else
                 this.merge();
             end
@@ -106,68 +95,21 @@ classdef DataManager < handle
             this = this.setUnfObject(Observation());        
         end
         
-        %%
+        %%Write to persistant storage
         function success = store(this,path)
             obj = this.getObject();
             success = this.xlsWriter.appendXLS(path,obj);
         end
         
+        
         function this = merge(this)
-            
             unfObj = this.getUnfObject();
             fobj = this.getObject();
-%            fobj.setSpectroStruct(mergestruct(fobj.getSpectroTime(),unfObj.getSpectroTime()));
             fobj.appendObservation(unfObj);
             this.setObject(fobj);
-%             if fobj.getNumRows() == 1
-%                 this.setObject(unfObj);
-%             else
-%                matrix = fobj.getMatrix();
-%                row = unfObj.getMatrix();
-%                
-%                [matrix,row] = Utilities.padMatrix(matrix,row);
-%                matrix = [matrix;row(2:end,:)];
-%                fobj.setMatrix(matrix);
-%                this.setObject(fobj);
-%             end
         end
         
-%         function combined = combine(this,obj,id)
-%             combinee = this.getObject();
-%             combineeMat = combinee.getRowFromID(id);
-%             
-%             objMat = obj.getRowFromID(id);
-%             combined = Observation();
-%             
-%             s_combinee = size(combineeMat);
-%             s_objMat = size(objMat);
-%             
-%             temp = combined.getMatrix();
-%             temp = [temp;cell(1,length(temp))];
-%             
-%             [objMat,combineeMat] = Utilities.padMatrix(objMat,combineeMat);
-%             [temp,combineeMat] = Utilities.padMatrix(temp,combineeMat);
-%             
-%             for i=1:max(s_combinee(2),s_objMat(2))
-%                 if isempty(objMat{2,i})
-%                     temp{2,i} = combineeMat{2,i};
-%                 else
-%                     temp{2,i} = objMat{2,i};
-%                 end
-%             end
-%             
-%             obj.deleteRowFromID(id);
-%             
-%             [temp,oldMat] = Utilities.padMatrix(temp,obj.getMatrix());
-%             
-%             temp = [oldMat;temp(2:end,:)];
-%             
-%             this.getObject().deleteRowFromID(id);
-% 
-%             combined = combined.setMatrix(temp);
-%         end
-
-        %%
+        %%Adds a comment to the comment column
         function this = addComment(this,row,comment)
             obj = this.getObject();
             d = obj.getMatrix();
