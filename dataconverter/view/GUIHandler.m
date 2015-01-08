@@ -113,6 +113,14 @@ classdef GUIHandler
             if iscell(importInfo) && ~isnumeric(importInfo{1,2})           
                 type = importInfo{1,1}; 
                 p = importInfo{1,2};
+                
+                if strcmp(type,'load')
+                    
+                    [fname,pname,nonImportant] = uigetfile();
+                    
+                    this.dataManager.importOldData([pname,fname]);
+                else
+                
                 this.inputManager = this.inputManager.splitPaths(p,type);
                 paths_ = this.inputManager.getPaths();
                                 
@@ -128,13 +136,13 @@ classdef GUIHandler
                 %end
 
                 %s = size(this.dataManager.getUnfObject().getMatrix());
-
                 if this.dataManager.getUnfObject.hasMultiples() || strcmp(type,'Spectro') || strcmp(type,'Olfactory')
-                    this = this.launchDialogue(type);
-                else
-                    this.dataManager.finalize();
+                        this = this.launchDialogue(type);
+                    else
+                        this.dataManager.finalize();
                 end
-
+                
+                end
                 this = this.updateGUI();                
             end
         end

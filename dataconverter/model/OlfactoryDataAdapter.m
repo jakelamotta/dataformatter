@@ -41,8 +41,8 @@ classdef OlfactoryDataAdapter < DataAdapter
                 this.tempMatrix{i+1,1} = x;
                 this.tempMatrix{i+1,2} = y;
                 
-               % this.dobj.addOlfactoryData(tempStruct,id_);
-               this = this.addValues(idx,paths{1,i});
+                % this.dobj.addOlfactoryData(tempStruct,id_);
+                this = this.addValues(idx,paths{1,i});
                 this.dobj.setObservation(this.tempMatrix,id_);
                 this.tempMatrix = {'OlfX','OlfY'};
             end
@@ -58,7 +58,6 @@ classdef OlfactoryDataAdapter < DataAdapter
     
     methods (Access = private)
         
-    end
-    
+    end    
 end
 

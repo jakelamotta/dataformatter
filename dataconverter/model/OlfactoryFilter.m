@@ -49,7 +49,6 @@ classdef OlfactoryFilter < Filter
                   appendee{j,k} = x1(k);
                end               
            end
-           
            %matrix = [matrix(:,1:21),matrix(:,28:end)];
            matrix = [matrix,appendee];
            this.filtered.setMatrix(matrix);           

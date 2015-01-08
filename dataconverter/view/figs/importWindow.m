@@ -22,7 +22,7 @@ function varargout = importWindow(varargin)
 
 % Edit the above text to modify the response to help importWindow
 
-% Last Modified by GUIDE v2.5 07-Oct-2014 14:35:12
+% Last Modified by GUIDE v2.5 08-Jan-2015 14:12:18
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -96,12 +96,16 @@ function okBtn_Callback(hObject, eventdata, handles)
         type = 'Behavior';
     elseif get(handles.radiobutton6,'value')
         type = 'Olfactory';
+    elseif get(handles.loadrb,'value')
+        type = 'load';
     else
         type = NaN;
     end
-    
-    path_ = uigetdir(Utilities.getpath(''));
-    
+    if ~strcmp(type,'load')
+        path_ = uigetdir(Utilities.getpath(''));
+    else
+        path_ = '';
+    end
     data{1,1} = type;
     data{1,2} = path_;    
     
@@ -189,6 +193,7 @@ function updateRadio(handles,hObject)
     set(handles.radiobutton4,'value',false);
     set(handles.radiobutton5,'value',false);
     set(handles.radiobutton6,'value',false);
+    set(handles.loadrb,'value',false);
     set(hObject,'value',true);
     
     
@@ -207,3 +212,12 @@ function figure1_CloseRequestFcn(hObject, eventdata, handles)
         % The GUI is no longer waiting, just close it
         delete(hObject);
     end
+
+
+% --- Executes on button press in loadrb.
+function loadrb_Callback(hObject, eventdata, handles)
+% hObject    handle to loadrb (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of loadrb

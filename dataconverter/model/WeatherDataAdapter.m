@@ -14,6 +14,7 @@ classdef WeatherDataAdapter < DataAdapter
             this.tempMatrix = {'/weatherTime','wind speed (m/s)','direction(degrees)','Temperature(c)'};
         end
         
+        %%Generic function for adding flower, date and 
         function this = addValues(this,idx,p)
             this.tempMatrix = addValues@DataAdapter(this,p,idx,this.tempMatrix);
         end
@@ -26,8 +27,10 @@ classdef WeatherDataAdapter < DataAdapter
             timeList{1,1} = str2double(time(1:4));
             timeList{1,2} = str2double(time(5:6));
             timeList{1,3} = str2double(time(7:8));
-            timeList{1,4} = str2double(time(10:11));
-            timeList{1,5} = str2double(time(12:13));
+            if length(time) >= 10
+                timeList{1,4} = str2double(time(10:11));
+                timeList{1,5} = str2double(time(12:13));
+            end
         end
         
         %%This function compares two time stamps and checks that they are
@@ -48,7 +51,16 @@ classdef WeatherDataAdapter < DataAdapter
            found = (actualTime{1,1} == row{1,1}) & (actualTime{1,2} == row{1,2});
            found = (actualTime{1,3} == row{1,3}) & found;
            found = found & (abs(actualTime{1,4}+actualTime{1,5}/60 - (row{1,4}+row{1,5}/60)) <= deltaTime/60.);
-            
+        end
+        
+        function found = compareDay(this,actualTime,row)
+           
+           for i=1:length(row)
+               row{1,i} = str2double(row{1,i});
+           end
+           
+           found = (actualTime{1,1} == row{1,1}) & (actualTime{1,2} == row{1,2});
+           found = (actualTime{1,3} == row{1,3}) & found;
         end
         
         %%
@@ -76,72 +88,94 @@ classdef WeatherDataAdapter < DataAdapter
                 else
                     time = spectroTime;
                 end
-%                 if isfield(spectroTime,strrep(id_,'.',''))
-%                     time = spectroTime.(strrep(id_,'.',''));
-%                 else
-%                     time = '';
-%                 end
                 
                 if strcmp('',time)
-                     time = inputManager.getDataManager().getHandler().getTime(id_);
-                end
-                
-                timeList = this.splitTime(time);
-                
-                rawData = this.fileReader(paths{1,i});
-                rawData = strrep(rawData,'   ',' ');
-                rawData = strrep(rawData,'  ',' ');
-                
-                temp = cellfun(@this.createDob,rawData,'UniformOutput',false);
-                
-                t_temp = temp{1,1};
-                
-                %%Finds the optimal starting point to minimize search time
-                if ~isempty(timeList)
-                    if timeList{1,2} == str2double(t_temp{1,2})
-                        start = 1;
+                    %%The correct weather data is fetched from the list by
+                    %%using the input time and comparing it to the weather data
+                    %%time. 
+                    day = paths{1,i}(strfind(paths{1,i},'data\')+5:strfind(paths{1,i},'data\')+12);
+                    timeList = this.splitTime(day);
+                    
+                    rawData = this.fileReader(paths{1,i});
+                    rawData = strrep(rawData,'   ',' ');
+                    rawData = strrep(rawData,'  ',' ');
+
+                    temp = cellfun(@this.createDob,rawData,'UniformOutput',false);
+                    start = 1;
+                    for j=start:length(temp)
+
+                        if ~isempty(timeList)
+                            t_temp = temp{1,j}(1,1:5);
+
+                            if this.compareDay(timeList,t_temp)
+                                %disp(t_temp);
+                                weatherDate = temp{1,j}(1:5);
+                                weatherDate = ['/',weatherDate{1},'-',weatherDate{2},'-',weatherDate{3},'-',weatherDate{4},'-',weatherDate{5}];
+                                temp{1,j}(5) = {weatherDate};
+                                this.tempMatrix = [this.tempMatrix;temp{1,j}(5:8)];
+                            end
+                        end
+                        %s = size(this.tempMatrix);
+                    end
+                    
+            else
+                    timeList = this.splitTime(time);
+
+                    rawData = this.fileReader(paths{1,i});
+                    rawData = strrep(rawData,'   ',' ');
+                    rawData = strrep(rawData,'  ',' ');
+
+                    temp = cellfun(@this.createDob,rawData,'UniformOutput',false);
+
+                    t_temp = temp{1,1};
+
+                    %%Finds the optimal starting point to minimize search time
+                    if ~isempty(timeList)
+                        if timeList{1,2} == str2double(t_temp{1,2})
+                            start = 1;
+                        else
+                            start = (length(temp)/2);%-500;
+                        end
+
+                        %Heuristic to find starting point of search
+                        dayDiff = timeList{1,3}-str2double(t_temp{1,3});
+
+                        %144 is the number of 10 minutes interval per day
+                        start = start+dayDiff*144;
+
+                        %Safety mesure to not miss the day due to missing data
+                        %points etc. The number is somewhat arbitrary
+                        start = start-50;                
                     else
-                        start = (length(temp)/2);%-500;
+                        start = 1;
                     end
 
-                    %Heuristic to find starting point of search
-                    dayDiff = timeList{1,3}-str2double(t_temp{1,3});
+                    %%The correct weather data is fetched from the list by
+                    %%using the input time and comparing it to the weather data
+                    %%time. 
+                    for j=start:length(temp)
 
-                    %144 is the number of 10 minutes interval per day
-                    start = start+dayDiff*144;
-                    
-                    %Safety mesure to not miss the day due to missing data
-                    %points etc. The number is somewhat arbitrary
-                    start = start-50;                
-                else
-                    start = 1;
-                end
-                
-                %%The correct weather data is fetched from the list by
-                %%using the input time and comparing it to the weather data
-                %%time. 
-                for j=start:length(temp)
-                    
-                    if ~isempty(timeList)
-                        t_temp = temp{1,j}(1,1:5);
-                    
-                        if this.compareTime(timeList,t_temp)
-                            %disp(t_temp);
+                        if ~isempty(timeList)
+                            t_temp = temp{1,j}(1,1:5);
+
+                            if this.compareTime(timeList,t_temp)
+                                %disp(t_temp);
+                                weatherDate = temp{1,j}(1:5);
+                                weatherDate = ['/',weatherDate{1},'-',weatherDate{2},'-',weatherDate{3},'-',weatherDate{4},'-',weatherDate{5}];
+                                temp{1,j}(5) = {weatherDate};
+                                this.tempMatrix = [this.tempMatrix;temp{1,j}(5:8)];
+                                break;
+                            end
+                        else
                             weatherDate = temp{1,j}(1:5);
                             weatherDate = ['/',weatherDate{1},'-',weatherDate{2},'-',weatherDate{3},'-',weatherDate{4},'-',weatherDate{5}];
                             temp{1,j}(5) = {weatherDate};
                             this.tempMatrix = [this.tempMatrix;temp{1,j}(5:8)];
-                            break;
                         end
-                    else
-                        weatherDate = temp{1,j}(1:5);
-                        weatherDate = ['/',weatherDate{1},'-',weatherDate{2},'-',weatherDate{3},'-',weatherDate{4},'-',weatherDate{5}];
-                        temp{1,j}(5) = {weatherDate};
-                        this.tempMatrix = [this.tempMatrix;temp{1,j}(5:8)];
+                        s = size(this.tempMatrix);
                     end
-                    s = size(this.tempMatrix);
+
                 end
-                
                 
                 this = this.addValues(idx,paths{1,i});
                 

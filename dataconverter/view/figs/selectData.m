@@ -69,7 +69,6 @@ userdata.data = data;
 % userdata.spectro =spectro;
 % userdata.olfactory = olfactory;
 
-
 %data = myTable(handles.figure1,data);
 
 if strcmp(id,'Spectro')
@@ -285,6 +284,61 @@ disp(get(button,'Position'));
 
 end
 
+function downSampleOlf(varargin)
+    %
+    matrix = varargin{3};
+    t = varargin{4};
+    hfig = varargin{5};
+    type = varargin{6};
+    
+    s = size(matrix);
+    height = s(1);
+    h = findobj('Tag','sampleedit');
+    rate = get(h,'String');
+    dsrate = str2double(rate);
+    
+    if strcmp(type,'Spectro')
+        for i=2:height
+            y1 = matrix{i,uint32(Constants.SpectroYPos)};
+            x1 = matrix{i,uint32(Constants.SpectroXPos)};
+            y2 = matrix{i,uint32(Constants.SpectroYUpPos)};
+            x2 = matrix{i,uint32(Constants.SpectroXUpPos)};
+
+            x1new = round(linspace(380,600,dsrate));
+            x2new = round(linspace(380,600,dsrate));
+
+            y1 = interp1(x1,y1,x1new);
+            y2 = interp1(x2,y2,x2new);
+
+            plot(t,x1,matrix{i,uint32(Constants.SpectroYPos)},'g');
+            hold on
+            plot(t,x2,matrix{i,uint32(Constants.SpectroYUpPos)},'g');
+            plot(t,x1new,y1,'r');
+            plot(t,x2new,y2,'b');
+        end
+    else
+        for i=2:height
+            y1 = matrix{i,uint32(Constants.OlfXPos)};
+            x1 = matrix{i,uint32(Constants.OlfYPos)};
+
+            x1new = round(linspace(0,60,dsrate));
+            y1 = interp1(x1,y1,x1new);
+            plot(t,x1,matrix{i,21},'g');
+            hold on
+            plot(t,x1new,y1,'r');
+        end
+    end
+    
+    userdata = get(hfig,'UserData');
+    
+    handler = userdata.handler;
+
+    handler.dataManager = handler.dataManager.setNrOfSpectroDP(userdata.dp); 
+    userdata.handler = handler;
+    userdata.dp = dsrate;
+    
+    set(hfig,'UserData',userdata);
+ end
 
 function downSample(varargin)
     %

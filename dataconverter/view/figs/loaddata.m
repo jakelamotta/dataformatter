@@ -85,60 +85,62 @@ if get(handles.okBtn,'UserData')
     
     nrOfTargets = 1;
     
-    if pos
-        flies = get(handles.popupmenu2,'String');
-        quantity = get(handles.popupmenu6,'Value');
-        index = get(handles.popupmenu2,'Value');
-        
-        fly = flies{index,1};
-        flyStr = ['positive','-',fly(1:end-2)];
-        
-        negOrPos{1,1} = flyStr;
-        negOrPos{2,1} = quantity;
-        
-        if strcmp(get(handles.popupmenu3,'Visible'),'on')
-            flies = get(handles.popupmenu3,'String');
-            quantity = get(handles.popupmenu7,'Value');
-            index = get(handles.popupmenu3,'Value');
-            fly = flies{index,1};
-            flyStr = ['positive','-',fly(1:end-2)];
-
-            negOrPos{1,2} = flyStr;
-            negOrPos{2,2} = quantity;
-            nrOfTargets = nrOfTargets + 1;
-        end
-        
-        if strcmp(get(handles.popupmenu4,'Visible'),'on')
-            flies = get(handles.popupmenu4,'String');
-            quantity = get(handles.popupmenu8,'Value');
-            index = get(handles.popupmenu4,'Value');
-            fly = flies{index,1};
-            flyStr = ['positive','-',fly(1:end-2)];
-
-            negOrPos{1,3} = flyStr;
-            negOrPos{2,3} = quantity;
-            
-            nrOfTargets = nrOfTargets + 1;
-        end
-        
-        if strcmp(get(handles.popupmenu5,'Visible'),'on')
-            flies = get(handles.popupmenu5,'String');
-            quantity = get(handles.popupmenu9,'Value');
-            index = get(handles.popupmenu5,'Value');
-            fly = flies{index,1};
-            flyStr = ['positive','-',fly(1:end-2)];
-
-            negOrPos{1,4} = flyStr;
-            negOrPos{2,4} = quantity;
-            
-            nrOfTargets = nrOfTargets + 1;
-        end
-    end
+    
+    %%Code for 
+%     if pos
+%         flies = get(handles.popupmenu2,'String');
+%         quantity = get(handles.popupmenu6,'Value');
+%         index = get(handles.popupmenu2,'Value');
+%         
+%         fly = flies{index,1};
+%         flyStr = 'positive';
+%         
+%         negOrPos{1,1} = flyStr;
+%         negOrPos{2,1} = quantity;
+%         
+%         if strcmp(get(handles.popupmenu3,'Visible'),'on')
+%             flies = get(handles.popupmenu3,'String');
+%             quantity = get(handles.popupmenu7,'Value');
+%             index = get(handles.popupmenu3,'Value');
+%             fly = flies{index,1};
+%             flyStr = ['positive','-',fly(1:end-2)];
+% 
+%             negOrPos{1,2} = flyStr;
+%             negOrPos{2,2} = quantity;
+%             nrOfTargets = nrOfTargets + 1;
+%         end
+%         
+%         if strcmp(get(handles.popupmenu4,'Visible'),'on')
+%             flies = get(handles.popupmenu4,'String');
+%             quantity = get(handles.popupmenu8,'Value');
+%             index = get(handles.popupmenu4,'Value');
+%             fly = flies{index,1};
+%             flyStr = ['positive','-',fly(1:end-2)];
+% 
+%             negOrPos{1,3} = flyStr;
+%             negOrPos{2,3} = quantity;
+%             
+%             nrOfTargets = nrOfTargets + 1;
+%         end
+%         
+%         if strcmp(get(handles.popupmenu5,'Visible'),'on')
+%             flies = get(handles.popupmenu5,'String');
+%             quantity = get(handles.popupmenu9,'Value');
+%             index = get(handles.popupmenu5,'Value');
+%             fly = flies{index,1};
+%             flyStr = ['positive','-',fly(1:end-2)];
+% 
+%             negOrPos{1,4} = flyStr;
+%             negOrPos{2,4} = quantity;
+%             
+%             nrOfTargets = nrOfTargets + 1;
+%         end
+%     end
     
     targets = cell(1,nrOfTargets);
     
     for i=1:nrOfTargets
-        fly = [negOrPos{1,i},num2str(negOrPos{2,i})];
+        fly = negOrPos{1,i};%[negOrPos{1,i},num2str(negOrPos{2,i})];
         target = [date_,'\',flower,'\',fly,'\'];
         targets{1,i} = target;
     end

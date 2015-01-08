@@ -51,7 +51,7 @@ classdef ImageDataAdapter < DataAdapter
             
             for i=1:nrOfFnames
                 fname = images.(fnames{i});
-                [ims,cont] = handler.getCroppedImage(fname,paths{1,i});
+                [ims,cont] = handler.getCroppedImage(fname,fnames{i});%paths{1,i});
                 %[im,keep] = handler.getCroppedImage(rawData,paths{1,i});
                 
                 if cont

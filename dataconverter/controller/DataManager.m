@@ -18,6 +18,11 @@ classdef DataManager < handle
     
     methods (Access=public)
         
+        
+        function this = importOldData(this,filename) 
+            [~,~,old] = xlsread(filename);
+            this.observation.setMatrix(old);
+        end
         %%Default constructor, takes an instance of an InputManager and a
         %%an GUIHandler object respectively
         function this = DataManager(inM,inH)
