@@ -59,22 +59,15 @@ classdef DataManager < handle
             
             diff = w_old-w_new;
             
-            if diff > 0
-                padding = cell(h_new,diff);
-                tempMat = [tempMat,padding];
+            if diff < 0
                 
-                tempMat2 = this.getObject().getMatrix();
-                tempMat2 = tempMat2(1,:);
-                %tempMat2 = current.getMatrix();
-                %tempMat2 = [tempMat2,padding(1,:)];
-                current.setMatrix(tempMat2);
             end
             
-%             for i=3:h_new
-%                 rows(end+1) = i;
-%             end                       
-%             
-            newMat = [current.getMatrix();tempMat(2:h_new,:)];
+            for i=3:h
+                rows(end+1) = i;
+            end                       
+            
+            newMat = [current.getMatrix();tempMat(rows,:)];
             current = current.setMatrix(newMat);
 %           current.setSpectroStruct(temp.getSpectroTime());
             this = this.setUnfObject(current);

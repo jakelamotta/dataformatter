@@ -86,9 +86,6 @@ classdef Observation < handle
         function this = doAverage(this)
             this.sortById();
             matrix = this.getMatrix();            
-            
-            
-            
             this.setMatrix(matrix);
         end
         

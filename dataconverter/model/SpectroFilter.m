@@ -14,12 +14,12 @@ classdef SpectroFilter < Filter
             this.downSample2(dsrate);
             this.expandSpectrumPoints();
             
-            switch type
-                case 'nofilter'
-                    
-                case 'average'                    
+%             switch type
+%                 case 'nofilter'
+%                     this.filtered = filter@Filter(this,this.filtered,10,this.filtered.getWidth());
+%                 case 'average'                    
                     this.filtered = filter@Filter(this,this.filtered,10,this.filtered.getWidth());
-            end
+            %end
             
             filtered = this.filtered;
         end
@@ -42,8 +42,8 @@ classdef SpectroFilter < Filter
                 y2 = matrix{i,y2pos};
                 x2 = matrix{i,x2newpos};
 
-                x1new = round(linspace(380,600,dsrate));
-                x2new = round(linspace(380,600,dsrate));
+                x1new = round(linspace(380,600,200));%str2double(dsrate)));
+                x2new = round(linspace(380,600,200));%str2double(dsrate)));
 
                 y1 = interp1(x1,y1,x1new);
                 y2 = interp1(x2,y2,x2new);
@@ -51,7 +51,7 @@ classdef SpectroFilter < Filter
                 matrix{i,y1pos} = y1;
                 matrix{i,y2pos} = y2;
                 matrix{i,x1newpos} = x1new;
-                matrix{i,x2newpos} = x2new;                
+                matrix{i,x2newpos} = x2new;
             end
             
             this.filtered.setMatrix(matrix);
