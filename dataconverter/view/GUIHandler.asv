@@ -8,11 +8,9 @@ classdef GUIHandler
         dataManager;
         inputManager;
         updater;
-        organizer;
-        
-        %%GUI elements
         mainWindow;
         menuBar;
+        organizer;
         loadBtn;
         importBtn;
         manageBtn;
@@ -30,10 +28,10 @@ classdef GUIHandler
         tableSize;
         sortDateBtn;
         sortIdBtn;
-        metadata;
     end
     
-    methods (Access = public)        
+    methods (Access = public)
+        
         function this = GUIHandler()
             this.scrsz = get(0,'ScreenSize');    
             sz = this.scrsz;

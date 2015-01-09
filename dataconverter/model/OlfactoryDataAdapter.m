@@ -6,7 +6,7 @@ classdef OlfactoryDataAdapter < DataAdapter
         tempMatrix;
     end
     
-    methods
+    methods (Access = public)
         
         function this = OlfactoryDataAdapter()
             this.dobj = Observation();

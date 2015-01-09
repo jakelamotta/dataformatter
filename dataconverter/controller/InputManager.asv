@@ -84,6 +84,7 @@ classdef InputManager < handle
                 if strcmp(type,'Behavior') && noExcelFile
                    this.saveToDir(Utilities.getpath('template.xlsx'),[target,type]);
                 end
+                
             end
         end
         
@@ -104,8 +105,7 @@ classdef InputManager < handle
             ps = this.paths;
         end
         
-        function createMetaData(this,path,tree)
-            
+        function tree = createMetaData(this,path,tree)
             temp = dir(path);
             fs = strfind(path,'\');
             [h,w] = size(temp);
@@ -115,7 +115,7 @@ classdef InputManager < handle
                     tree.addChild(child);
                     
                     if temp(i).isdir
-                        this.createMetaData([path,'\',temp(i).name],child);
+                        tree = this.createMetaData([path,'\',temp(i).name],child);
                     end
             end
         end        
