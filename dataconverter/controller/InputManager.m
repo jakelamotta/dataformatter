@@ -104,18 +104,54 @@ classdef InputManager < handle
             ps = this.paths;
         end
         
-        function createMetaData(this,path,tree)
+        function writeMetaDatatoFile(this)
+            rootTree = FolderTree('data');
             
+            path = Utilities.getpath('');
+            
+            this.getMetaData(path,rootTree);
+            
+            while rootTree.hasChildren()
+                date_ = rootTree.popChild();
+                this.createText([date_.getName(),'\r\n']);
+                
+                while date_.hasChildren()
+                    flower = date_.popChild();
+                    this.createText([flower.getName(),'\r\n']);                    
+                    
+                    while flower.hasChildren()
+                        negOrPos = flower.popChild();
+                        this.createText([negOrPos.getName(),'\r\n']);         
+                        
+                        while negOrPos.hasChildren()
+                            id = negOrPos.popChild();
+                            this.createText([id.getName(),'\r\n\r\n']);
+                        end
+                    end
+                    
+                    
+                end 
+                this.createText(['**********************','\r\n']);
+            end            
+        end
+        
+        function createText(this,toWrite)
+            %toWrite = [date_,'\r\n' ,flower,'\r\n',negOrPos,'\r\n',id.getName(),'\r\n\r\n'];
+            fid = fopen(Utilities.getpath('metadatatest.txt'),'a');
+            fprintf(fid,toWrite);
+            fclose(fid);
+        end
+        
+        function getMetaData(this,path,tree)
             temp = dir(path);
             fs = strfind(path,'\');
             [h,w] = size(temp);
             
             for i=3:h                    
                     child = FolderTree(temp(i).name,tree);
-                    tree.addChild(child);
                     
                     if temp(i).isdir
-                        this.createMetaData([path,'\',temp(i).name],child);
+                        this.getMetaData([path,'\',temp(i).name],child);
                     end
             end
         end        
@@ -144,7 +180,6 @@ classdef InputManager < handle
                     numFiles = size(typeDir);
                     
                     this.paths{1,end+1} = [path,'\',typeDir(i).name];
-                    
                 else
                     this = this.recSearch([path,'\',temp(i).name],type);
                 end

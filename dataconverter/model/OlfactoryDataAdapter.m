@@ -21,8 +21,8 @@ classdef OlfactoryDataAdapter < DataAdapter
             tic;
             size_ = size(paths);
             
-            rows = cell(size_(2),2);
-            this.tempMatrix = [this.tempMatrix;rows];
+%             rows = cell(size_(2),2);
+%             this.tempMatrix = [this.tempMatrix;rows];
             
             for i=1:size_(2)
                 idx = strfind(paths{1,i},'\');
@@ -38,8 +38,8 @@ classdef OlfactoryDataAdapter < DataAdapter
                 x = transpose(rawData(:,1));
                 y = transpose(rawData(:,2));
                 
-                this.tempMatrix{i+1,1} = x;
-                this.tempMatrix{i+1,2} = y;
+                this.tempMatrix{2,1} = x;
+                this.tempMatrix{2,2} = y;
                 
                 % this.dobj.addOlfactoryData(tempStruct,id_);
                 this = this.addValues(idx,paths{1,i});

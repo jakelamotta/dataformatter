@@ -193,6 +193,11 @@ classdef DataManager < handle
         
         function this = setNrOfOlfactoryDP(this,dp)
            %The value can only be changed once, from it's original value
+           
+           if ischar(dp)
+               dp = str2double(dp);
+           end
+           
            if this.olfactoryDP == 15000
                this.olfactoryDP = dp;
            end

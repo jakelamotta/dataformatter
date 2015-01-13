@@ -66,7 +66,7 @@ classdef OlfactoryFilter < Filter
                 y1 = matrix{i,y1pos};
                 x1 = matrix{i,x1newpos};
                 
-                x1new = linspace(min(x1),max(x1),str2double(dsrate));
+                x1new = linspace(min(x1),max(x1),dsrate);
                 
                 y1 = interp1(x1,y1,x1new);
                 
