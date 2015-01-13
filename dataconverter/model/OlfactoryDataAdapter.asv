@@ -55,7 +55,7 @@ classdef OlfactoryDataAdapter < DataAdapter
             try
                 rawData = csvread(p,3,0);
             catch e
-                rawData = dlmread(p);
+                
             end
         end
     end
