@@ -1,21 +1,24 @@
 classdef FolderTree < handle
-    %FOLDERTREE Summary of this class goes here
-    %   Detailed explanation goes here
+    %FolderTree. Simple data structure that is organized as a hierarchy
+    %tree. 
     
     properties (Access = private)
-        parent;
-        children;
-        issource;
+        parent; %FolderTree - parent of current object, if null current is root
+        children; %Cellarray of FolderTrees - list of children
+        issource; %Boolean - True if root, false if has parent
         source;
-        name;
+        name; %String
     end
     
     methods (Access = public)
         
-        function this = FolderTree(n,varargin)
-            
+        %%Constructor. Called with a name and and an option for passing a
+        %%FolderTree object as parent. The root tree is the only one that
+        %%does not have a parent.
+        function this = FolderTree(n,varargin)            
            this.name = n;
            this.children = {};
+           
            if isempty(varargin)
                this.issource = true;
            else
@@ -29,6 +32,7 @@ classdef FolderTree < handle
             disp(this.name);
         end
         
+        %%Pops a child from the children list
         function child = popChild(this)
             child = this.children{1};            
             
@@ -39,26 +43,14 @@ classdef FolderTree < handle
             end
         end
         
+        %%Boolean function, returns true if the Tree has at least one child
+        %%and false otherwise
         function haschildren = hasChildren(this)
            haschildren = ~isempty(this.children); 
         end
         
-        function this = addChild(this,child)
-           this.children = [this.children,{child}]; 
-        end
-        
-        function p = getParent(this)
-            p = this.parent;
-        end
-        
-        function n = getName(this)
-            n= this.name;
-        end
-        
-        function childrenList = getChildren(this)
-            childrenList = this.children;
-        end
-        
+        %%Boolean function, returns true if the tree is a parent. It is only
+        %% the root tree that does not have a parent.
         function isparent = isParent(this)
             isparent = true;
             
@@ -67,6 +59,31 @@ classdef FolderTree < handle
             end
         end
         
+        %%Function for adding a child to a tree.
+        function this = addChild(this,child)
+           this.children = [this.children,{child}]; 
+        end
+        
+        
+        %%
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        %%%%%%%%%%%%%%%%%%%%%GETTERS AND SETTERS%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%        
+        function p = getParent(this)
+            p = this.parent;
+        end
+        
+        function n = getName(this)
+            n= this.name;
+        end
+        
+        function child = getChildAtIndex(this,index)
+           child = this.children{index}; 
+        end
+        
+        function childrenList = getChildren(this)
+            childrenList = this.children;
+        end
     end    
 end
 

@@ -120,10 +120,6 @@ if get(handles.okBtn,'UserData')
     data = userdata.data;
     handler = userdata.handler;
 
-%     if isfield(userdata,'dp')
-%         handler.getDataManager().setNrOfOlfactoryDP(userdata.dp);
-%     end
-
     h = findobj('Tag','sampleedit');
     rate = get(h,'String');
     
@@ -234,7 +230,7 @@ size_ = size(data);
 height = size_(1);
 
 global colors;
-t = axes('Position',[.15 .25, .8 .25]);
+t = axes('units','normalized','Position',[.15 .25, .8 .25]);
 
 index = 1;
 

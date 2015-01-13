@@ -87,6 +87,14 @@ classdef InputManager < handle
             end
         end
         
+        %%Function that writes metadata to a word document
+        function writeMetaDatatoFile(this)
+            rootTree = FolderTree('data');
+            path = Utilities.getpath('');
+            this.getMetaData(path,rootTree);
+            WriteToWordFromMatlab(Utilities.getpath('metadata.doc'),rootTree);
+        end
+        
         %%
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         %%%%%%%%%%%%%%%%%%%%%GETTERS AND SETTERS%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -104,52 +112,13 @@ classdef InputManager < handle
             ps = this.paths;
         end
         
-        function writeMetaDatatoFile(this)
-            rootTree = FolderTree('data');
-            
-            path = Utilities.getpath('');
-            
-            this.getMetaData(path,rootTree);
-            WriteToWordFromMatlab(Utilities.getpath('metadata.doc'),rootTree);
-%             while rootTree.hasChildren()
-%                 date_ = rootTree.popChild();
-%                 this.createText([date_.getName(),'\r\n'],'');
-%                 
-%                 while date_.hasChildren()
-%                     flower = date_.popChild();
-%                     this.createText('',[flower.getName(),'\r\n']);                    
-%                     
-%                     while flower.hasChildren()
-%                         negOrPos = flower.popChild();
-%                         this.createText('',[negOrPos.getName(),'\r\n']);         
-%                         
-%                         while negOrPos.hasChildren()
-%                             id = negOrPos.popChild();
-%                             this.createText('',[id.getName(),'\r\n\r\n']);
-%                         end
-%                     end
-%                     
-%                     
-%                 end 
-%                 this.createText('',['**********************','\r\n']);
-%             end            
-        end
-        
-        function createText(this,headline,toWrite)
-            %toWrite = [date_,'\r\n' ,flower,'\r\n',negOrPos,'\r\n',id.getName(),'\r\n\r\n'];
-%             fid = fopen(Utilities.getpath('metadatatest.txt'),'a');
-%             fprintf(fid,toWrite);
-%             fclose(fid);
-            p = Utilities.getpath('metadata.doc');
-            WriteToWordFromMatlab(p,headline,toWrite);
-        end
-        
+        %%Function that recursively builds a FolderTree object collection
         function getMetaData(this,path,tree)
             temp = dir(path);
-            fs = strfind(path,'\');
             [h,w] = size(temp);
             
             for i=3:h                    
+                    %%Creates a new FolderTree child with input FolderTree as parent
                     child = FolderTree(temp(i).name,tree);
                     
                     if temp(i).isdir

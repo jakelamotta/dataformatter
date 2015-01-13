@@ -180,7 +180,7 @@ classdef GUIHandler
         end
         
         function this = metadataCallback(this,varargin)
-        
+            this.inputManager.writeMetaDatatoFile();
         end
         
         %%Function that sets upp all the gui elements. Each position is
@@ -194,9 +194,10 @@ classdef GUIHandler
             this.importBtn = uicontrol(this.mainWindow,'Style','pushbutton','String','Load data', 'Position',[sz(3)/7.68 sz(4)/1.84 sz(3)/16 sz(4)/21.6],'Callback',@this.importCallback);
             this.manageBtn = uicontrol(this.mainWindow,'Style','pushbutton','String','Manage data','Position',[sz(3)/4.8 sz(4)/1.84 sz(3)/16 sz(4)/21.6],'Callback',@this.manageCallback);
             this.exportBtn = uicontrol(this.mainWindow,'Style','pushbutton','String','Export','Position',[sz(3)/2.95 sz(4)/1.8848 sz(3)/12.8 sz(4)/14.4],'Callback',@this.exportCallback);
-            this.sortDateBtn = uicontrol(this.mainWindow,'Style','pushbutton','String','Sort by date','Position',[sz(3)/1.6226 sz(4)/2.3273 sz(3)/29.0 sz(4)/35.2],'Callback',@this.mergeCallback);
+            this.exportBtn = uicontrol(this.mainWindow,'Style','pushbutton','String','Export','Position',[sz(3)/2.95 sz(4)/1.8848 sz(3)/12.8 sz(4)/14.4],'Callback',@this.exportCallback);
+            this.sortDateBtn = uicontrol('parent',this.mainWindow,'Style','pushbutton','String','Sort by date','Position',[sz(3)/1.6226 sz(4)/2.3273 sz(3)/29.0 sz(4)/35.2],'Callback',@this.mergeCallback);
             this.sortIdBtn = uicontrol(this.mainWindow,'Style','pushbutton','String','Sort by id','Position',[sz(3)/1.6226 sz(4)/2.6273 sz(3)/29.0 sz(4)/35.2],'Callback',@this.sortIdCallback);
-            this.dataTable = uitable(this.mainWindow,'Position',this.tableSize,'CellSelectionCallback',@this.tableCallback);
+            this.dataTable = uitable(this.mainWindow,'Position',this.tableSize,'units','normalized','CellSelectionCallback',@this.tableCallback);
             
             this.file_ = uimenu(this.mainWindow,'Label','File');
             this.clear_ = uimenu(this.file_,'Label','Clear data','Callback',@this.clearCallback);

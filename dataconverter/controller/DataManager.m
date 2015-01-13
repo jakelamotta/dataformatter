@@ -4,6 +4,7 @@ classdef DataManager < handle
     %GUI and all the underlying data handling. It passes any command from
     %the user to the correct class instance 
     
+    
     properties (Access = private)
         xlsWriter;
         adapter;

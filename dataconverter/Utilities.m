@@ -2,37 +2,10 @@ classdef Utilities
     %UTILITIES Utility class contaning som static methods for generic tasks
     %that are useful for many different classes
     
-    properties
-    
-    end
-       
     methods (Static)
         
 
         function [first,second] = padMatrix(first, second)
-%             lenFirst = size(first);
-%             lenSecond = size(second);
-%             lenFirst = lenFirst(2);
-%             lenSecond = lenSecond(2);
-%             
-%             if lenFirst < lenSecond
-%                 diff = abs(lenFirst-lenSecond);
-%                 s = size(first);
-%                 height = s(1);
-%                 
-%                 newMat = cell(height,diff);
-%                 first = [first,newMat];
-%                 first(1,:) = second(1,:);
-%             elseif lenFirst > lenSecond
-%                 diff = abs(lenFirst-lenSecond);
-%                 s = size(second);
-%                 height = s(1);
-%                 
-%                 newMat = cell(height,diff);
-%                 second = [second,newMat];
-%                 second(1,:) = first(1,:);
-%             end
-% %             
             [h1,w1] = size(first);
             [h2,w2] = size(second);
             
@@ -47,15 +20,6 @@ classdef Utilities
                 second = [second,newMat];
                 second(1,:) = first(1,:);
             end
-%             
-%             diff = abs(h1-h2);
-%             newMat = cell(diff,max(w1,w2));
-%                 
-%             if h1 < h2
-%                 first = [first;newMat];
-%             elseif h1 > h2
-%                 second = [second;newMat];
-%             end
         end
         
         %%
@@ -66,11 +30,6 @@ classdef Utilities
             
             prefixpy = [tmp(1:end-length(mfilename)),'data\'];
             path = [prefixpy,file];
-        end
-        
-        %%
-        function row = findRowFromTime(matrix,time)
-            %Time in format 'yyyymmddhhmm'
         end
         
         %%Pad a string with the input string padWidth so that the input is
