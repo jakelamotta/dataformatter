@@ -12,7 +12,7 @@ classdef FolderTree < handle
     
     methods (Access = public)
         
-        %%Constructor. Called with a name and and an option for passing a
+        %%Constructor. Called with a name and an option for passing a
         %%FolderTree object as parent. The root tree is the only one that
         %%does not have a parent.
         function this = FolderTree(n,varargin)            

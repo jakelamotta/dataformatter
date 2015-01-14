@@ -51,16 +51,40 @@ function WriteToWordFromMatlab(path,rootTree)
                 negOrPos = flower.popChild();
                 
                 %Style='Normal';
-                TextString=negOrPos.getName();    
+                TextString=negOrPos.getName();
                 WordText(ActXWord,TextString,Style,[0,1]);
                 
                 while negOrPos.hasChildren()
                     
                     id = negOrPos.popChild();
-                    Style='Normal';
+                    
+                    Style='No spacing';
                     TextString=id.getName();    
                     WordText(ActXWord,TextString,Style,[0,1]);
                     
+                    while id.hasChildren()
+                        
+                        type = id.popChild();
+                        
+                        first = true;
+                        
+                        while type.hasChildren()
+                            if first
+                                TextString=['      ',type.getName(),': '];    
+                                WordText(ActXWord,TextString,Style,[0,0]);
+                                first = false;
+                            end
+                            file_ = type.popChild();
+                            
+                            TextString=[file_.getName(),' '];    
+                            WordText(ActXWord,TextString,Style,[0,0]);
+                            
+                            if ~type.hasChildren()
+                                TextString='';    
+                                WordText(ActXWord,TextString,Style,[0,2]);
+                            end
+                        end                        
+                    end
                 end                
             end
             

@@ -81,10 +81,11 @@ if get(handles.okBtn,'UserData')
     %id_ = get(handles.editID,'String');
     pos = get(handles.posRdbtn,'value');
     negOrPos = cell(2,4);
-    negOrPos{1,1} = char('negative'*~pos+'positive'*pos);
+    negOrPos{1,1} = 'negative'*negOrPos;
     
     nrOfTargets = 1;
-        
+    
+    
     %%Code for 
 %     if pos
 %         flies = get(handles.popupmenu2,'String');

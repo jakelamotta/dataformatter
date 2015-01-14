@@ -33,7 +33,7 @@ classdef OlfactoryDataAdapter < DataAdapter
                 rawData = this.fileReader(paths{1,i});
                 
                 if iscell(rawData)
-                    x = transpose(cellfun(@this.str2double2,rawData(:,1)));
+                    x = transpose(cellfun(@str2double,rawData(:,1)));
                     y = transpose(cell2mat(rawData(:,2)));
                 else
                     x = transpose(rawData(:,1));
@@ -63,10 +63,10 @@ classdef OlfactoryDataAdapter < DataAdapter
                 end
             end
         end
-        
-        function element = str2double2(this,mcell)
-            element = str2double(mcell);
-        end
+%         
+%         function element = str2double2(this,mcell)
+%             element = str2double(mcell);
+%         end
     end
     
     methods (Access = private)
