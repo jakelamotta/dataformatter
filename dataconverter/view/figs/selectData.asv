@@ -304,7 +304,7 @@ function downSample(varargin)
     rate = get(h,'String');
     dsrate = str2double(rate);
     
-    %%Interpolating Spectro data 
+    %%
     if strcmp(type,'Spectro')
         for i=2:height
             y1 = matrix{i,uint32(Constants.SpectroYPos)};
@@ -324,7 +324,7 @@ function downSample(varargin)
             plot(t,x1new,y1,'r');
             plot(t,x2new,y2,'b');
         end
-    %%Interpolating Olfactory data 
+    %%Interpolating 
     else
         for i=2:height
             x1 = matrix{i,uint32(Constants.OlfXPos)};
@@ -338,8 +338,11 @@ function downSample(varargin)
         end
     end
     
-    userdata = get(hfig,'UserData');    
+    %%
+    userdata = get(hfig,'UserData');
+    
     handler = userdata.handler;
+
     handler.dataManager = handler.dataManager.setNrOfSpectroDP(userdata.dp); 
     userdata.handler = handler;
     userdata.dp = dsrate;

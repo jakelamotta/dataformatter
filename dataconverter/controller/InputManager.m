@@ -40,8 +40,6 @@ classdef InputManager < handle
                 end
                 toc
             end
-            
-                        
         end        
                 
         %%Takes a path as an input and finds all folders of the input type

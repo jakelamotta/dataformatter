@@ -221,3 +221,6 @@ function loadrb_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 % Hint: get(hObject,'Value') returns toggle state of loadrb
+    if get(hObject,'value')
+        updateRadio(handles,hObject);
+    end

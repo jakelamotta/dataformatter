@@ -12,7 +12,7 @@ function WriteToWordFromMatlab(path,rootTree)
 % 051122  AK  Modification of 'save2word' in Mathworks File Exchange   
 % 060204  AK  Updated with WordSymbol, WordCreateTable and "Flying Start" section 
 % 060214  AK  Pagenumber, font color and TOC added
-% 130115  Kristian  Removed most stuff so it would fit my purposes
+% 130115  Kristian  Removed most stuff so it would fit our purposes
 % -------------------------------------------------------------------
 
 	%WordFileName='TestDoc.doc';
@@ -40,7 +40,9 @@ function WriteToWordFromMatlab(path,rootTree)
         TextString=date_.getName();
         WordText(ActXWord,TextString,Style,[0,2]);%two enters after text
     
+        %%Iterate through the foldertree, see documentation for FolderTree
         while date_.hasChildren()
+            %Fetch and remove first child
             flower = date_.popChild();
             
             Style='Heading 3';

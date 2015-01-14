@@ -98,32 +98,51 @@ if ~isfield(config,'weatherPath')
 end
 
 strings = varargin{2};
+strings = strings{1};
 
-nrOfTargets = size(strings);
+str_ = strings;
+idx = strfind(str_,'\');
+sub1 = str_(idx(1)+1:idx(1)+3);
+sub2 = str_(idx(2)+1:idx(2)+1);
+sub3 = str_(1:idx(1)-1);
+  
+id_ = config.id;
+sub4 = num2str(id_);
 
-for i=1:nrOfTargets(2)
-    str_ = strings{1,i};
-    idx = strfind(str_,'\');
-    sub1 = str_(idx(1)+1:idx(1)+3);
-    sub2 = str_(idx(2)+1:idx(2)+1);
-    sub3 = str_(1:idx(1)-1);
+sub4 = Utilities.padString(sub4,'0',3);
+
+str_ = [sub1,'_',sub2,sub3,'_',sub4];
+str_ = strrep(str_,'\','');
     
-    id_ = config.id+i-1;
-    sub4 = num2str(id_);
+strings = [strings,str_,'\'];
 
-    sub4 = Utilities.padString(sub4,'0',3);
+set(handles.edit1,'String',strings);
 
-    str_ = [sub1,'_',sub2,sub3,'_',sub4];
-    str_ = strrep(str_,'\','');
-    
-    strings{1,i} = [strings{1,i},str_,'\'];
-end
-
-set(handles.edit1,'String',strings{1,1});
+% strings = varargin{2};
+% 
+% nrOfTargets = size(strings);
+% 
+% for i=1:nrOfTargets(2)
+%     str_ = strings{1,i};
+%     idx = strfind(str_,'\');
+%     sub1 = str_(idx(1)+1:idx(1)+3);
+%     sub2 = str_(idx(2)+1:idx(2)+1);
+%     sub3 = str_(1:idx(1)-1);
+%     
+%     id_ = config.id+i-1;
+%     sub4 = num2str(id_);
+% 
+%     sub4 = Utilities.padString(sub4,'0',3);
+% 
+%     str_ = [sub1,'_',sub2,sub3,'_',sub4];
+%     str_ = strrep(str_,'\','');
+%     
+%     strings{1,i} = [strings{1,i},str_,'\'];
+% end
+% 
+% set(handles.edit1,'String',strings{1,1});
 tempStruct.targets = strings;
 set(handles.output,'UserData',tempStruct);
-
-
 
 % UIWAIT makes loaddatastep2 wait for user response (see UIRESUME)
 uiwait(handles.figure1);
@@ -138,17 +157,17 @@ function varargout = loaddatastep2_OutputFcn(hObject, eventdata, handles)
 
 % Get default command line output from handles structure
 %varargout{1} = handles.output;
-if get(handles.okBtn,'UserData') 
-    
+if get(handles.okBtn,'UserData')    
     data = get(handles.output,'UserData');
+    data.targets = get(handles.edit1,'String');
     varargout{1}.target = data.targets;
     data = rmfield(data,'targets');
     varargout{1}.sources = data;
-    %varargout{1}.sources = get(handles.output,'UserData');
-    
+    %varargout{1}.sources = get(handles.output,'UserData');    
 else
     varargout = cell(1,1);
 end
+
 delete(handles.figure1);
 
 
