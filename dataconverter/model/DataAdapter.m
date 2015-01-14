@@ -1,4 +1,4 @@
-classdef DataAdapter
+classdef DataAdapter < handle
     %The DATAADAPTER class is a general class to the different kinds of
     %dataadapters, one for each data type. Provides the subclasses with a
     %method for reading files. The adapters are an fits the input data into
