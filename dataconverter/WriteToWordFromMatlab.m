@@ -232,7 +232,7 @@ function WordText(actx_word_p,text_p,style_p,enters_p,color_p)
     end
     
 	actx_word_p.Selection.TypeText(text_p);
-    actx_word_p.Selection.Font.Color='wdColorAutomatic';%set back to default color
+    %actx_word_p.Selection.Font.Color='wdColorAutomatic';%set back to default color
     for k=1:enters_p(2)    
         actx_word_p.Selection.TypeParagraph; %enter
     end
