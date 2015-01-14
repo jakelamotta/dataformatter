@@ -55,6 +55,7 @@ classdef OlfactoryDataAdapter < DataAdapter
                     rawData = dlmread(p);
                 catch e2
                     [uu1,uu2,rawData] = xlsread(p);
+                    rawData(:,1) = cellfun(@str2double,rawData(:,1));
                 end
             end
         end

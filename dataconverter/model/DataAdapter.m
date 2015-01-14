@@ -34,8 +34,8 @@ classdef DataAdapter
             for i=2:h
                 matrix{i,1} = flower(2:end-1);
                 matrix{i,2} = date_(2:end-1);
-                matrix{i,3} = double(logical(strfind(negOrPos,'egative')));
-                matrix{i,4} = double(logical(~strfind(negOrPos,'egative')));
+                matrix{i,3} = double(strcmp(negOrPos(2:end-1),'negative'));
+                matrix{i,4} = double(~strcmp(negOrPos(2:end-1),'negative'));
             end
         end
         
