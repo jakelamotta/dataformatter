@@ -28,8 +28,9 @@ classdef Utilities
             %hardcoded because they are not subjects of change
             tmp = mfilename('fullpath'); %Returns path of current m-file
             
-            prefixpy = [tmp(1:end-length(mfilename)),'data\'];
-            path = [prefixpy,file];
+            prefixpy = [tmp(1:end-length(mfilename)),'data'];
+            %path = [prefixpy,file];
+            path = fullfile(prefixpy,file);
         end
         
         %%Pad a string with the input string padWidth so that the input is

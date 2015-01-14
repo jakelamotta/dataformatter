@@ -188,15 +188,29 @@ classdef GUIHandler
         function this = initGUI(this)
             sz = this.scrsz;
             
+%             this.mainWindow = figure('Name','Title','DockControls','off','NumberTitle','off','Position',[sz(3)/8 sz(4)/8 sz(3)/1.5 sz(4)/1.5],'MenuBar','None','ToolBar','None');
+% %           this.panel = uibuttongroup(this.mainWindow,'Position',[(sz(3)/8)-50 (sz(4)/8)-50 (sz(3)/1.9)-50 (sz(4)/2.3)-50]);            
+%             this.loadBtn = uicontrol(this.mainWindow,'Style','pushbutton','String','Import Data','Position',[sz(3)/19.2 sz(4)/1.84 sz(3)/16 sz(4)/21.6],'Callback',@this.loadCallback);
+%             this.importBtn = uicontrol(this.mainWindow,'Style','pushbutton','String','Load data', 'Position',[sz(3)/7.68 sz(4)/1.84 sz(3)/16 sz(4)/21.6],'Callback',@this.importCallback);
+%             this.manageBtn = uicontrol(this.mainWindow,'Style','pushbutton','String','Manage data','Position',[sz(3)/4.8 sz(4)/1.84 sz(3)/16 sz(4)/21.6],'Callback',@this.manageCallback);
+%             %this.exportBtn = uicontrol(this.mainWindow,'Style','pushbutton','String','Export','Position',[sz(3)/2.95 sz(4)/1.8848 sz(3)/12.8 sz(4)/14.4],'Callback',@this.exportCallback);
+%             this.exportBtn =  uicontrol('parent', this.mainWindow, 'style', 'pushbutton', 'units', 'normalized', 'position', [0.5 0.8 0.1 0.1], 'string', 'Export', 'fontunits', 'normalized', 'fontsize', 0.1 );
+%             
+%             this.sortDateBtn = uicontrol('parent',this.mainWindow,'Style','pushbutton','String','Sort by date','Position',[sz(3)/1.6226 sz(4)/2.3273 sz(3)/29.0 sz(4)/35.2],'Callback',@this.mergeCallback);
+%             this.sortIdBtn = uicontrol(this.mainWindow,'Style','pushbutton','String','Sort by id','Position',[sz(3)/1.6226 sz(4)/2.6273 sz(3)/29.0 sz(4)/35.2],'Callback',@this.sortIdCallback);
+%             uicontrol ('parent', this.mainWindow, 'style', 'pushbutton', 'units', 'normalized', 'position', [0.1 0.1 0.1 0.1], 'string', 'test', 'fontunits', 'normalized', 'fontsize', 0.2 );
+%             
+
             this.mainWindow = figure('Name','Title','DockControls','off','NumberTitle','off','Position',[sz(3)/8 sz(4)/8 sz(3)/1.5 sz(4)/1.5],'MenuBar','None','ToolBar','None');
 %           this.panel = uibuttongroup(this.mainWindow,'Position',[(sz(3)/8)-50 (sz(4)/8)-50 (sz(3)/1.9)-50 (sz(4)/2.3)-50]);            
-            this.loadBtn = uicontrol(this.mainWindow,'Style','pushbutton','String','Import Data','Position',[sz(3)/19.2 sz(4)/1.84 sz(3)/16 sz(4)/21.6],'Callback',@this.loadCallback);
-            this.importBtn = uicontrol(this.mainWindow,'Style','pushbutton','String','Load data', 'Position',[sz(3)/7.68 sz(4)/1.84 sz(3)/16 sz(4)/21.6],'Callback',@this.importCallback);
-            this.manageBtn = uicontrol(this.mainWindow,'Style','pushbutton','String','Manage data','Position',[sz(3)/4.8 sz(4)/1.84 sz(3)/16 sz(4)/21.6],'Callback',@this.manageCallback);
-            this.exportBtn = uicontrol(this.mainWindow,'Style','pushbutton','String','Export','Position',[sz(3)/2.95 sz(4)/1.8848 sz(3)/12.8 sz(4)/14.4],'Callback',@this.exportCallback);
-            this.exportBtn = uicontrol(this.mainWindow,'Style','pushbutton','String','Export','Position',[sz(3)/2.95 sz(4)/1.8848 sz(3)/12.8 sz(4)/14.4],'Callback',@this.exportCallback);
-            this.sortDateBtn = uicontrol('parent',this.mainWindow,'Style','pushbutton','String','Sort by date','Position',[sz(3)/1.6226 sz(4)/2.3273 sz(3)/29.0 sz(4)/35.2],'Callback',@this.mergeCallback);
-            this.sortIdBtn = uicontrol(this.mainWindow,'Style','pushbutton','String','Sort by id','Position',[sz(3)/1.6226 sz(4)/2.6273 sz(3)/29.0 sz(4)/35.2],'Callback',@this.sortIdCallback);
+            this.importBtn = uicontrol('parent', this.mainWindow, 'style', 'pushbutton', 'units', 'normalized', 'position', [0.14 0.8 0.1 0.1], 'string', 'Import data', 'fontunits', 'normalized', 'fontsize', 0.2, 'Callback',@this.loadCallback);
+            this.importBtn = uicontrol('parent', this.mainWindow, 'style', 'pushbutton', 'units', 'normalized', 'position', [0.26 0.8 0.1 0.1], 'string', 'Load data', 'fontunits', 'normalized', 'fontsize', 0.2, 'Callback',@this.importCallback);
+            this.manageBtn = uicontrol('parent', this.mainWindow, 'style', 'pushbutton', 'units', 'normalized', 'position', [0.38 0.8 0.1 0.1], 'string', 'Manage data', 'fontunits', 'normalized', 'fontsize', 0.2,'Callback',@this.manageCallback );
+            this.exportBtn =  uicontrol('parent', this.mainWindow, 'style', 'pushbutton', 'units', 'normalized', 'position', [0.5 0.8 0.1 0.1], 'string', 'Export', 'fontunits', 'normalized', 'fontsize', 0.2,'Callback',@this.exportCallback);
+            
+            this.sortDateBtn = uicontrol('parent', this.mainWindow, 'style', 'pushbutton', 'units', 'normalized', 'position', [0.93 0.64 0.06 0.05], 'string', 'Sort by date', 'fontunits', 'normalized', 'fontsize', 0.3,'Callback',@this.mergeCallback);
+            this.sortIdBtn = uicontrol('parent', this.mainWindow, 'style', 'pushbutton', 'units', 'normalized', 'position', [0.93 0.58 0.06 0.05], 'string', 'Sort by id', 'fontunits', 'normalized', 'fontsize', 0.3,'Callback',@this.sortIdCallback);
+            
             this.dataTable = uitable(this.mainWindow,'Position',this.tableSize,'units','normalized','CellSelectionCallback',@this.tableCallback);
             
             this.file_ = uimenu(this.mainWindow,'Label','File');
