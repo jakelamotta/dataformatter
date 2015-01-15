@@ -73,7 +73,7 @@ userdata.type = id;
 %data = myTable(handles.figure1,data);
 
 if strcmp(id,'Spectro')
-    userdata.dp = handler.dataManager.getNrOfSpectroDP();
+    userdata.dp = handler.getDataManager().getNrOfSpectroDP();
     %set(hObject,'UserData',userdata);
 %     setGraph(handles,spectro);
     set(hObject,'UserData',userdata);
@@ -223,72 +223,69 @@ function setTable(handles,data)
 end
 
 function setGraph(h,data,type)
+    handle = h.figure1;
 
-handle = h.figure1;
-
-size_ = size(data);
-height = size_(1);
-
-global colors;
-t = axes('units','normalized','Position',[.15 .25, .8 .25]);
-
-index = 1;
-
-if strcmp(type,'Spectro')
+    [height,w] = size(data);
     
-legendList = cell(1,(height-1)*2);
+    global colors;
+    t = axes('units','normalized','Position',[.15 .25, .8 .25]);
 
-for i=2:height
-    plot(t,[data{i,uint32(Constants.SpectroXPos)}],[data{i,uint32(Constants.SpectroYPos)}],colors{1,mod(i,length(colors))+1});
+    index = 1;
 
-    hold on;
-    plot(t,[data{i,uint32(Constants.SpectroXUpPos)}],[data{i,uint32(Constants.SpectroYUpPos)}],colors{1,mod(i,length(colors))+1});
-    legendList{index} = data{i,2};
-    legendList{index+1} = [data{i,2},'up'];
-        
-    index = index + 2;
-end
+    if strcmp(type,'Spectro')
 
-elseif strcmp(type,'Olfactory')
-    
-    legendList = cell(1,(height-1));
-    
+    legendList = cell(1,(height-1)*2);
+
     for i=2:height
-        
-    plot(t,[data{i,uint32(Constants.OlfXPos)}],[data{i,uint32(Constants.OlfYPos)}],colors{1,mod(i,length(colors))+1});
-    hold on;
-    legendList{index} = data{i,2};
-        
-    index = index + 1;
+        plot(t,[data{i,uint32(Constants.SpectroXPos)}],[data{i,uint32(Constants.SpectroYPos)}],colors{1,mod(i,length(colors))+1});
+
+        hold on;
+        plot(t,[data{i,uint32(Constants.SpectroXUpPos)}],[data{i,uint32(Constants.SpectroYUpPos)}],colors{1,mod(i,length(colors))+1});
+        legendList{index} = data{i,2};
+        legendList{index+1} = [data{i,2},'up'];
+
+        index = index + 2;
     end
-end
 
-legend(legendList);
+    elseif strcmp(type,'Olfactory')
+        legendList = cell(1,(height-1));
 
-toSend = data;
+        for i=2:height
 
-userdata = get(handle,'UserData');
-handler = userdata.handler;
+        plot(t,[data{i,uint32(Constants.OlfXPos)}],[data{i,uint32(Constants.OlfYPos)}],colors{1,mod(i,length(colors))+1});
+        hold on;
+        legendList{index} = data{i,2};
 
-if strcmp(userdata.type,'Spectro')
-    dp = handler.dataManager.getNrOfSpectroDP();
-else
-    dp = handler.dataManager.getNrOfOlfactoryDP();
-end
+        index = index + 1;
+        end
+    end
 
-edit_ = uicontrol(handle,'Style','edit','Tag','sampleedit','String',dp,'Position',[20 240 40 20]);
-uicontrol(handle,'Style','text','String','Nr of datapoints used','Position',[65 240 110 20]);
+    legend(legendList);
 
-if dp ~= 200 && strcmp(userdata.type,'Spectro')
-    set(edit_,'Enable','off')
-end
+    toSend = data;
 
-if dp ~= 15000 && strcmp(userdata.type,'Olfactory')
-    set(edit_,'Enable','off')
-end
+    userdata = get(handle,'UserData');
+    handler = userdata.handler;
 
-button = uicontrol(handle,'Style','pushbutton','Position',[20 190 100 20],'String','Interpolate','Callback',{@downSample,toSend,t,handle,type});
-disp(get(button,'Position'));
+    if strcmp(userdata.type,'Spectro')
+        dp = handler.getDataManager().getNrOfSpectroDP();
+    else
+        dp = handler.getDataManager().getNrOfOlfactoryDP();
+    end
+
+    edit_ = uicontrol(handle,'Style','edit','Tag','sampleedit','String',dp,'Position',[20 240 40 20]);
+    uicontrol(handle,'Style','text','String','Nr of datapoints used','Position',[65 240 110 20]);
+
+    if dp ~= 200 && strcmp(userdata.type,'Spectro')
+        set(edit_,'Enable','off')
+    end
+
+    if dp ~= 15000 && strcmp(userdata.type,'Olfactory')
+        set(edit_,'Enable','off')
+    end
+
+    button = uicontrol(handle,'Style','pushbutton','Position',[20 190 100 20],'String','Interpolate','Callback',{@downSample,toSend,t,handle,type});
+    disp(get(button,'Position'));
 end
 
 %%Function for interpolating Spectro and Olfactory data
@@ -324,6 +321,7 @@ function downSample(varargin)
             plot(t,x1new,y1,'r');
             plot(t,x2new,y2,'b');
         end
+        
     %%Interpolating Olfactory data 
     else
         for i=2:height
@@ -339,11 +337,13 @@ function downSample(varargin)
     end
     
     userdata = get(hfig,'UserData');    
-    handler = userdata.handler;
-    handler.dataManager = handler.dataManager.setNrOfSpectroDP(userdata.dp); 
-    userdata.handler = handler;
-    userdata.dp = dsrate;
+    mHandler = userdata.handler;
     
+    mHandler.getDataManager().setNrOfSpectroDP(userdata.dp); 
+        
+    userdata.handler = mHandler;
+    userdata.dp = dsrate;
+        
     set(hfig,'UserData',userdata);
  end
 

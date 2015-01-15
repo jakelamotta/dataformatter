@@ -190,7 +190,7 @@ function WriteToWordFromMatlab(path,rootTree)
     WordCreateTOC(ActXWord,1,3);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%        
     CloseWord(ActXWord,WordHandle,path);    
-    close all;
+    %close all;
 return
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

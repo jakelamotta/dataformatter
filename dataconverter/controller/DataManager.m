@@ -11,7 +11,6 @@ classdef DataManager < handle
         manager;
         observation;
         unfilteredObj;
-        filterFactory;
         spectroDP;
         olfactoryDP;
         handler;
@@ -28,7 +27,6 @@ classdef DataManager < handle
         %%Default constructor, takes an instance of an InputManager and a
         %%an GUIHandler object respectively
         function this = DataManager(inM,inH)
-            this.filterFactory = FilterFactory();
             this.manager = inM;
             this.handler = inH;
             this.xlsWriter = XLSWriter();
@@ -66,31 +64,36 @@ classdef DataManager < handle
                 
                 tempMat2 = this.getObject().getMatrix();
                 tempMat2 = tempMat2(1,:);
-                %tempMat2 = current.getMatrix();
-                %tempMat2 = [tempMat2,padding(1,:)];
+                
                 current.setMatrix(tempMat2);
             end
             
-%             for i=3:h_new
-%                 rows(end+1) = i;
-%             end                       
-%             
             newMat = [current.getMatrix();tempMat(2:h_new,:)];
             current = current.setMatrix(newMat);
-%           current.setSpectroStruct(temp.getSpectroTime());
+            
             this = this.setUnfObject(current);
         end
         
-        %%Applies a filter according to input type
-        function this = applyFilter(this,id,type)
-            row = this.getUnfObject();
-            filter = this.filterFactory.createFilter(id);
-            this.setUnfObject(filter.filter(row,type,this.getNrOfOlfactoryDP()));
-        end
-          
-        %%
-        function this = finalize(this)
+        function this = finalize(this,id)
             obj = this.getUnfObject();
+            
+            if strcmp(id,'Spectro')
+               obj.downSample(this.getNrOfSpectroDP(),id);
+               obj.expandSpectrumPoints(id);
+            end
+            
+            if strcmp(id,'Olfactory')
+                obj.downSample(this.getNrOfOlfactoryDP(),id);
+                obj.expandSpectrumPoints(id);                
+            end
+            
+            obj.removeArrays();
+            
+            if obj.hasMultiples()
+                obj.doAverage(8);
+                this.setUnfObject(obj);
+            end
+                        
             objID = obj.getObjectID();
             
             numberOfObs = length(objID);
@@ -125,8 +128,7 @@ classdef DataManager < handle
             obj = this.getObject();
             success = this.xlsWriter.appendXLS(path,obj);
         end
-        
-        
+                
         function this = merge(this)
             unfObj = this.getUnfObject();
             fobj = this.getObject();

@@ -1,10 +1,10 @@
-classdef GUIHandler
+classdef GUIHandler < handle
     %GUIHANDLER Class for handling the GUI. It is responsible for
     %communicating with the underlying data handling via the DataManager
     %class. It also makes sure that the correct gui file is launched at
     %when needed.
     
-    properties (Access = public)
+    properties (Access = private)
         dataManager;
         inputManager;
         updater;
@@ -34,6 +34,7 @@ classdef GUIHandler
     end
     
     methods (Access = public)
+        
         function this = GUIHandler()
             this.scrsz = get(0,'ScreenSize');
             sz = this.scrsz;
@@ -71,12 +72,12 @@ classdef GUIHandler
         %%button
         function this = loadCallback(this,varargin)
             this.organizer = this.organizer.launchGUI();
-%             if iscell(this.organizer.target)
-%                 size_ = size(this.organizer.target);
-%                 for i=1:size_(2)
-%                     success = this.inputManager.organize(this.organizer.sources,this.organizer.target{1,i});
-%                 end
-%             end
+            %             if iscell(this.organizer.target)
+            %                 size_ = size(this.organizer.target);
+            %                 for i=1:size_(2)
+            %                     success = this.inputManager.organize(this.organizer.sources,this.organizer.target{1,i});
+            %                 end
+            %             end
             success = this.inputManager.organize(this.organizer.sources,this.organizer.target);
         end
         
@@ -111,40 +112,45 @@ classdef GUIHandler
         %%button
         function this = importCallback(this,varargin)
             importInfo = importWindow();
+            
             profile on;
             if iscell(importInfo) && ~isnumeric(importInfo{1,2})
-                type = importInfo{1,1};
+                %type = importInfo{1,1};
+                types =importInfo{1,1};
                 p = importInfo{1,2};
-                
-                if strcmp(type,'load')                    
-                    [fname,pname,nonImportant] = uigetfile('*.*');
                     
-                    this.dataManager.importOldData([pname,fname]);
-                else
+                for index=1:length(types)
+                    type = types{index};
                     
-                    this.inputManager = this.inputManager.splitPaths(p,type);
-                    paths_ = this.inputManager.getPaths();
                     
-                    if isempty(paths_)
-                        errordlg(['There are no ', type,' data files in the specified folder, please try again.'],'No such file')
-                    end
-                    
-                    %try
-                    this.dataManager = this.dataManager.addObject(type,paths_);
-                    %catch ex
-                    %Suggestions is to log details of the error
-                    %    errordlg(['Something went wrong when trying to parse the ',type,' data file. Error message: ',ex.message],'Parse error');
-                    %end
-                    
-                    %s = size(this.dataManager.getUnfObject().getMatrix());
-                    if this.dataManager.getUnfObject.hasMultiples() || strcmp(type,'Spectro') || strcmp(type,'Olfactory')
-                        this = this.launchDialogue(type);
+                    if strcmp(type,'load')
+                        [fname,pname,nonImportant] = uigetfile('*.*');
+                        
+                        this.dataManager.importOldData([pname,fname]);
                     else
-                        this.dataManager.finalize();
+                        this.inputManager = this.inputManager.splitPaths(p,type);
+                        paths_ = this.inputManager.getPaths();
+                        
+                        if isempty(paths_)
+                            errordlg(['There are no ', type,' data files in the specified folder, please try again.'],'No such file')
+                        end
+                        
+                        try
+                            this.dataManager = this.dataManager.addObject(type,paths_);
+                        catch ex
+                            errordlg(['Something went wrong when trying to parse the ',type,' data file. Error message: ',ex.message],'Parse error');
+                        end
+                        
+                        %s = size(this.dataManager.getUnfObject().getMatrix());
+                        if this.dataManager.getUnfObject.hasMultiples() || strcmp(type,'Spectro') || strcmp(type,'Olfactory')
+                            this = this.launchDialogue(type);
+                        else
+                            this.dataManager.finalize(type);
+                        end
                     end
                     
+                    this = this.updateGUI();
                 end
-                this = this.updateGUI();
             end
         end
         
@@ -227,14 +233,11 @@ classdef GUIHandler
         function this = launchDialogue(this,id,varargin)
             profile viewer;
             out_ = selectData(this.dataManager.getUnfObject(),id,this);
-            type = out_.type;
             
-            if ~strcmp(type,'nofilter')
-                this = out_.handler;
-                %input_ = out_.data;
-                this.dataManager = this.dataManager.applyFilter(id,type);
-                this.dataManager = this.dataManager.finalize();
-            end
+            this = out_.handler;
+            this.getDataManager().getUnfObject().setMatrix(out_.data);
+            %this.getDataManager().applyFilter();
+            this.getDataManager().finalize(id);
         end
     end
 end

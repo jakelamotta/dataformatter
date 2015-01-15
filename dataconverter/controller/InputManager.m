@@ -49,7 +49,7 @@ classdef InputManager < handle
             this = this.recSearch(p,type);         
         end
         
-        %%
+        %%Function for organizing data into folders
         function success = organize(this,sources,target)
             success = true;
             types = fieldnames(sources);
@@ -96,8 +96,7 @@ classdef InputManager < handle
         %%
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         %%%%%%%%%%%%%%%%%%%%%GETTERS AND SETTERS%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%        
         function this = setDataManager(this,dm)
             this.dataManager = dm;
         end

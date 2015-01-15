@@ -83,36 +83,54 @@ function okBtn_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
     data = cell(1,2);
+    types = {'','','','','',''};
+    type = '';
     
     if get(handles.radiobutton1,'value')
-        type = 'Abiotic';
-    elseif get(handles.radiobutton2,'value')
-        type = 'Weather';
-    elseif get(handles.radiobutton3,'value')
-        type = 'Image';
-    elseif get(handles.radiobutton4,'value')
-        type = 'Spectro';
-    elseif get(handles.radiobutton5,'value')
-        type = 'Behavior';
-    elseif get(handles.radiobutton6,'value')
-        type = 'Olfactory';
-    elseif get(handles.loadrb,'value')
-        type = 'load';
-    else
-        type = NaN;
+        %type = 'Abiotic';
+        types{1} = 'Abiotic';
     end
+    
+    if get(handles.radiobutton2,'value')
+        %type = 'Weather';
+        types{2} = 'Weather';
+    end
+    
+    if get(handles.radiobutton3,'value')
+        types{3} = 'Image';
+    end
+    
+    if get(handles.radiobutton4,'value')
+        types{4} = 'Spectro';
+    end
+    
+    if get(handles.radiobutton5,'value')
+        types{5} = 'Behavior';
+    end
+    
+    if get(handles.radiobutton6,'value')
+        types{6} = 'Olfactory';
+    end
+    
+    if get(handles.loadrb,'value')
+        type = 'load';
+    end
+  
+    types = types(~cellfun('isempty',types));
+    
     if ~strcmp(type,'load')
         path_ = uigetdir(Utilities.getpath(''));
     else
+        types = {type};
         path_ = '';
     end
-    data{1,1} = type;
+    
+    data{1,1} = types;
     data{1,2} = path_;    
     
     set(hObject,'UserData',data);
-    close;
+    close;    
     
-
 % --- Executes on button press in cancelBtn.
 function cancelBtn_Callback(hObject, eventdata, handles)
 % hObject    handle to cancelBtn (see GCBO)
@@ -186,14 +204,14 @@ function radiobutton6_Callback(hObject, eventdata, handles)
         updateRadio(handles,hObject);
     end
     
-function updateRadio(handles,hObject)
-    set(handles.radiobutton1,'value',false);
-    set(handles.radiobutton2,'value',false);
-    set(handles.radiobutton3,'value',false);
-    set(handles.radiobutton4,'value',false);
-    set(handles.radiobutton5,'value',false);
-    set(handles.radiobutton6,'value',false);
-    set(handles.loadrb,'value',false);
+ function updateRadio(handles,hObject)
+%     set(handles.radiobutton1,'value',false);
+%     set(handles.radiobutton2,'value',false);
+%     set(handles.radiobutton3,'value',false);
+%     set(handles.radiobutton4,'value',false);
+%     set(handles.radiobutton5,'value',false);
+%     set(handles.radiobutton6,'value',false);
+%     set(handles.loadrb,'value',false);
     set(hObject,'value',true);
     
     
