@@ -58,11 +58,13 @@ handles.output = hObject;
 % Update handles structure
 guidata(hObject, handles);
 
-if ~isempty(varargin)
-    tempStruct = varargin{1};
-else
+%if ~isempty(varargin)
+%    tempStruct = varargin{1};
+%else
     tempStruct = struct;
-end
+%end
+
+
 
 if exist('config.mat','file')
     load('config.mat');
@@ -118,29 +120,6 @@ strings = [strings,str_,'\'];
 
 set(handles.edit1,'String',strings);
 
-% strings = varargin{2};
-% 
-% nrOfTargets = size(strings);
-% 
-% for i=1:nrOfTargets(2)
-%     str_ = strings{1,i};
-%     idx = strfind(str_,'\');
-%     sub1 = str_(idx(1)+1:idx(1)+3);
-%     sub2 = str_(idx(2)+1:idx(2)+1);
-%     sub3 = str_(1:idx(1)-1);
-%     
-%     id_ = config.id+i-1;
-%     sub4 = num2str(id_);
-% 
-%     sub4 = Utilities.padString(sub4,'0',3);
-% 
-%     str_ = [sub1,'_',sub2,sub3,'_',sub4];
-%     str_ = strrep(str_,'\','');
-%     
-%     strings{1,i} = [strings{1,i},str_,'\'];
-% end
-% 
-% set(handles.edit1,'String',strings{1,1});
 tempStruct.targets = strings;
 set(handles.output,'UserData',tempStruct);
 
@@ -287,8 +266,6 @@ function updateSource(handles,type,varargin)
         
         fname = 'template.xlsx';        
     else
-        
-
         if strcmp(type,'Spectro')
             pname = uigetdir(Utilities.getpath(''));
             fname = '';

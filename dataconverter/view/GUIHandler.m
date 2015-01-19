@@ -1,4 +1,4 @@
-classdef GUIHandler < handle
+classdef GUIHandler% < handle
     %GUIHANDLER Class for handling the GUI. It is responsible for
     %communicating with the underlying data handling via the DataManager
     %class. It also makes sure that the correct gui file is launched at
