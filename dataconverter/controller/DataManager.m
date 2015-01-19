@@ -19,6 +19,8 @@ classdef DataManager < handle
     methods (Access=public)
         
         
+        %%Function for importing an Observation matrix from file. Any
+        %%existing data will be deleted.
         function this = importOldData(this,filename) 
             [~,~,old] = xlsread(filename);
             this.observation.setMatrix(old);
@@ -35,7 +37,7 @@ classdef DataManager < handle
             
             %Initializes to 300 and 15000 respectively, once its set after this its final to not
             %create inconcistensies between observations
-            this.spectroDP = 200;
+            this.spectroDP = 220;
             this.olfactoryDP = 15000;
         end
         

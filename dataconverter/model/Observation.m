@@ -12,9 +12,11 @@ classdef Observation < handle
         
         %%Constructor. 
         function this = Observation()
-            this.xlsMatrix = {'Flower','ID','DATE','/SpectroTime','/weatherTime','Negative','Positive','temperature(c)','Humidity','CO2','wind speed (m/s)','direction(degrees)','Temperature(c)','Contrast','Correlation','Energy','homogenity','ent','alpha','Comment'};
+%             this.xlsMatrix = {'Flower','ID','DATE','/SpectroTime','/weatherTime','Negative','Positive','temperature(c)','Humidity','CO2','wind speed (m/s)','direction(degrees)','Temperature(c)','Contrast','Correlation','Energy','homogenity','ent','alpha','Comment'};
+%             global matrixColumns;
+%             this.xlsMatrix = [this.xlsMatrix,matrixColumns,{'lux_flower','lux_up','SpectroX','SpectroY','SpectroXUp','SpectroYUp','OlfX','OlfY'}];
             global matrixColumns;
-            this.xlsMatrix = [this.xlsMatrix,matrixColumns,{'lux_flower','lux_up','SpectroX','SpectroY','SpectroXUp','SpectroYUp','OlfX','OlfY'}];
+            this.xlsMatrix = [matrixColumns,{'lux_flower','lux_up','SpectroX','SpectroY','SpectroXUp','SpectroYUp','OlfX','OlfY'}];
         end
         
         %%Adding an observation to another, it doesnt consider copies or
@@ -415,6 +417,19 @@ classdef Observation < handle
                     for j=2:this.getNumRows()
                         if strcmp(id,this.xlsMatrix{j,2})
                             spectroTime = this.xlsMatrix{j,i};
+                        end
+                    end
+                end
+            end
+        end
+        
+        function abioticTime = getAbioticTime(this,id)
+            abioticTime = '';
+            for i=4:this.getWidth()
+                if strcmp(this.xlsMatrix{1,i},'/AbioTime')
+                    for j=2:this.getNumRows()
+                        if strcmp(id,this.xlsMatrix{j,2})
+                            abioticTime = this.xlsMatrix{j,i};
                         end
                     end
                 end

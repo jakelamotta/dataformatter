@@ -20,7 +20,7 @@ function setGlobalVariables()
     %varMap is a hash table for creating variable names for behavior data...
     varmap = containers.Map();
     
-    [notUsed,notUsed2,data] = xlsread(Utilities.getpath('behavior_variables.xls'));
+        
     
     %...using a predefined insects-file.
     fid = fopen(Utilities.getpath('insects.txt'),'r');

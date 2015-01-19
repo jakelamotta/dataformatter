@@ -28,14 +28,13 @@ classdef WeatherDataAdapter < DataAdapter
         function timeList = splitTime(this,time)
             start = strfind(time,'2');
             time = time(start(1):end);
-            time = strrep(time,'-','');
             timeList = cell(1,5);
             timeList{1,1} = str2double(time(1:4));
             timeList{1,2} = str2double(time(5:6));
             timeList{1,3} = str2double(time(7:8));
             if length(time) >= 10
-                timeList{1,4} = str2double(time(09:10));
-                timeList{1,5} = str2double(time(11:12));
+                timeList{1,4} = str2double(time(10:11));
+                timeList{1,5} = str2double(time(12:13));
             end
         end
         
@@ -85,17 +84,11 @@ classdef WeatherDataAdapter < DataAdapter
                     errordlg(['Incorrect path was passed to the file reader. Error:',e.message]);
                 end
                 
-                %Use spectro time as a way to find the correct weather data
+                %Use spectro time as a way to 
                 spectroTime = inObj.getSpectroTime(id_);
                 
                 if isempty(spectroTime)
-                    abioticTime = inObj.getAbioticTime(id_);
-                    
-                    if isempty(abioticTime)
-                        time = '';
-                    else
-                        time = abioticTime;
-                    end                    
+                    time = '';
                 else
                     time = spectroTime;
                 end

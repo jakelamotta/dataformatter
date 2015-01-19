@@ -135,11 +135,11 @@ classdef GUIHandler% < handle
                             errordlg(['There are no ', type,' data files in the specified folder, please try again.'],'No such file')
                         end
                         
-                        try
+                        %try
                             this.dataManager = this.dataManager.addObject(type,paths_);
-                        catch ex
-                            errordlg(['Something went wrong when trying to parse the ',type,' data file. Error message: ',ex.message],'Parse error');
-                        end
+                        %catch ex
+                        %    errordlg(['Something went wrong when trying to parse the ',type,' data file. Error message: ',ex.message],'Parse error');
+                        %end
                         
                         %s = size(this.dataManager.getUnfObject().getMatrix());
                         if this.dataManager.getUnfObject.hasMultiples() || strcmp(type,'Spectro') || strcmp(type,'Olfactory')

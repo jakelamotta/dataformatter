@@ -10,7 +10,7 @@ classdef AbioticDataAdapter < DataAdapter
         
         function this = AbioticDataAdapter()
             this.dobj = Observation();
-            this.tempMatrix = {'Date','CO2','temperature(c)','Humidity'};
+            this.tempMatrix = {'/AbioTime','Ab_CO2','Ab_temp','Ab_humid'};
         end
         
         function this = addValues(this,idx,p)
@@ -45,13 +45,17 @@ classdef AbioticDataAdapter < DataAdapter
                    [h,w] = size(temp{1,k});
                    
                    if w == 4
-                       this.tempMatrix = [this.tempMatrix;temp{1,k}];
+                       row = temp{1,k};
+                       row{1} = strrep(strrep(row{1},'-',''),'_','');
+                       this.tempMatrix = [this.tempMatrix;row];
                    end
                 end
                 
+                
+                
                 this = this.addValues(idx,path);
                 this.dobj = this.dobj.setObservation(this.tempMatrix,id_);                    
-                this.tempMatrix = {'Date','CO2','temperature(c)','Humidity'};
+                this.tempMatrix = {'/AbioTime','CO2','temperature(c)','Humidity'};
             end
             
             obj = this.dobj;
