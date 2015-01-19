@@ -24,22 +24,22 @@ classdef AbioticDataAdapter < DataAdapter
             s = size(paths);
             
             for i=1:s(2)
+                path = paths{1,i};
                 idx = strfind(paths{1,i},'\');
                 
                 try
                     %%The observation id is found in the filepath one step
                     %%above the type folder
-                    id_ = paths{1,i}(idx(end-2)+1:idx(end-1)-1);
+                    id_ = path(idx(end-2)+1:idx(end-1)-1);
                 catch e
                     errordlg('Incorrect path was passed to the file reader');
                 end
                 
-                path = paths{1,i};
                 
                 %%Retrieve data from the file
                 rawData = this.fileReader(path);
                 
-                temp = cellfun(@this.createDob,rawData,'UniformOutput',false);
+                temp = cellfun(@this.createObs,rawData,'UniformOutput',false);
                 
                 for k=1:length(temp)
                    [h,w] = size(temp{1,k});
@@ -61,8 +61,10 @@ classdef AbioticDataAdapter < DataAdapter
             obj = this.dobj;
         end
         
-        function temp = createDob(this, inRow)
+        function temp = createObs(this, inRow)
+            %Split around " ; ".
             row = regexp(inRow,[char(9),';',char(9)],'split');
+            
             temp = cellfun(@AbioticDataAdapter.handleRow,row,'UniformOutput',false);
             %temp = cellfun(@str2num,row,'UniformOutput',false);%[this.tempMatrix;cellfun(@str2num,row,'UniformOutput',false)];
         end

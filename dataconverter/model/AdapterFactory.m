@@ -1,6 +1,6 @@
 classdef AdapterFactory
-    %ADAPTERFACTORY Summary of this class goes here
-    %   Detailed explanation goes here
+    %ADAPTERFACTORY If new file types are added they should be added under
+    %the constructor. Otherwise this class should never need to change.
     
     properties
         adapters
@@ -18,6 +18,7 @@ classdef AdapterFactory
             this.adapters('Olfactory') = @() OlfactoryDataAdapter();
         end
         
+        %%Create 
         function adapter = createAdapter(this,id)
             if this.adapters.isKey(id)
                 adapter = this.adapters(id);

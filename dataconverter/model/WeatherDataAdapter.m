@@ -1,16 +1,16 @@
 classdef WeatherDataAdapter < DataAdapter
     %WEATHERDATAADAPTER Summary of this class goes here
     %   Detailed explanation goes here
-    
     properties (Access = private)
         tempMatrix;
         cell_;
         nrOfNewVariables;
-    end
-    
+    end    
     methods (Access = public)
         
-        %%
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        %%When adding new weather variables, changes go here!!%%%%%%%%%%%%%
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         function this = WeatherDataAdapter()
             this.dobj = Observation();
             %this.cell_ = {'/weatherTime','Wind speed','Wind dir','W_temp','W_humid','Pressure','Radiation'};
@@ -18,8 +18,11 @@ classdef WeatherDataAdapter < DataAdapter
             this.nrOfNewVariables = 0;
             this.tempMatrix = this.cell_;
         end
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         
-        %%Generic function for adding flower, date and 
+        %%Generic function for adding flower, date and negative/positive
         function this = addValues(this,idx,p)
             this.tempMatrix = addValues@DataAdapter(this,p,idx,this.tempMatrix);
         end
@@ -88,6 +91,7 @@ classdef WeatherDataAdapter < DataAdapter
                 %Use spectro time as a way to find the correct weather data
                 spectroTime = inObj.getSpectroTime(id_);
                 
+                %%If there is no spectro time check if there is a abiotic.
                 if isempty(spectroTime)
                     abioticTime = inObj.getAbioticTime(id_);
                     
@@ -100,6 +104,9 @@ classdef WeatherDataAdapter < DataAdapter
                     time = spectroTime;
                 end
                 
+                %If there is no time to use to find weather data the day is
+                %used for narrowing down the number of potential
+                %measurements. 
                 if strcmp('',time)
                     %%The correct weather data is fetched from the list by
                     %%using the input time and comparing it to the weather data
@@ -119,16 +126,13 @@ classdef WeatherDataAdapter < DataAdapter
                             t_temp = temp{1,j}(1,1:5);
 
                             if this.compareDay(timeList,t_temp)
-                                %disp(t_temp);
                                 weatherDate = temp{1,j}(1:5);
                                 weatherDate = ['/',weatherDate{1},'-',weatherDate{2},'-',weatherDate{3},'-',weatherDate{4},'-',weatherDate{5}];
                                 temp{1,j}(5) = {weatherDate};
                                 this.tempMatrix = [this.tempMatrix;temp{1,j}(5:8+this.nrOfNewVariables)];
                             end
                         end
-                        %s = size(this.tempMatrix);
-                    end
-                    
+                    end                    
             else
                     timeList = this.splitTime(time);
 

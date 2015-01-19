@@ -2,7 +2,7 @@ classdef DataManager < handle
     %DATAMANAGER A central class that is responsible for talking to most
     %parts of the system. Its the datamanager that is the link between the
     %GUI and all the underlying data handling. It passes any command from
-    %the user to the correct class instance 
+    %the user to the correct class instance s
     
     
     properties (Access = private)
@@ -79,6 +79,7 @@ classdef DataManager < handle
         function this = finalize(this,id)
             obj = this.getUnfObject();
             
+            %Interpolate and expnd the spectrum points to their own columns
             if strcmp(id,'Spectro')
                obj.downSample(this.getNrOfSpectroDP(),id);
                obj.expandSpectrumPoints(id);
@@ -89,19 +90,24 @@ classdef DataManager < handle
                 obj.expandSpectrumPoints(id);                
             end
             
+            %Remove the temporary columns for storing the arrays which
+            %contains spectro and olfactory data
             obj.removeArrays();
             
+            %If there are more than one row of an observation, calc avg.
             if obj.hasMultiples()
                 obj.doAverage(8);
                 this.setUnfObject(obj);
             end
-                        
+            
             objID = obj.getObjectID();
             
             numberOfObs = length(objID);
             listOfIds = cell(1,1);
             index = 1;
             
+            %%Find out for which IDs in the incoming observation already exist
+            %%in the current one.
             for k=1:numberOfObs
                 id = objID{1,k};
                 
@@ -111,6 +117,8 @@ classdef DataManager < handle
                 end
             end
             
+            %%If there are an observation that already exist, these rows
+            %%need to be combined
             if ~isempty(listOfIds{1,1})
                 this.getObject().appendObservation(this.getUnfObject());
                 
