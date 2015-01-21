@@ -63,10 +63,6 @@ classdef OlfactoryDataAdapter < DataAdapter
                 end
             end
         end
-%         
-%         function element = str2double2(this,mcell)
-%             element = str2double(mcell);
-%         end
     end
     
     methods (Access = private)

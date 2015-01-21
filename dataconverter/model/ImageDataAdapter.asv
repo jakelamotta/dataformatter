@@ -26,19 +26,17 @@ classdef ImageDataAdapter < DataAdapter
             handler = inputManager.getDataManager().getHandler();
             
             images = struct;
-            folders = {};
             
             for i=1:w
                 idx = strfind(paths{1,i},'\');
                 
-                [pathstr,name,ext] = fileparts(paths{1,i});
+                [pathstr,name,ext] = fileparts(paths{1,i})
                 
                 try
                     id_ = paths{1,i}(idx(end-2)+1:idx(end-1)-1);
                     
                     if ~isfield(images,strrep(id_,'.','__'))
-                       images.(strrep(id_,'.','__')) = {[];[];[]};
-                       folders{end+1} = pathstr;
+                        images.(strrep(id_,'.','__')) = {[];[];[]};
                     end
                     
                 catch e
@@ -97,7 +95,7 @@ classdef ImageDataAdapter < DataAdapter
                             
                             this.dobj.setObservation(this.tempMatrix,strrep(fnames{i},'__','.'));
                             this.tempMatrix = {'Contrast','Correlation','Energy','homogenity','ent','alpha'};
-                            imwrite(im,fullfile(folders{i},['cropped_',ims{2,h}]));
+                            imwrite(im,fullfile(images.path,['cropped_',ims{2,h}]));
                         end 
                     end
                 end
