@@ -21,7 +21,7 @@ classdef Utilities
                 second(1,:) = first(1,:);
             end
         end
-        
+                
         %%
         function [path] = getpath(file)
             %Returns correct path for given file and type, only the relative paths are

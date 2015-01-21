@@ -2,7 +2,6 @@ classdef WeatherDataAdapter < DataAdapter
     %WEATHERDATAADAPTER Summary of this class goes here
     %   Detailed explanation goes here
     properties (Access = private)
-        tempMatrix;
         cell_;
         nrOfNewVariables;
     end    
@@ -23,8 +22,8 @@ classdef WeatherDataAdapter < DataAdapter
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         
         %%Generic function for adding flower, date and negative/positive
-        function this = addValues(this,idx,p)
-            this.tempMatrix = addValues@DataAdapter(this,p,idx,this.tempMatrix);
+        function this = addValues(this,p)
+            this.tempMatrix = addValues@DataAdapter(this,p,this.tempMatrix);
         end
         
         %%
@@ -83,13 +82,8 @@ classdef WeatherDataAdapter < DataAdapter
             inObj = varargin{1};
             
             for i=1:size_(2)              
-                idx = strfind(paths{1,i},'\');
-                
-                try
-                    id_ = paths{1,i}(idx(end-2)+1:idx(end-1)-1);
-                catch e
-                    errordlg(['Incorrect path was passed to the file reader. Error:',e.message]);
-                end
+
+                id_ = DataAdapter.getIdFromPath(paths{1,i});
                 
                 %Use spectro time as a way to find the correct weather data
                 spectroTime = inObj.getSpectroTime(id_);
@@ -191,7 +185,7 @@ classdef WeatherDataAdapter < DataAdapter
                     end
                 end
                 
-                this = this.addValues(idx,paths{1,i});
+                this = this.addValues(paths{1,i});
                 
                 this.dobj = this.dobj.setObservation(this.tempMatrix,id_);
                 this.tempMatrix = this.cell_;

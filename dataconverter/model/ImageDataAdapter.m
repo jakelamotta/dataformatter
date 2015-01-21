@@ -2,8 +2,7 @@ classdef ImageDataAdapter < DataAdapter
     %IMAGEDATAADAPTER Summary of this class goes here
     %   Detailed explanation goes here
     
-    properties        
-        tempMatrix;
+    properties       
     end
     
     methods (Access = public)
@@ -13,8 +12,8 @@ classdef ImageDataAdapter < DataAdapter
             this.dobj = Observation();
         end
         
-        function this = addValues(this,idx,p)
-            this.tempMatrix = addValues@DataAdapter(this,p,idx,this.tempMatrix);
+        function this = addValues(this,p)
+            this.tempMatrix = addValues@DataAdapter(this,p,this.tempMatrix);
         end
         
         function obj = getDataObject(this,paths,varargin)
@@ -93,7 +92,7 @@ classdef ImageDataAdapter < DataAdapter
 
                             this.tempMatrix = [this.tempMatrix;parameters];
                             
-                            this = this.addValues(idx,paths{1,i});
+                            this = this.addValues(paths{1,i});
                             
                             this.dobj.setObservation(this.tempMatrix,strrep(fnames{i},'__','.'));
                             this.tempMatrix = {'Contrast','Correlation','Energy','homogenity','ent','alpha'};

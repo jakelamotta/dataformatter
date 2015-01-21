@@ -3,7 +3,6 @@ classdef BehaviorDataAdapter < DataAdapter
     %   Detailed explanation goes here
     
     properties
-        tempMatrix;
         varMap;
         size_;
         cols;
@@ -21,8 +20,8 @@ classdef BehaviorDataAdapter < DataAdapter
             this.dobj = Observation();
             global varmap;
             this.varMap = varmap;
-            s = size(this.tempMatrix);
-            this.size_ = s(2);            
+            [h,w] = size(this.tempMatrix);
+            this.size_ = w;            
         end
         
         function rawData = fileReader(this,path)
@@ -33,22 +32,19 @@ classdef BehaviorDataAdapter < DataAdapter
             end
         end
         
-        function this = addValues(this,idx,p)
-            this.tempMatrix = addValues@DataAdapter(this,p,idx,this.tempMatrix);
+        function this = addValues(this,p)
+            this.tempMatrix = addValues@DataAdapter(this,p,this.tempMatrix);
         end
         
         function obj = getDataObject(this,paths)
-            s = size(paths);
+            [h,w] = size(paths);
             
-            for i=1:s(2)
+            for i=1:w
                 if strfind(paths{1,i}(end-3:end),'xls')
                     idx = strfind(paths{1,i},'\');
                     this.tempMatrix = this.tempMatrix(1,:);
-                    try
-                        id_ = paths{1,i}(idx(end-2)+1:idx(end-1)-1);
-                    catch e
-                        errordlg('Incorrect path was passed to the file reader');
-                    end
+
+                    id_ = DataAdapter.getIdFromPath(paths{1,i});
                     
                     %%If there is no prefilled behavior file the user needs
                     %%to fill it manually.
@@ -63,10 +59,14 @@ classdef BehaviorDataAdapter < DataAdapter
                         
                         %Rename template1 and continue execution as normal
                         toRemove = paths{1,i};
-                        newFileName = [id_,'.xlsx'];
                         
-                        paths{1,i} = paths{1,i}(1:end-13);
-                        paths{1,i} = [paths{1,i},newFileName];
+                        [pathstr,name,ext] = fileparts(paths{1,i});
+                        
+                        newFileName = [id_,ext];
+                        
+                        %paths{1,i} = paths{1,i}(1:end-13);
+                        
+                        paths{1,i} = fullfile(pathstr,newFileName);
                         
                         copyfile(toRemove,paths{1,i});
                         delete(toRemove);
@@ -77,7 +77,7 @@ classdef BehaviorDataAdapter < DataAdapter
                     rawData = this.fileReader(path);
                     this = this.parse(rawData);
                     
-                this = this.addValues(idx,paths{1,i});
+                this = this.addValues(paths{1,i});
                 
                 obj = this.dobj.setObservation(this.tempMatrix,id_);
                 this.tempMatrix = [this.genData,this.cols];

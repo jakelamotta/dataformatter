@@ -3,7 +3,6 @@ classdef SpectroDataAdapter < DataAdapter
     %   Detailed explanation goes here
     
     properties
-        tempMatrix;
     end
     
     methods (Access = public)

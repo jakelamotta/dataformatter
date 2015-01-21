@@ -3,7 +3,6 @@ classdef AbioticDataAdapter < DataAdapter
     %   Detailed explanation goes here
     
     properties
-        tempMatrix;
     end
     
     methods (Access = public)
@@ -13,8 +12,8 @@ classdef AbioticDataAdapter < DataAdapter
             this.tempMatrix = {'/AbioTime','Ab_CO2','Ab_temp','Ab_humid'};
         end
         
-        function this = addValues(this,idx,p)
-            this.tempMatrix = addValues@DataAdapter(this,p,idx,this.tempMatrix);
+        function this = addValues(this,p)
+            this.tempMatrix = addValues@DataAdapter(this,p,this.tempMatrix);
         end
 %         
         %%Function that takes a list of file paths and retrieve a data
@@ -25,15 +24,17 @@ classdef AbioticDataAdapter < DataAdapter
             
             for i=1:s(2)
                 path = paths{1,i};
-                idx = strfind(paths{1,i},'\');
-                
-                try
-                    %%The observation id is found in the filepath one step
-                    %%above the type folder
-                    id_ = path(idx(end-2)+1:idx(end-1)-1);
-                catch e
-                    errordlg('Incorrect path was passed to the file reader');
-                end
+%                 idx = strfind(paths{1,i},'\');
+%                 
+%                 try
+%                     %%The observation id is found in the filepath one step
+%                     %%above the type folder
+%                     id_ = path(idx(end-2)+1:idx(end-1)-1);
+%                 catch e
+%                     errordlg('Incorrect path was passed to the file reader');
+%                 end
+
+                id_ = DataAdapter.getIdFromPath(path);
                 
                 
                 %%Retrieve data from the file
@@ -53,7 +54,7 @@ classdef AbioticDataAdapter < DataAdapter
                 
                 
                 
-                this = this.addValues(idx,path);
+                this = this.addValues(path);
                 this.dobj = this.dobj.setObservation(this.tempMatrix,id_);                    
                 this.tempMatrix = {'/AbioTime','Ab_CO2','Ab_temp','Ab_humid'};
             end

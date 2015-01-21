@@ -7,6 +7,7 @@ classdef DataAdapter < handle
     
     properties
         dobj;
+        tempMatrix;
         genData;
     end
     
@@ -20,20 +21,26 @@ classdef DataAdapter < handle
             this.genData = {'Flower','DATE','Negative','Positive';};
         end
         
-        function matrix = addValues(this,path,idx,matrix)
+        function matrix = addValues(this,path,matrix)
             [h,w] = size(matrix);
+            
             g = [{'Flower','DATE','Negative','Positive'};cell(h-1,4)];
+            
+            parts = regexp(path,'\', 'split');            
             
             matrix = [g,matrix];
             
-            date_ = path(idx(end-5):idx(end-4));
+%             date_ = path(idx(end-5):idx(end-4));
+%             
+%             flower = path(idx(end-4):idx(end-3));
+%             negOrPos = path(idx(end-3):idx(end-2));
+            date_ = parts{end-5};
             
-            flower = path(idx(end-4):idx(end-3));
-            negOrPos = path(idx(end-3):idx(end-2));
-            
+            flower = parts{end-4};
+            negOrPos = parts{end-3};
             for i=2:h
-                matrix{i,1} = flower(2:end-1);
-                matrix{i,2} = date_(2:end-1);
+                matrix{i,1} = flower;
+                matrix{i,2} = date_;
                 matrix{i,3} = double(strcmp(negOrPos(2:end-1),'negative'));
                 matrix{i,4} = double(~strcmp(negOrPos(2:end-1),'negative'));
             end
@@ -61,6 +68,23 @@ classdef DataAdapter < handle
                 errordlg('Could not load source-file');
             end
         end
+    end
+    
+    methods (Static)
+       
+        function id = getIdFromPath(path)
+            
+            parts = regexp(path,'\', 'split');
+            id = NaN;
+            
+            for k=length(parts):-1:1
+                if ~isnan(str2double(parts{k}))
+                    id = parts{k+3};
+                    break;
+                end
+            end
+        end
+        
     end
     
 end
