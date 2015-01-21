@@ -1,4 +1,4 @@
-classdef CellInterface
+classdef CellInterface < handle
     %CELLINTERFACE Summary of this class goes here
     %   Detailed explanation goes here
     
@@ -7,7 +7,6 @@ classdef CellInterface
     end
     
     methods (Static)
-        
         function obj = createRowCell(w)
             obj = CellInterface(1,w);
         end
@@ -18,12 +17,10 @@ classdef CellInterface
         
         function obj = create2DCell(h,w)
             obj = CellInterface(h,w);
-        end
-    
+        end    
     end
   
-    methods (Access = public)
-        
+    methods (Access = public)        
         function cell_ = getCell(this)
             cell_ = this.mCell;
         end
@@ -32,17 +29,35 @@ classdef CellInterface
             row = this.mCell(index,:);
         end
         
-        function col = getCol(this,index);
+        function this = setRow(this,index,row)
+            this.mCell(index,:) = row;
+        end
+        
+        function this = setCol(this,index,col)
+            this.mCell(:,index) = col;
+        end
+        
+        function col = getCol(this,index)
            col = this.mCell(:,index); 
+        end
+        
+        function this = set(this,value,varargin)
+            if size(varargin) ~= 2
+               this.mCell{varargin{1}} = value;
+           else
+               h = varargin{1};
+               w = varargin{2};
+               this.mCell{h,w} = value;
+           end
         end
         
         function element = get(this,varargin)
            if size(varargin) ~= 2
-               element = this.mCell(varargin{1});
+               element = this.mCell{varargin{1}};
            else
                h = varargin{1};
                w = varargin{2};
-               element = this.mCell(h,w);
+               element = this.mCell{h,w};
            end
            element = element{1};           
         end
@@ -53,7 +68,15 @@ classdef CellInterface
         
         function [h,w] = getSize(this)
            [h,w] = size(this.mCell); 
-        end        
+        end
+        
+        function h = getHeight(this)
+           [h,w] = size(this.mCell); 
+        end
+        
+        function w = getWidth(this)
+           [h,w] = size(this.mCell); 
+        end
     end
     
     methods (Access = private)
@@ -61,6 +84,5 @@ classdef CellInterface
            this.mCell = cell(h,w); 
         end
     end
-    
 end
 

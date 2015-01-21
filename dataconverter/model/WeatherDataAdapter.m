@@ -36,6 +36,7 @@ classdef WeatherDataAdapter < DataAdapter
             timeList{1,1} = str2double(time(1:4));
             timeList{1,2} = str2double(time(5:6));
             timeList{1,3} = str2double(time(7:8));
+            
             if length(time) >= 10
                 timeList{1,4} = str2double(time(09:10));
                 timeList{1,5} = str2double(time(11:12));
@@ -62,6 +63,7 @@ classdef WeatherDataAdapter < DataAdapter
            found = found & (abs(actualTime{1,4}+actualTime{1,5}/60 - (row{1,4}+row{1,5}/60)) <= deltaTime/60.);
         end
         
+        %%
         function found = compareDay(this,actualTime,row)
            
            for i=1:length(row)
@@ -75,6 +77,7 @@ classdef WeatherDataAdapter < DataAdapter
         %%
         function obj = getDataObject(this,paths,varargin)
             profile on;
+            
             %time in format: multiple-20140821-104913
             size_ = size(paths);
             inObj = varargin{1};
@@ -133,7 +136,7 @@ classdef WeatherDataAdapter < DataAdapter
                             end
                         end
                     end                    
-            else
+                else
                     timeList = this.splitTime(time);
 
                     rawData = this.fileReader(paths{1,i});
@@ -168,8 +171,7 @@ classdef WeatherDataAdapter < DataAdapter
                     %%The correct weather data is fetched from the list by
                     %%using the input time and comparing it to the weather data
                     %%time. 
-                    for j=start:length(temp)
-
+                    for j=start:length(temp)                        
                         if ~isempty(timeList)
                             t_temp = temp{1,j}(1,1:5);
 
@@ -185,10 +187,8 @@ classdef WeatherDataAdapter < DataAdapter
                             weatherDate = ['/',weatherDate{1},'-',weatherDate{2},'-',weatherDate{3},'-',weatherDate{4},'-',weatherDate{5}];
                             temp{1,j}(5) = {weatherDate};
                             this.tempMatrix = [this.tempMatrix;temp{1,j}(5:8+this.nrOfNewVariables)];
-                        end
-                        
+                        end                        
                     end
-
                 end
                 
                 this = this.addValues(idx,paths{1,i});
@@ -204,8 +204,7 @@ classdef WeatherDataAdapter < DataAdapter
         %%Uses the generic filreader of the parent class.
         function rawData = fileReader(this, path)
               rawData = fileReader@DataAdapter(this,path);   
-        end
-        
+        end        
     end
     
     methods (Access = private)
@@ -219,6 +218,6 @@ classdef WeatherDataAdapter < DataAdapter
         function this = addObject(this)
             size_ = size(this.objList);            
             this.objList{1,size_(2)+1} = this.dobj;        
-        end     
-    end    
+        end
+    end
 end

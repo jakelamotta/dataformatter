@@ -8,8 +8,9 @@ classdef XLSWriter
     methods (Access = public)
         
         function success = writeToXLS(this,fileName,obj)
-            
-            save(strrep(datestr(now),' ','-'),obj);
+            f = strrep(datestr(now),' ','-');
+            f = strrep(f,':','');
+            save([f,'.mat'],'obj');
             
             try
                 fullname = [fileName,'.xlsx'];
