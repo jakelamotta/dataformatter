@@ -18,13 +18,13 @@ classdef DataAdapter < handle
     methods (Access = public)
         
         function this = DataAdapter()
-            this.genData = {'Flower','DATE','Negative','Positive';};
+            this.genData = {'Flower','Date','Negative','Positive';};
         end
         
         function matrix = addValues(this,path,matrix)
             [h,w] = size(matrix);
             
-            g = [{'Flower','DATE','Negative','Positive'};cell(h-1,4)];
+            g = [{'Flower','Date','Negative','Positive'};cell(h-1,4)];
             
             parts = regexp(path,'\', 'split');            
             
@@ -41,8 +41,8 @@ classdef DataAdapter < handle
             for i=2:h
                 matrix{i,1} = flower;
                 matrix{i,2} = date_;
-                matrix{i,3} = double(strcmp(negOrPos(2:end-1),'negative'));
-                matrix{i,4} = double(~strcmp(negOrPos(2:end-1),'negative'));
+                matrix{i,3} = double(strcmp(negOrPos,'negative'));
+                matrix{i,4} = double(~strcmp(negOrPos,'negative'));
             end
         end
         

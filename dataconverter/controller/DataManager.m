@@ -87,7 +87,7 @@ classdef DataManager < handle
             
             if strcmp(id,'Olfactory')
                 obj.downSample(this.getNrOfOlfactoryDP(),id);
-                obj.expandSpectrumPoints(id);                
+                obj.expandSpectrumPoints(id);
             end
             
             %Remove the temporary columns for storing the arrays which
@@ -167,8 +167,7 @@ classdef DataManager < handle
             objMat = obj.getMatrix();
             objMat{2,col_} = comment;            
                        
-            obj.setMatrix(objMat);
-            
+            obj.setMatrix(objMat);            
             this.setObject(obj);
         end
         

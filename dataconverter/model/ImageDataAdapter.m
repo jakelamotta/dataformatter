@@ -8,7 +8,7 @@ classdef ImageDataAdapter < DataAdapter
     methods (Access = public)
         
         function this = ImageDataAdapter()        
-            this.tempMatrix = {'Contrast','Correlation','Energy','homogenity','ent','alpha'};
+            this.tempMatrix = {'Contrast','Correlation','Energy','Homogenity','Entropy','Alpha'};
             this.dobj = Observation();
         end
         
@@ -95,7 +95,7 @@ classdef ImageDataAdapter < DataAdapter
                             this = this.addValues(paths{1,i});
                             
                             this.dobj.setObservation(this.tempMatrix,strrep(fnames{i},'__','.'));
-                            this.tempMatrix = {'Contrast','Correlation','Energy','homogenity','ent','alpha'};
+                            this.tempMatrix = {'Contrast','Correlation','Energy','Homogenity','Entropy','Alpha'};
                             imwrite(im,fullfile(folders{i},['cropped_',ims{2,h}]));
                         end 
                     end
