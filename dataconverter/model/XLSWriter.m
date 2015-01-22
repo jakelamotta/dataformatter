@@ -10,7 +10,7 @@ classdef XLSWriter
         function success = writeToXLS(this,fileName,obj)
             f = strrep(datestr(now),' ','-');
             f = strrep(f,':','');
-            save([f,'.mat'],'obj');
+            %save([f,'.mat'],'obj');
             
             try
                 fullname = [fileName,'.xlsx'];
