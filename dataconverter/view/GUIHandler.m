@@ -208,9 +208,8 @@ classdef GUIHandler% < handle
         
         %%Function that updates the datatable
         function this = updateGUI(this)
-            this.dataTable = uitable(this.mainWindow,'data',this.dataManager.getObject().getMatrix(),'Position',this.tableSize);
+            this.dataTable = uitable(this.mainWindow,'data',this.dataManager.getObject().getMatrix(),'Position',this.tableSize,'units','normalized');
         end
-        
         
         function this = launchDialogue(this,id,varargin)
             profile viewer;

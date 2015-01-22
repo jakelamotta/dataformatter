@@ -4,7 +4,8 @@ classdef WeatherDataAdapter < DataAdapter
     properties (Access = private)
         cell_;
         nrOfNewVariables;
-    end    
+    end
+    
     methods (Access = public)
         
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

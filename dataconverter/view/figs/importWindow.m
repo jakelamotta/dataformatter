@@ -93,7 +93,7 @@ function okBtn_Callback(hObject, eventdata, handles)
     
     if get(handles.radiobutton2,'value')
         %type = 'Weather';
-        types{2} = 'Weather';
+        types{6} = 'Weather';
     end
     
     if get(handles.radiobutton3,'value')
@@ -101,15 +101,15 @@ function okBtn_Callback(hObject, eventdata, handles)
     end
     
     if get(handles.radiobutton4,'value')
-        types{4} = 'Spectro';
+        types{5} = 'Spectro';
     end
     
     if get(handles.radiobutton5,'value')
-        types{5} = 'Behavior';
+        types{2} = 'Behavior';
     end
     
     if get(handles.radiobutton6,'value')
-        types{6} = 'Olfactory';
+        types{4} = 'Olfactory';
     end
     
     if get(handles.loadrb,'value')
