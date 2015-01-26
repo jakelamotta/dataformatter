@@ -96,6 +96,9 @@ varargout{1} = '';
 if get(handles.okBtn,'UserData')
     
     varargout{1} = get(handles.popupmenu1,'UserData');
+
+else
+    varargout{1} = 'kill';
 end
 
 delete(hObject);
@@ -279,9 +282,18 @@ set(S.fH, 'WindowButtonUpFcn', @stopDragFcn);
 %                tempImage = im(floor(y_min):floor(y_min)+floor(avg),floor(x_min):floor(x_min)+floor(avg),:);
 %             end
             
-            set(S.aH,'UserData',rgb2gray(tempImage));
+            if ndims(tempImage) == 3
+                set(S.aH,'UserData',rgb2gray(tempImage));
+            else
+                set(S.aH,'UserData',tempImage);
+            end
             images = get(S.h.popupmenu1,'UserData');
-            images{1,get(S.h.popupmenu1,'Value')} = rgb2gray(tempImage); 
+            
+            if ndims(tempImage) == 3
+                images{1,get(S.h.popupmenu1,'Value')} = rgb2gray(tempImage); 
+            else
+                images{1,get(S.h.popupmenu1,'Value')} = tempImage; 
+            end
             set(S.h.popupmenu1,'UserData',images);
         end
         
@@ -328,6 +340,7 @@ function popupmenu1_Callback(hObject, eventdata, handles)
 % Hints: contents = cellstr(get(hObject,'String')) returns popupmenu1 contents as cell array
 %        contents{get(hObject,'Value')} returns selected item from popupmenu1
     cla(handles.axes2,'reset');
+    cla(handles.axes1,'reset');
     index = get(hObject,'Value');
     imageList = get(handles.figure1,'UserData');
     list = get(handles.popupmenu1,'UserData');

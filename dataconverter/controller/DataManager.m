@@ -4,24 +4,23 @@ classdef DataManager < handle
     %GUI and all the underlying data handling. It passes any command from
     %the user to the correct class instance s
     
-    
+    %%Variables used by the DataManager class
     properties (Access = private)
-        xlsWriter;
-        adapter;
-        manager;
+        xlsWriter; %Writer for exporting
+        manager; %InputManager object that is used for loading data
         observation;
         unfilteredObj;
-        spectroDP;
-        olfactoryDP;
-        handler;
+        spectroDP; %Number of data points used for interpolation of Spectro data
+        olfactoryDP; %Number of data points used for interpolation of Olfactory data
+        handler; %GUIhandler object
     end
     
+    %Public methods, accessible from other classes
     methods (Access=public)
-        
         
         %%Function for importing an Observation matrix from file. Any
         %%existing data will be deleted.
-        function this = importOldData(this,filename) 
+        function this = importOldData(this,filename)
             [~,~,old] = xlsread(filename);
             this.observation.setMatrix(old);
         end
@@ -32,8 +31,8 @@ classdef DataManager < handle
             this.manager = inM;
             this.handler = inH;
             this.xlsWriter = XLSWriter();
-            this.unfilteredObj = Observation();%DataObject();
-            this.observation = Observation();%DataObject();
+            this.unfilteredObj = Observation();
+            this.observation = Observation();
             
             %Initializes to 300 and 15000 respectively, once its set after this its final to not
             %create inconcistensies between observations
@@ -47,9 +46,12 @@ classdef DataManager < handle
             this = this.setObject(Observation());
         end
         
-        %%
+        %%Adds a newly important Observation to the observation that is
+        %%displayed
         function this = addObject(this,id,path)
+            %Get new data from the input manager.
             temp = this.manager.getObservation(id,path,this.getObject());
+            
             current = this.getUnfObject();
             tempMat = temp.getMatrix();
             
@@ -76,13 +78,14 @@ classdef DataManager < handle
             this = this.setUnfObject(current);
         end
         
+        %%
         function this = finalize(this,id)
             obj = this.getUnfObject();
             
             %Interpolate and expnd the spectrum points to their own columns
             if strcmp(id,'Spectro')
-               obj.downSample(this.getNrOfSpectroDP(),id);
-               obj.expandSpectrumPoints(id);
+                obj.downSample(this.getNrOfSpectroDP(),id);
+                obj.expandSpectrumPoints(id);
             end
             
             if strcmp(id,'Olfactory')
@@ -123,14 +126,14 @@ classdef DataManager < handle
                 this.getObject().appendObservation(this.getUnfObject());
                 
                 for i=1:length(listOfIds)
-                   id = listOfIds{1,i};
-                   this.getObject().combine(id);
+                    id = listOfIds{1,i};
+                    this.getObject().combine(id);
                 end
             else
                 this.merge();
             end
             
-            this = this.setUnfObject(Observation());        
+            this = this.setUnfObject(Observation());
         end
         
         %%Write to persistant storage
@@ -138,7 +141,8 @@ classdef DataManager < handle
             obj = this.getObject();
             success = this.xlsWriter.appendXLS(path,obj);
         end
-                
+        
+        %%Merge to observations that have no common observation ids
         function this = merge(this)
             unfObj = this.getUnfObject();
             fobj = this.getObject();
@@ -165,9 +169,9 @@ classdef DataManager < handle
             
             obj = this.objList(id_);
             objMat = obj.getMatrix();
-            objMat{2,col_} = comment;            
-                       
-            obj.setMatrix(objMat);            
+            objMat{2,col_} = comment;
+            
+            obj.setMatrix(objMat);
             this.setObject(obj);
         end
         
@@ -192,7 +196,7 @@ classdef DataManager < handle
         end
         
         function handler = getHandler(this)
-           handler = this.handler; 
+            handler = this.handler;
         end
         
         function dp = getNrOfSpectroDP(this)
@@ -204,15 +208,15 @@ classdef DataManager < handle
         end
         
         function this = setNrOfOlfactoryDP(this,dp)
-           %The value can only be changed once, from it's original value
-           
-           if ischar(dp)
-               dp = str2double(dp);
-           end
-           
-           if this.olfactoryDP == 15000
-               this.olfactoryDP = dp;
-           end
+            %The value can only be changed once, from it's original value
+            
+            if ischar(dp)
+                dp = str2double(dp);
+            end
+            
+            if this.olfactoryDP == 15000
+                this.olfactoryDP = dp;
+            end
         end
         
         function this = setNrOfSpectroDP(this,dp)

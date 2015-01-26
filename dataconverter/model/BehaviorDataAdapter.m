@@ -68,8 +68,6 @@ classdef BehaviorDataAdapter < DataAdapter
                         
                         newFileName = [id_,ext];
                         
-                        %paths{1,i} = paths{1,i}(1:end-13);
-                        
                         paths{1,i} = fullfile(pathstr,newFileName);
                         
                         copyfile(toRemove,paths{1,i});

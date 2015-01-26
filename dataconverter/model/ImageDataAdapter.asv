@@ -57,11 +57,9 @@ classdef ImageDataAdapter < DataAdapter
             
             for i=1:nrOfFnames
                 fname = images.(fnames{i});
-                [ims,mcontinue] = handler.getCroppedImage(fname,fnames{i});
-                if ~mcontinue
-                    break;
-                end
+                [ims,cont] = handler.getCroppedImage(fname,fnames{i});
                 
+                if cont
                     s = size(ims);
                     
                     for h_=1:s(2) 
@@ -124,6 +122,7 @@ classdef ImageDataAdapter < DataAdapter
                             imwrite(im,fullfile(folders{i},['cropped_',ims{2,h_}]));
                         end 
                     end
+                end
             end            
             
             obj = this.dobj;

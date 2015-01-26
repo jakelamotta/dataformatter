@@ -112,7 +112,10 @@ classdef WeatherDataAdapter < DataAdapter
                     %%The correct weather data is fetched from the list by
                     %%using the input time and comparing it to the weather data
                     %%time. 
-                    day = paths{1,i}(strfind(paths{1,i},'data\')+5:strfind(paths{1,i},'data\')+12);
+                    %day = paths{1,i}(strfind(paths{1,i},'data\')+5:strfind(paths{1,i},'data\')+12);
+                    parts = regexp(paths{1,i},'\', 'split');            
+                    day = parts{end-5};
+                    
                     timeList = this.splitTime(day);
                     
                     rawData = this.fileReader(paths{1,i});
