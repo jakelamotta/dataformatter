@@ -87,12 +87,10 @@ function okBtn_Callback(hObject, eventdata, handles)
     type = '';
     
     if get(handles.radiobutton1,'value')
-        %type = 'Abiotic';
         types{1} = 'Abiotic';
     end
     
     if get(handles.radiobutton2,'value')
-        %type = 'Weather';
         types{6} = 'Weather';
     end
     
@@ -205,13 +203,6 @@ function radiobutton6_Callback(hObject, eventdata, handles)
     end
     
  function updateRadio(handles,hObject)
-%     set(handles.radiobutton1,'value',false);
-%     set(handles.radiobutton2,'value',false);
-%     set(handles.radiobutton3,'value',false);
-%     set(handles.radiobutton4,'value',false);
-%     set(handles.radiobutton5,'value',false);
-%     set(handles.radiobutton6,'value',false);
-%     set(handles.loadrb,'value',false);
     set(hObject,'value',true);
     
     

@@ -36,6 +36,10 @@ classdef BehaviorDataAdapter < DataAdapter
             this.tempMatrix = addValues@DataAdapter(this,p,this.tempMatrix);
         end
         
+        %%Function for retrieving a Observation object with
+        %%Behavior data
+        %%Input - Cell of paths
+        %%Output - Observation object
         function obj = getDataObject(this,paths)
             [h,w] = size(paths);
             
@@ -109,8 +113,7 @@ classdef BehaviorDataAdapter < DataAdapter
         end
         
         %%Function that parse the data of the behavior file.
-        %%Input:
-        %%Rawdata - data from excel file
+        %%Input: Rawdata - data from excel file
         function this = parse(this,rawData)
             nrOfRows = size(rawData);
             
@@ -171,4 +174,3 @@ classdef BehaviorDataAdapter < DataAdapter
         end
     end
 end
-

@@ -1,15 +1,19 @@
 classdef XLSWriter
-    %XLSWRITER Class responsible for writing dataobjects to a xls-file
-    %(excel)
+    %XLSWRITER Class responsible for writing dataobjects to a excel-file
     
     properties
     end
     
+    %Public methods, accessible from other classes
     methods (Access = public)
         
+        %%Function that writes to excel
         function success = writeToXLS(this,fileName,obj)
             f = strrep(datestr(now),' ','-');
             f = strrep(f,':','');
+            
+            %Uncomment this to make the program saving mat-files with
+            %aswell as exporting to excel.
             %save([f,'.mat'],'obj');
             
             try
@@ -20,7 +24,7 @@ classdef XLSWriter
                 errordlg(e.getReport(),'Error');
             end
         end
-        
+       
         function success = appendXLS(this,fname,obj)
             toSave = obj;
             obj.sortById();

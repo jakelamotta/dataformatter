@@ -16,10 +16,9 @@ classdef Organizer
         
         function path = getPath(this,type)
             path = this.paths.(type);
-        end        
+        end
         
         function this = launchGUI(this)
-            
             out_ = loaddata(this.sources);
             if isstruct(out_)
                 out2 = loaddatastep2(this.sources,out_.target);
@@ -28,7 +27,6 @@ classdef Organizer
                     if isstruct(out_)
                         this.sources = out2.sources;
                         this.target = out2.target;
-                        %this.target = [out2.target,'\'];
                     end
                 end
             end

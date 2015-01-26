@@ -1,11 +1,13 @@
 classdef WeatherDataAdapter < DataAdapter
     %WEATHERDATAADAPTER Summary of this class goes here
     %   Detailed explanation goes here
+    
     properties (Access = private)
         cell_;
         nrOfNewVariables;
     end
     
+    %Public methods, accessible from other classes
     methods (Access = public)
         
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -27,7 +29,9 @@ classdef WeatherDataAdapter < DataAdapter
             this.tempMatrix = addValues@DataAdapter(this,p,this.tempMatrix);
         end
         
-        %%
+        %%Splits a time string in the form 'yyyymmdd-mmss' or
+        %%'yyyymmddmmss' into a cell with years, month, day, min and sec
+        %%separated
         function timeList = splitTime(this,time)
             start = strfind(time,'2');
             time = time(start(1):end);
@@ -63,7 +67,8 @@ classdef WeatherDataAdapter < DataAdapter
            found = found & (abs(actualTime{1,4}+actualTime{1,5}/60 - (row{1,4}+row{1,5}/60)) <= deltaTime/60.);
         end
         
-        %%
+        %%Compare the day of two time stamps, returns true if they are the
+        %%same
         function found = compareDay(this,actualTime,row)
            
            for i=1:length(row)
@@ -74,16 +79,14 @@ classdef WeatherDataAdapter < DataAdapter
            found = (actualTime{1,3} == row{1,3}) & found;
         end
         
-        %%
+        %%Get a Observation with weather data
         function obj = getDataObject(this,paths,varargin)
-            profile on;
-            
             %time in format: multiple-20140821-104913
             size_ = size(paths);
             inObj = varargin{1};
             
-            for i=1:size_(2)              
-
+            for i=1:size_(2)            
+                %Retrieve id from the path
                 id_ = DataAdapter.getIdFromPath(paths{1,i});
                 
                 %Use spectro time as a way to find the correct weather data
@@ -199,15 +202,15 @@ classdef WeatherDataAdapter < DataAdapter
         %%Uses the generic filreader of the parent class.
         function rawData = fileReader(this, path)
               rawData = fileReader@DataAdapter(this,path);   
-        end        
+        end 
     end
     
+    %Methods only accesible within the class
     methods (Access = private)
         
         function temp = createDob(this, inRow)            
             row = regexp(inRow,' ','split');
             temp = row;
-            %temp = cellfun(@str2double,row,'UniformOutput',false);%[this.tempMatrix;cellfun(@str2num,row,'UniformOutput',false)];
         end
         
         function this = addObject(this)

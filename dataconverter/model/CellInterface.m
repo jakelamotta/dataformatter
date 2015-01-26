@@ -1,9 +1,8 @@
 classdef CellInterface < handle
-    %CELLINTERFACE Summary of this class goes here
-    %   Detailed explanation goes here
+    %CELLINTERFACE Class for simplyfying cell usage. Feel free to use it.
     
     properties
-        mCell;
+        mCell; %A cell
     end
     
     methods (Static)

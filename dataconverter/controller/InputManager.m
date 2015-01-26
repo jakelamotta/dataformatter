@@ -1,6 +1,7 @@
 classdef InputManager < handle
     %INPUTMANAGER class deals with input and some organzing of data
     
+    %%Variables used by the InputManager class
     properties (Access = private)
         adapterFactory;
         dataObject;
@@ -10,6 +11,7 @@ classdef InputManager < handle
         adapter;
     end
     
+    %Public methods, accessible from other classes
     methods (Access = public)
         
         %%Default constructor, can take an instance of a DataManager as an argument
@@ -26,27 +28,26 @@ classdef InputManager < handle
         %%accordingly. The adapterId is the type of adapter to be created
         function obj = getObservation(this,adapterId,paths,inObj)
             
+            %Create the correct adapter given the type of data needed
             this.adapter = this.adapterFactory.createAdapter(adapterId);
             
+            %If a string is returned something went wrong
             if ischar(this.adapter)
                 errordlg('The data adapter could not be created, the adapterfactory did not return a valid object');
             else
-                tic;
                 if strcmp(adapterId,'Weather') || strcmp(adapterId,'Image')
-                    %spectroTime = inObj.getSpectroTime();
                     obj = this.adapter.getDataObject(paths,inObj,this);
                 else
                     obj = this.adapter.getDataObject(paths);
                 end
-                toc
             end
-        end        
-                
+        end
+        
         %%Takes a path as an input and finds all folders of the input type
         %%that are located in a subfolder of the input path
         function this = splitPaths(this,p,type)
             this.paths = {};
-            this = this.recSearch(p,type);         
+            this = this.recSearch(p,type);
         end
         
         %%Function for organizing data into folders
@@ -76,11 +77,11 @@ classdef InputManager < handle
                         success = success & this.saveToDir(sources.(type).(file),[target,type]);
                     end
                 else
-                   success = success & this.saveToDir(sources.(type),[target,type]);
+                    success = success & this.saveToDir(sources.(type),[target,type]);
                 end
                 
                 if strcmp(type,'Behavior') && noExcelFile
-                   this.saveToDir(Utilities.getpath('template.xlsx'),[target,type]);
+                    this.saveToDir(Utilities.getpath('template.xlsx'),[target,type]);
                 end
             end
         end
@@ -96,7 +97,7 @@ classdef InputManager < handle
         %%
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         %%%%%%%%%%%%%%%%%%%%%GETTERS AND SETTERS%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%        
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         function this = setDataManager(this,dm)
             this.dataManager = dm;
         end
@@ -114,15 +115,15 @@ classdef InputManager < handle
             temp = dir(path);
             [h,w] = size(temp);
             
-            for i=3:h                    
-                    %%Creates a new FolderTree child with input FolderTree as parent
-                    child = FolderTree(temp(i).name,tree);
-                    
-                    if temp(i).isdir
-                        this.getMetaData([path,'\',temp(i).name],child);
-                    end
+            for i=3:h
+                %%Creates a new FolderTree child with input FolderTree as parent
+                child = FolderTree(temp(i).name,tree);
+                
+                if temp(i).isdir
+                    this.getMetaData([path,'\',temp(i).name],child);
+                end
             end
-        end        
+        end
     end
     
     methods (Access = private)
@@ -133,7 +134,7 @@ classdef InputManager < handle
         function this = recSearch(this,path,type)
             
             if strcmp(type,'Spectro')
-               type = 'metadata';
+                type = 'metadata';
             end
             
             temp = dir(path);
@@ -158,7 +159,7 @@ classdef InputManager < handle
         %%This is the function that copies files from one location to
         %another location.
         %Input: - sourcePath: the path to what is to be copied as a string
-        %       - targetPath: the relative path to the target folder 
+        %       - targetPath: the relative path to the target folder
         function success = saveToDir(this,sourcePath, targetPath)
             success = true;
             
@@ -175,11 +176,10 @@ classdef InputManager < handle
             if isdir(sourcePath)
                 indices = strfind(sourcePath,'\');
                 index = indices(end);
-                path = [path,'\',sourcePath(index+1:end)];                
+                path = [path,'\',sourcePath(index+1:end)];
             end
             
             copyfile(sourcePath,path);
         end
-    end    
+    end
 end
-

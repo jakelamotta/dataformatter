@@ -17,6 +17,10 @@ classdef OlfactoryDataAdapter < DataAdapter
             this.tempMatrix = addValues@DataAdapter(this,p,this.tempMatrix);
         end
         
+        %%Function for retrieving a Observation object with
+        %%Spectrophotometer data
+        %%Input - Cell of paths
+        %%Output - Observation object
         function obj = getDataObject(this,paths)
             tic;
             size_ = size(paths);

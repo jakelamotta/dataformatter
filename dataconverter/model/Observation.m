@@ -132,6 +132,8 @@ classdef Observation < handle
             this.setMatrix(matrix);
         end
         
+        %%Calculate average for the input rows starting from column
+        %%"colStart
         function row = average(this,colStart,rows)
             
             [h,w] = size(rows);
@@ -181,7 +183,7 @@ classdef Observation < handle
             end            
         end
         
-        
+        %%Interpolating spectrophotometer or olfactory data
         function this = downSample(this,dsrate,type)
             y1pos = uint32(Constants.SpectroYPos);
             y2pos = uint32(Constants.SpectroYUpPos);
@@ -443,6 +445,7 @@ classdef Observation < handle
             [h,width] = size(this.xlsMatrix);
         end
         
+        %%Returns number of rows
         function height = getNumRows(this)
             [height,w] = size(this.xlsMatrix);
         end

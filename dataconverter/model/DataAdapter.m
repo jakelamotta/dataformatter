@@ -29,15 +29,10 @@ classdef DataAdapter < handle
             parts = regexp(path,'\', 'split');            
             
             matrix = [g,matrix];
-            
-%             date_ = path(idx(end-5):idx(end-4));
-%             
-%             flower = path(idx(end-4):idx(end-3));
-%             negOrPos = path(idx(end-3):idx(end-2));
             date_ = parts{end-5};
-            
             flower = parts{end-4};
             negOrPos = parts{end-3};
+            
             for i=2:h
                 matrix{i,1} = flower;
                 matrix{i,2} = date_;
@@ -72,6 +67,7 @@ classdef DataAdapter < handle
     
     methods (Static)
        
+        %%Function that retrieves id from a search path
         function id = getIdFromPath(path)
             
             parts = regexp(path,'\', 'split');

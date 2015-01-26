@@ -118,6 +118,11 @@ if get(handles.okBtn,'UserData')
     
     userdata = get(handles.figure1,'UserData');
     data = userdata.data;
+    
+%     if isfield(data,'rows')
+%         data(userdata.rows,:) = [];
+%     end
+    
     handler = userdata.handler;
 
     h = findobj('Tag','sampleedit');
@@ -171,7 +176,9 @@ function okBtn_Callback(hObject, eventdata, handles)
     userdata = get(handles.figure1,'UserData');
     data = userdata.data;
     
-    if get(handles.checkbox1,'value') || validateData(data)     
+    
+    
+    if get(handles.checkbox1,'value') || validateData(data)    
         set(hObject,'UserData',true);
         close;
     else
@@ -365,7 +372,14 @@ function deleteRow(varargin)
     data = data(mask,:);
     set(th,'Data',data);
     userdata = get(handle.figure1,'UserData');
-    userdata.data = data;
+    
+    actualData = userdata.data;
+    
+    actualData(rows,:) = [];
+    
+    userdata.data = actualData;
+    
+    userdata.rows = rows;
     set(handle.figure1,'UserData',userdata);
 end
 

@@ -24,18 +24,8 @@ classdef AbioticDataAdapter < DataAdapter
             
             for i=1:s(2)
                 path = paths{1,i};
-%                 idx = strfind(paths{1,i},'\');
-%                 
-%                 try
-%                     %%The observation id is found in the filepath one step
-%                     %%above the type folder
-%                     id_ = path(idx(end-2)+1:idx(end-1)-1);
-%                 catch e
-%                     errordlg('Incorrect path was passed to the file reader');
-%                 end
-
-                id_ = DataAdapter.getIdFromPath(path);
                 
+                id_ = DataAdapter.getIdFromPath(path);                
                 
                 %%Retrieve data from the file
                 rawData = this.fileReader(path);
@@ -51,8 +41,6 @@ classdef AbioticDataAdapter < DataAdapter
                        this.tempMatrix = [this.tempMatrix;row];
                    end
                 end
-                
-                
                 
                 this = this.addValues(path);
                 this.dobj = this.dobj.setObservation(this.tempMatrix,id_);                    

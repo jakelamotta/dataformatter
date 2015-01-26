@@ -1,6 +1,5 @@
 classdef ImageDataAdapter < DataAdapter
-    %IMAGEDATAADAPTER Summary of this class goes here
-    %   Detailed explanation goes here
+    %IMAGEDATAADAPTER Class for adapting images to an Observation object
     
     properties       
     end
@@ -16,6 +15,10 @@ classdef ImageDataAdapter < DataAdapter
             this.tempMatrix = addValues@DataAdapter(this,p,this.tempMatrix);
         end
         
+        %%Function for retrieving a Observation object with
+        %%Image data
+        %%Input - Cell of paths
+        %%Output - Observation object
         function obj = getDataObject(this,paths,varargin)
             tic;
             
@@ -52,11 +55,9 @@ classdef ImageDataAdapter < DataAdapter
             fnames = fieldnames(images);
             nrOfFnames = length(fnames);
             
-            
             for i=1:nrOfFnames
                 fname = images.(fnames{i});
-                [ims,cont] = handler.getCroppedImage(fname,fnames{i});%paths{1,i});
-                %[im,keep] = handler.getCroppedImage(rawData,paths{1,i});
+                [ims,cont] = handler.getCroppedImage(fname,fnames{i});
                 
                 if cont
                     s = size(ims);
@@ -65,6 +66,10 @@ classdef ImageDataAdapter < DataAdapter
                         im = ims{1,h};
                         keep = ims{3,h};
                         if keep
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%Olga script below%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+                            
                             % calculate parameters
                             k=graycomatrix(im, 'offset', [0 1; -1 1; -1 0; -1 -1],'NumLevels',256);
                             stats = graycoprops(k,{'contrast','homogeneity','Correlation','Energy'});
@@ -89,7 +94,11 @@ classdef ImageDataAdapter < DataAdapter
 
                             % get a result of 6 parameters for 1 image
                             parameters = {mean(stats.Contrast),mean(stats.Correlation),mean(stats.Energy),mean(stats.Homogeneity),ent alpha};
-
+                            
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%Olga script above%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%here%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+                            
                             this.tempMatrix = [this.tempMatrix;parameters];
                             
                             this = this.addValues(paths{1,i});
@@ -100,8 +109,7 @@ classdef ImageDataAdapter < DataAdapter
                         end 
                     end
                 end
-            end
-            
+            end            
             
             obj = this.dobj;
             toc
