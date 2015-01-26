@@ -122,7 +122,7 @@ function pushbutton3_Callback(hObject, eventdata, handles)
 % hObject    handle to pushbutton3 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)    
-    cla(handles.axes2,'reset');
+
     showCroppedImage(handles);
     list = get(handles.popupmenu1,'UserData');
     index = get(handles.popupmenu1,'Value');
@@ -244,40 +244,39 @@ set(S.fH, 'WindowButtonUpFcn', @stopDragFcn);
             plot([x_min,x_max],[y_max,y_max]);
             plot([x_min,x_min],[y_min,y_max]);
             plot([x_max,x_max],[y_min,y_max]);
-            
-            tempImage = squarify(im,y_min,y_max,x_min,x_max);
-%             tempImage = im(floor(y_min):floor(y_max),floor(x_min):floor(x_max),:);
-% %             tempSize = size(tempImage);
-% %             
-% %             if tempSize(1) ~= tempSize(2)
-% %                avg = (tempSize(1)+tempSize(2))/2;
-% %                
-% %                if avg+floor(y_min) > tempSize(1)
-% %                    avg = tempSize(1);
-% %                end
-% %                
-% %                if avg+floor(x_min) > tempSize(2)
-% %                    avg = tempSize(2);
-% %                end
-% %                    
-% %                tempImage = im(floor(y_min):floor(y_min)+floor(avg),floor(x_min):floor(x_min)+floor(avg),:);
-% %             end
-% 
-%             [h,w] = size(tempImage);
+
+            tempImage = im(floor(y_min):floor(y_max),floor(x_min):floor(x_max),:);
+%             tempSize = size(tempImage);
 %             
-%             if h ~= w
-%                avg = (h+w)/2;
+%             if tempSize(1) ~= tempSize(2)
+%                avg = (tempSize(1)+tempSize(2))/2;
 %                
-%                if avg+floor(y_min) > h
-%                    avg = h;
+%                if avg+floor(y_min) > tempSize(1)
+%                    avg = tempSize(1);
 %                end
 %                
-%                if avg+floor(x_min) > w
-%                    avg = w;
+%                if avg+floor(x_min) > tempSize(2)
+%                    avg = tempSize(2);
 %                end
 %                    
 %                tempImage = im(floor(y_min):floor(y_min)+floor(avg),floor(x_min):floor(x_min)+floor(avg),:);
 %             end
+
+            [h,w] = size(tempImage);
+            
+            if h ~= w
+               avg = (h+w)/2;
+               
+               if avg+floor(y_min) > h
+                   avg = h;
+               end
+               
+               if avg+floor(x_min) > w
+                   avg = w;
+               end
+                   
+               tempImage = im(floor(y_min):floor(y_min)+floor(avg),floor(x_min):floor(x_min)+floor(avg),:);
+            end
             
             set(S.aH,'UserData',rgb2gray(tempImage));
             images = get(S.h.popupmenu1,'UserData');
@@ -294,14 +293,8 @@ set(S.fH, 'WindowButtonUpFcn', @stopDragFcn);
 end
 
 function squaredImage = squarify(image_,varargin)
-    if ~isempty(varargin)
-        y_min = varargin{1};
-        y_max = varargin{2};
-        x_min = varargin{3};
-        x_max = varargin{4};
-        
-        squaredImage = image_(floor(y_min):floor(y_max),floor(x_min):floor(x_max),:);
-    end
+    squaredImage = image_(floor(y_min):floor(y_max),floor(x_min):floor(x_max),:);
+
     [h,w] = size(squaredImage);
 
     if h ~= w
@@ -327,7 +320,6 @@ function popupmenu1_Callback(hObject, eventdata, handles)
 
 % Hints: contents = cellstr(get(hObject,'String')) returns popupmenu1 contents as cell array
 %        contents{get(hObject,'Value')} returns selected item from popupmenu1
-    cla(handles.axes2,'reset');
     index = get(hObject,'Value');
     imageList = get(handles.figure1,'UserData');
     list = get(handles.popupmenu1,'UserData');

@@ -77,7 +77,9 @@ classdef BehaviorDataAdapter < DataAdapter
                     end
 
                     path = paths{1,i};
-
+                    
+                    disp(paths{1,i});
+                    
                     rawData = this.fileReader(path);
                     this = this.parse(rawData);
                     
