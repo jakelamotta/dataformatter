@@ -43,7 +43,10 @@ classdef BehaviorDataAdapter < DataAdapter
         function obj = getDataObject(this,paths)
             [h,w] = size(paths);
             
+            this.nrOfPaths = w;
+            
             for i=1:w
+                this.updateProgress(i);
                 if strfind(paths{1,i}(end-3:end),'xls')
                     idx = strfind(paths{1,i},'\');
                     this.tempMatrix = this.tempMatrix(1,:);
@@ -88,11 +91,11 @@ classdef BehaviorDataAdapter < DataAdapter
                 end
                 
             end
+            close(this.mWaitbar);
         end        
     end
     
-    methods (Access = private)
-        
+    methods (Access = private)        
         %%Extract the time of the video clip from the behavior file, will
         %%return a list if there are multiple observations in one file. 
         function time = findTotTime(this,rawData)

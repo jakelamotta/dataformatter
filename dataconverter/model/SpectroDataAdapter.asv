@@ -53,11 +53,11 @@ classdef SpectroDataAdapter < DataAdapter
         %%Output - Observation object
         function obj = getDataObject(this,paths)
             
-            s = length(paths);
+            s = size(paths);
             obj = Observation();
-            this.nrOfPaths = s;
-            for i=1:s
-                this.updateProgress(i);
+            this.nrOfPaths =
+            for i=1:s(2)
+                
                 if strcmp(paths{1,i}(end-10:end),'rawData.txt')
                     
                     indices = strfind(paths{1,i},'\');
@@ -129,8 +129,6 @@ classdef SpectroDataAdapter < DataAdapter
                     this.tempMatrix = this.init;
                 end
             end
-            
-            close(this.mWaitbar);
             obj = this.dobj;
         end
     end

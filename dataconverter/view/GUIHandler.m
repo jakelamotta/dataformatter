@@ -113,7 +113,9 @@ classdef GUIHandler% < handle
                 %type = importInfo{1,1};
                 types =importInfo{1,1};
                 p = importInfo{1,2};
-                    
+                
+                
+                
                 for index=1:length(types)
                     type = types{index};
                     

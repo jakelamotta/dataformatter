@@ -20,9 +20,12 @@ classdef AbioticDataAdapter < DataAdapter
         %%object with data from these files
         function obj = getDataObject(this,paths)
             
-            s = size(paths);
+            s = length(paths);
             
-            for i=1:s(2)
+            this.nrOfPaths = s;
+            
+            for i=1:s
+                this.updateProgress(i);
                 path = paths{1,i};
                 
                 id_ = DataAdapter.getIdFromPath(path);                
@@ -46,7 +49,7 @@ classdef AbioticDataAdapter < DataAdapter
                 this.dobj = this.dobj.setObservation(this.tempMatrix,id_);                    
                 this.tempMatrix = {'/AbioTime','Ab_CO2','Ab_temp','Ab_humid'};
             end
-            
+            close(this.mWaitbar);
             obj = this.dobj;
         end
         

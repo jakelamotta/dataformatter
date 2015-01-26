@@ -23,9 +23,12 @@ classdef OlfactoryDataAdapter < DataAdapter
         %%Output - Observation object
         function obj = getDataObject(this,paths)
             tic;
-            size_ = size(paths);
+            size_ = length(paths);
             
-            for i=1:size_(2)
+            this.nrOfPaths = size_;
+            
+            for i=1:size_
+                this.updateProgress(i);
                 id_ = DataAdapter.getIdFromPath(paths{1,i});
 
                 rawData = this.fileReader(paths{1,i});
@@ -46,6 +49,7 @@ classdef OlfactoryDataAdapter < DataAdapter
                 this.tempMatrix = this.initMatrix;
             end
             
+            close(this.mWaitbar);
             obj = this.dobj;
             toc            
         end

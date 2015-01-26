@@ -14,12 +14,16 @@ function WriteToWordFromMatlab(path,rootTree)
 % 060214  AK  Pagenumber, font color and TOC added
 % 130115  Kristian  Removed most stuff so it would fit our purposes
 % -------------------------------------------------------------------
-
+    
+    if exist(path,'file')
+       delete(path); 
+    end
+    
 	%WordFileName='TestDoc.doc';
 	%CurDir=pwd;
 	%FileSpec = fullfile(CurDir,WordFileName);
 	[ActXWord,WordHandle]=StartWord(path);
-    delete(path);
+    %delete(path);
     fprintf('Document will be saved in %s\n',path);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%    
 %Section 1

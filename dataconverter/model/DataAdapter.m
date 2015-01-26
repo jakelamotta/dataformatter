@@ -9,16 +9,26 @@ classdef DataAdapter < handle
         dobj;
         tempMatrix;
         genData;
+        nrOfPaths;
+        mWaitbar;
     end
     
     methods (Abstract)
         obj = getDataObject(this,paths)
+        
     end
+    
+   
     
     methods (Access = public)
         
+        function this = updateProgress(this,nrOfSolved)
+            this.mWaitbar = waitbar(nrOfSolved/this.nrOfPaths);
+        end
+        
         function this = DataAdapter()
             this.genData = {'Flower','Date','Negative','Positive';};
+            this.mWaitbar = waitbar(0,'Please wait while data is loaded...','Name',class(this));
         end
         
         function matrix = addValues(this,path,matrix)
