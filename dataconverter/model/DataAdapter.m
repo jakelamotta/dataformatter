@@ -27,7 +27,7 @@ classdef DataAdapter < handle
         
         function this = DataAdapter()
             this.genData = {'Flower','Date','Negative','Positive';};
-            if ~isa(class(this),'ImageDataAdapter')
+            if ~isa(this,'ImageDataAdapter')
                 this.mWaitbar = waitbar(0,'Please wait while data is loaded...','Name',class(this));
             end
         end
