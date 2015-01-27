@@ -82,11 +82,15 @@ classdef WeatherDataAdapter < DataAdapter
         %%Get a Observation with weather data
         function obj = getDataObject(this,paths,varargin)
             %time in format: multiple-20140821-104913
-            size_ = size(paths);
+            length_ = length(paths);
             inObj = varargin{1};
             
-            for i=1:size_(2)            
+            this.nrOfPaths = length_;
+            
+            for i=1:length_
+                
                 %Retrieve id from the path
+                this.updateProgress(i);
                 id_ = DataAdapter.getIdFromPath(paths{1,i});
                 
                 %Use spectro time as a way to find the correct weather data
@@ -197,7 +201,7 @@ classdef WeatherDataAdapter < DataAdapter
                 this.dobj = this.dobj.setObservation(this.tempMatrix,id_);
                 this.tempMatrix = this.cell_;
             end
-            
+            close(this.mWaitbar);
             obj = this.dobj;
             profile viewer;
         end

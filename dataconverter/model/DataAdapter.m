@@ -15,7 +15,6 @@ classdef DataAdapter < handle
     
     methods (Abstract)
         obj = getDataObject(this,paths)
-        
     end
     
    
@@ -28,7 +27,9 @@ classdef DataAdapter < handle
         
         function this = DataAdapter()
             this.genData = {'Flower','Date','Negative','Positive';};
-            this.mWaitbar = waitbar(0,'Please wait while data is loaded...','Name',class(this));
+            if ~isa(class(this),'ImageDataAdapter')
+                this.mWaitbar = waitbar(0,'Please wait while data is loaded...','Name',class(this));
+            end
         end
         
         function matrix = addValues(this,path,matrix)
@@ -46,6 +47,8 @@ classdef DataAdapter < handle
             for i=2:h
                 matrix{i,1} = flower;
                 matrix{i,2} = date_;
+                matrix{i,3 } = 0;
+                matrix{i,4} = 0;
                 matrix{i,3} = double(strcmp(negOrPos,'negative'));
                 matrix{i,4} = double(~strcmp(negOrPos,'negative'));
             end
@@ -67,8 +70,7 @@ classdef DataAdapter < handle
                     index = index+1;
                 end
                 
-                fclose(fid);
-                
+                fclose(fid);                
             catch
                 errordlg('Could not load source-file');
             end

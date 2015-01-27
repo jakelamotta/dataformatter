@@ -133,6 +133,11 @@ classdef GUIHandler% < handle
                         end
                         
                         %try
+                        
+                            if strcmp(type,'Abiotic')
+                               paths_ = fileChoice(paths_); 
+                            end
+                        
                             this.dataManager = this.dataManager.addObject(type,paths_);
                         %catch ex
                         %    errordlg(['Something went wrong when trying to parse the ',type,' data file. Error message: ',ex.message],'Parse error');

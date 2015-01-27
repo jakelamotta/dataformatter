@@ -18,7 +18,7 @@ classdef InputManager < handle
         function this = InputManager(varargin)
             this.adapterFactory = AdapterFactory();
             this.paths = {};
-            
+                        
             if ~isempty(varargin)
                 this.dataManager = varargin{1};
             end

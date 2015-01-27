@@ -24,19 +24,13 @@ classdef SpectroDataAdapter < DataAdapter
             [h,w] = size(matrix);
             g = [{'Flower','DATE','Negative','Positive'};cell(h-1,4)];
             
-            %[g,matrix] = Utilities.padMatrix(g,matrix);
             matrix = [g,matrix];
             
             date_ = path(idx(end-7):idx(end-6));
             
-            
-            
-            %           date_ = paths{1,i}(idx(end-5):idx(end-4));
             flower = path(idx(end-6):idx(end-5));
             negOrPos = path(idx(end-5):idx(end-4));
-            %             this.tempMatrix{i+1,1} = flower;
-            %             this.tempMatrix{i+1,3} = date_;
-            %
+            
             for i=2:h
                 matrix{i,1} = flower(2:end-1);
                 matrix{i,2} = date_(2:end-1);
