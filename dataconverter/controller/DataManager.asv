@@ -78,8 +78,6 @@ classdef DataManager < handle
             this = this.setUnfObject(current);
         end
         
-        %%Remove the HMTL encoding that was used to get differently colored rows in the
-        %%intermediate data handling step
         function obj = stripFirstRow(this,obj)
             
             for i=2:obj.getNumRows()
@@ -88,7 +86,7 @@ classdef DataManager < handle
                 start = strfind(tempFlower,'<TD>');
                 end_ = strfind(tempFlower,'</TD>');
                 
-                newFlower = tempFlower(start+4:end_-1);
+                newFlower = tempFlower(start+5:end_-2);
                 obj.set(i,1,newFlower);
             end
             

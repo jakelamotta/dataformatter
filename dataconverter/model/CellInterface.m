@@ -14,6 +14,10 @@ classdef CellInterface < handle
             obj = CellInterface(h,1);
         end
         
+        function obj = createEmptyCell()
+           obj = CellInterface(); 
+        end
+        
         function obj = create2DCell(h,w)
             obj = CellInterface(h,w);
         end    
@@ -35,7 +39,7 @@ classdef CellInterface < handle
         function this = setCol(this,index,col)
             this.mCell(:,index) = col;
         end
-        
+                
         function col = getCol(this,index)
            col = this.mCell(:,index); 
         end
@@ -79,8 +83,14 @@ classdef CellInterface < handle
     end
     
     methods (Access = private)
-        function this = CellInterface(h,w)
-           this.mCell = cell(h,w); 
+        function this = CellInterface(varargin)
+           if isempty(varargin)
+               this.mCell = {};
+           else
+               h = varargin{1};
+               w = varargin{2};
+               this.mCell = cell(h,w); 
+           end
         end
     end
 end

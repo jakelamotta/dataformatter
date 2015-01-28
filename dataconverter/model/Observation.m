@@ -468,12 +468,28 @@ classdef Observation < handle
             end
         end
         
+        function element = get(this,h,w)
+            element = this.xlsMatrix{h,w};
+        end
+        
+        function this = set(this,h,w,value)
+            this.xlsMatrix{h,w} = value;
+        end
+        
+        function section = getSection(this,h1,h2,w1,w2)
+           section = this.xlsMatrix(h1:h2,w1:w2); 
+        end
+        
         function matrix = getMatrix(this)
             matrix = this.xlsMatrix;
         end
         
         function this = setMatrix(this,m)
             this.xlsMatrix = m;
+        end
+        
+        function id = getIdAtRow(this,r)
+           id = this.xlsMatrix{r,2};
         end
         
         function this = setID(this,id)

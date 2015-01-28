@@ -75,7 +75,7 @@ function varargout = fileChoice_OutputFcn(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 % Get default command line output from handles structure
-    varargout{1} = [get(handles.figure1,'UserData'),transpose(get(handles.lbFiles,'String'))];
+    varargout{1} = transpose(get(handles.lbFiles,'String'));
 
     delete(hObject);
 end
@@ -150,36 +150,6 @@ function figure1_CloseRequestFcn(hObject, eventdata, handles)
 end
 
 function [noM, hasM] = findDuplicates(paths)
-    noM = {};
-    hasM = {};
     
-    [pathstr_current,NAME,EXT] = fileparts(paths{1});
-    [pathstr_next,NAME,EXT] = fileparts(paths{2});
     
-    if ~strcmp(pathstr_current,pathstr_next)
-        noM{1} = paths{1};
-    else
-        hasM{1} = paths{1};
-    end
-    
-    for i=2:length(paths)-1;            
-        [pathstr_current,NAME,EXT] = fileparts(paths{i});
-        [pathstr_prev,NAME,EXT] = fileparts(paths{i-1});
-        [pathstr_next,NAME,EXT] = fileparts(paths{i+1});
-        
-        if ~strcmp(pathstr_current,pathstr_prev) && ~strcmp(pathstr_current,pathstr_next)
-            noM{end+1} = paths{i};
-        else
-            hasM{end+1} = paths{i};
-        end
-    end
-    
-    [pathstr_current,NAME,EXT] = fileparts(paths{end});
-    [pathstr_prev,NAME,EXT] = fileparts(paths{end-1});
-    
-    if ~strcmp(pathstr_current,pathstr_prev)
-        noM{end+1} = paths{end};
-    else
-        hasM{end+1} = paths{end};
-    end
 end

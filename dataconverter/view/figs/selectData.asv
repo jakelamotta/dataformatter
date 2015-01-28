@@ -225,7 +225,7 @@ function setTable(handles,obj)
    
     obj.set(2,1,colorgen('#FFFFCC',obj.get(2,1)));
     
-    %Function to switch between colors when id changes
+    %Function to switch between colors 
     for i=3:obj.getNumRows()
         if ~strcmp(obj.getIdAtRow(i),obj.getIdAtRow(i-1))
             use1 = ~use1;
