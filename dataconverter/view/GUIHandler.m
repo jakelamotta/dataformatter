@@ -1,4 +1,4 @@
-classdef GUIHandler% < handle
+classdef GUIHandler < handle
     %GUIHANDLER Class for handling the GUI. It is responsible for
     %communicating with the underlying data handling via the DataManager
     %class. It also makes sure that the correct gui file is launched at
@@ -215,7 +215,9 @@ classdef GUIHandler% < handle
         
         %%Function that updates the datatable
         function this = updateGUI(this)
-            this.dataTable = uitable(this.mainWindow,'data',this.dataManager.getObject().getMatrix(),'Position',this.tableSize,'units','normalized');
+           % this.dataTable = uitable(this.mainWindow,'data',this.dataManager.getObject().getMatrix(),'Position',this.tableSize,'units','normalized');
+            set(this.dataTable,'Data',this.dataManager.getObject().getMatrix());
+            drawnow(); 
         end
         
         function this = launchDialogue(this,id,varargin)
