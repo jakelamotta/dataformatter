@@ -1,12 +1,12 @@
 classdef ImageDataAdapter < DataAdapter
     %IMAGEDATAADAPTER Class for adapting images to an Observation object
     
-    properties       
+    properties
     end
     
     methods (Access = public)
         
-        function this = ImageDataAdapter()        
+        function this = ImageDataAdapter()
             this.tempMatrix = {'Contrast','Correlation','Energy','Homogenity','Entropy','Alpha'};
             this.dobj = Observation();
         end
@@ -39,8 +39,8 @@ classdef ImageDataAdapter < DataAdapter
                     id_ = paths{1,i}(idx(end-2)+1:idx(end-1)-1);
                     
                     if ~isfield(images,strrep(id_,'.','__'))
-                       images.(strrep(id_,'.','__')) = {[];[];[]};
-                       folders{end+1} = pathstr;
+                        images.(strrep(id_,'.','__')) = {[];[];[]};
+                        folders{end+1} = pathstr;
                     end
                     
                 catch e
@@ -62,69 +62,73 @@ classdef ImageDataAdapter < DataAdapter
                     break;
                 end
                 
-                    s = size(ims);
+                s = size(ims);
+                
+                for h_=1:s(2)
+                    im = ims{1,h_};
+                    keepImage = ims{3,h_};
                     
-                    for h_=1:s(2) 
-                        im = ims{1,h_};
-                        keepImage = ims{3,h_};
+                    if keepImage
+                        if ndims(im) == 3
+                            %                                 [h,w,d] = size(im);
+                            im = rgb2gray(im);
+                            %                                 if h~=w
+                            %                                     im = im(min(h,w),min(h,w),:);
+                        end
+                        %                             else
+                        [h,w] = size(im);
                         
-                        if keepImage                            
-%                             if ndims(im) == 3                            
-%                                 [h,w,d] = size(im);
-% 
-%                                 if h~=w
-%                                     im = im(min(h,w),min(h,w),:);
-%                                 end
-%                             else                                
-                                [h,w] = size(im);
-
-                                if h~=w
-                                    im = im(min(h,w),min(h,w));
-                                end                            
-%                             end
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%Olga script below%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-                            
-                            % calculate parameters
-                            k=graycomatrix(im, 'offset', [0 1; -1 1; -1 0; -1 -1],'NumLevels',256);
-                            stats = graycoprops(k,{'contrast','homogeneity','Correlation','Energy'});
-                            ent = entropy(im);
-
-                            [M N] = size(im);
-                            imfft = fftshift(fft2(im));
-                            imabs = abs(imfft);
-                            abs_av=rotavg(imabs);
-                            freq2=0:N/2;
-
-                            if length(freq2) < 10^2
-                                xx=log(freq2(10:length(freq2)));
-                                yy=log(abs_av(freq2(10:length(freq2))));
-                            else
-                                xx=log(freq2(10:10^2));
-                                yy=log(abs_av(freq2(10:10^2)));
-                            end
-
-                            p=polyfit(xx',yy,1);
-                            alpha=(-1)*p(1);
-
-                            % get a result of 6 parameters for 1 image
-                            parameters = {mean(stats.Contrast),mean(stats.Correlation),mean(stats.Energy),mean(stats.Homogeneity),ent alpha};
-                            
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%Olga script above%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%here%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-                            
-                            this.tempMatrix = [this.tempMatrix;parameters];
-                            
-                            this = this.addValues(paths{1,i});
-                            
-                            this.dobj.setObservation(this.tempMatrix,strrep(fnames{i},'__','.'));
-                            this.tempMatrix = {'Contrast','Correlation','Energy','Homogenity','Entropy','Alpha'};
-                            imwrite(im,fullfile(folders{i},['cropped_',ims{2,h_}]));
-                        end 
+                        if h < w
+                            d = (w-h)/2;
+                            im = im(:,d:end-d-1);
+                        elseif w < h
+                            d = (h-w)/2;
+                            im = im(d:end-d-1,:);
+                        end
+                        %                             end
+                        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+                        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%Olga script below%%%%%%%%%%%%%%%%%%%%%%
+                        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+                        
+                        % calculate parameters
+                        k=graycomatrix(im, 'offset', [0 1; -1 1; -1 0; -1 -1],'NumLevels',256);
+                        stats = graycoprops(k,{'contrast','homogeneity','Correlation','Energy'});
+                        ent = entropy(im);
+                        
+                        [M N] = size(im);
+                        imfft = fftshift(fft2(im));
+                        imabs = abs(imfft);
+                        abs_av=rotavg(imabs);
+                        freq2=0:N/2;
+                        
+                        if length(freq2) < 10^2
+                            xx=log(freq2(10:length(freq2)));
+                            yy=log(abs_av(freq2(10:length(freq2))));
+                        else
+                            xx=log(freq2(10:10^2));
+                            yy=log(abs_av(freq2(10:10^2)));
+                        end
+                        
+                        p=polyfit(xx',yy,1);
+                        alpha=(-1)*p(1);
+                        
+                        % get a result of 6 parameters for 1 image
+                        parameters = {mean(stats.Contrast),mean(stats.Correlation),mean(stats.Energy),mean(stats.Homogeneity),ent alpha};
+                        
+                        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+                        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%Olga script above%%%%%%%%%%%%%%%%%%
+                        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%here%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+                        
+                        this.tempMatrix = [this.tempMatrix;parameters];
+                        
+                        this = this.addValues(paths{1,i});
+                        
+                        this.dobj.setObservation(this.tempMatrix,strrep(fnames{i},'__','.'));
+                        this.tempMatrix = {'Contrast','Correlation','Energy','Homogenity','Entropy','Alpha'};
+                        imwrite(im,fullfile(folders{i},['cropped_',ims{2,h_}]));
                     end
-            end            
+                end
+            end
             
             obj = this.dobj;
             toc
@@ -132,7 +136,7 @@ classdef ImageDataAdapter < DataAdapter
         
         function rawData = fileReader(this,path)
             rawData = imread(path); % load image
-        end        
-    end    
+        end
+    end
 end
 

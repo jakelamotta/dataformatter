@@ -237,8 +237,10 @@ function setTable(handles,obj)
             obj.set(i,1,colorgen('#99CCFF',obj.get(i,1)));
         end
     end
-        
-    set(t,'Data',obj.getMatrix());
+    
+    data = obj.getMatrix();
+    
+    set(t,'Data',[data(:,1:uint32(Constants.SpectroXPos)-1),data(:,uint32(Constants.OlfYPos)+1:end)]);
     
     % create pushbutton to delete selected rows
     uicontrol(h,'Style','pushbutton','Position',[20,400,60,20],'String','Delete','Callback',{@deleteRow,handles});
@@ -270,8 +272,8 @@ function setGraph(h,obj,type)
         %plot(t,[data{i,uint32(Constants.SpectroXUpPos)}],[data{i,uint32(Constants.SpectroYUpPos)}],colors{1,mod(i,length(colors))+1});
         plot(t,[obj.get(i,uint32(Constants.SpectroXUpPos))],[obj.get(i,uint32(Constants.SpectroYUpPos))],colors{1,mod(i,length(colors))+1});
         
-%         legendList{index} = data{i,2};
-%         legendList{index+1} = [data{i,2},'up'];
+%       legendList{index} = data{i,2};
+%       legendList{index+1} = [data{i,2},'up'];
         legendList{index+1} = [obj.get(i,2),'up'];
         legendList{index} = obj.get(i,2);
         index = index + 2;
@@ -397,27 +399,29 @@ function deleteRow(varargin)
     set(th,'Data',data);
     userdata = get(handle.figure1,'UserData');
     
-    actualData = userdata.data;
+    obs = userdata.data;
+    actualData = obs.getMatrix();
     
     actualData(rows,:) = [];
     
-    userdata.data = actualData;
+    obs.setMatrix(actualData);
+    userdata.data = obs;
     
     userdata.rows = rows;
     set(handle.figure1,'UserData',userdata);
 end
 
-function out_ = validateData(data)
+function out_ = validateData(obs)
     out_ = true;
-    s = size(data);
-    
-    temp = data{2,2};
-    
-    for i=3:s(1)
-        if strcmp(temp,data{i,2})
+    %s = size(data);
+    temp = obs.get(2,2);
+    %temp = data{2,2};
+    height = obs.getNumRows();
+    for i=3:height
+        if strcmp(temp,obs.get(i,2))%data{i,2})
             out_ = false;
             break;
         end
-        temp = data{i,2};
+        temp = obs.get(i,2);%data{i,2};
     end
 end
