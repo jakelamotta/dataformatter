@@ -205,9 +205,9 @@ function cellSelect(src,evt)
     end
 end
 
-function setTable(handles,obj)
+function setTable(handles,obs)
     %h = figure('Position',[600 400 402 100],'numbertitle','off','MenuBar','none');
-    data = obj.getMatrix();
+    data = obs.getMatrix();
     h = handles.figure1;
     defaultData = [data(:,1:uint32(Constants.SpectroXPos)-1),data(:,uint32(Constants.OlfYPos)+1:end)];
 
@@ -223,22 +223,22 @@ function setTable(handles,obj)
     %Color generating function
     colorgen = @(color,text) ['<html><table border=0 width=400 bgcolor=',color,'><TR><TD>',text,'</TD></TR> </table></html>'];
    
-    obj.set(2,1,colorgen('#FFFFCC',obj.get(2,1)));
+    obs.set(2,1,colorgen('#FFFFCC',obs.get(2,1)));
     
     %Function to switch between colors when id changes
-    for i=3:obj.getNumRows()
-        if ~strcmp(obj.getIdAtRow(i),obj.getIdAtRow(i-1))
+    for i=3:obs.getNumRows()
+        if ~strcmp(obs.getIdAtRow(i),obs.getIdAtRow(i-1))
             use1 = ~use1;
         end
         
         if use1
-            obj.set(i,1,colorgen('#FFFFCC',obj.get(i,1)));
+            obs.set(i,1,colorgen('#FFFFCC',obs.get(i,1)));
         else
-            obj.set(i,1,colorgen('#99CCFF',obj.get(i,1)));
+            obs.set(i,1,colorgen('#99CCFF',obs.get(i,1)));
         end
     end
     
-    data = obj.getMatrix();
+    data = obs.getMatrix();
     
     set(t,'Data',[data(:,1:uint32(Constants.SpectroXPos)-1),data(:,uint32(Constants.OlfYPos)+1:end)]);
     
@@ -246,7 +246,7 @@ function setTable(handles,obj)
     uicontrol(h,'Style','pushbutton','Position',[20,400,60,20],'String','Delete','Callback',{@deleteRow,handles});
 end
 
-function setGraph(h,obj,type)
+function setGraph(h,obs,type)
     handle = h.figure1;
     
     %[height,w] = size(data);
@@ -256,8 +256,8 @@ function setGraph(h,obj,type)
 
     index = 1;
     
-    data = obj.getMatrix();
-    height = obj.getNumRows();
+    data = obs.getMatrix();
+    height = obs.getNumRows();
     
     if strcmp(type,'Spectro')
 
@@ -266,16 +266,16 @@ function setGraph(h,obj,type)
     
     for i=2:height
         %plot(t,[data{i,uint32(Constants.SpectroXPos)}],[data{i,uint32(Constants.SpectroYPos)}],colors{1,mod(i,length(colors))+1});
-        plot(t,[obj.get(i,uint32(Constants.SpectroXPos))],[obj.get(i,uint32(Constants.SpectroYPos))],colors{1,mod(i,length(colors))+1});
+        plot(t,[obs.get(i,uint32(Constants.SpectroXPos))],[obs.get(i,uint32(Constants.SpectroYPos))],colors{1,mod(i,length(colors))+1});
 
         hold on;
         %plot(t,[data{i,uint32(Constants.SpectroXUpPos)}],[data{i,uint32(Constants.SpectroYUpPos)}],colors{1,mod(i,length(colors))+1});
-        plot(t,[obj.get(i,uint32(Constants.SpectroXUpPos))],[obj.get(i,uint32(Constants.SpectroYUpPos))],colors{1,mod(i,length(colors))+1});
+        plot(t,[obs.get(i,uint32(Constants.SpectroXUpPos))],[obs.get(i,uint32(Constants.SpectroYUpPos))],colors{1,mod(i,length(colors))+1});
         
 %       legendList{index} = data{i,2};
 %       legendList{index+1} = [data{i,2},'up'];
-        legendList{index+1} = [obj.get(i,2),'up'];
-        legendList{index} = obj.get(i,2);
+        legendList{index+1} = [obs.get(i,2),'up'];
+        legendList{index} = obs.get(i,2);
         index = index + 2;
     end
 
@@ -284,10 +284,10 @@ function setGraph(h,obj,type)
 
         for i=2:height
             %plot(t,[data{i,uint32(Constants.OlfXPos)}],[data{i,uint32(Constants.OlfYPos)}],colors{1,mod(i,length(colors))+1});
-            plot(t,[obj.get(i,uint32(Constants.OlfXPos))],[obj.get(i,uint32(Constants.OlfYPos))],colors{1,mod(i,length(colors))+1});
+            plot(t,[obs.get(i,uint32(Constants.OlfXPos))],[obs.get(i,uint32(Constants.OlfYPos))],colors{1,mod(i,length(colors))+1});
             
             hold on;
-            legendList{index} = obj.get(i,2);
+            legendList{index} = obs.get(i,2);
 
             index = index + 1;
         end
@@ -295,7 +295,7 @@ function setGraph(h,obj,type)
 
     legend(legendList);
 
-    toSend = obj;
+    toSend = obs;
 
     userdata = get(handle,'UserData');
     handler = userdata.handler;
@@ -323,13 +323,13 @@ end
 
 %%Function for interpolating Spectro and Olfactory data
 function downSample(varargin)
-    observation = varargin{3};
+    obs = varargin{3};
     
     t = varargin{4};
     hfig = varargin{5};
     type = varargin{6};
     
-    height = observation.getNumRows();
+    height = obs.getNumRows();
     h = findobj('Tag','sampleedit');
     rate = get(h,'String');
     dsrate = str2double(rate);
@@ -337,10 +337,10 @@ function downSample(varargin)
     %%Interpolating Spectro data 
     if strcmp(type,'Spectro')
         for i=2:height
-            y1 = observation.get(i,uint32(Constants.SpectroYPos));%matrix{i,uint32(Constants.SpectroYPos)};
-            x1 = observation.get(i,uint32(Constants.SpectroXPos));%matrix{i,uint32(Constants.SpectroXPos)};
-            y2 = observation.get(i,uint32(Constants.SpectroYUpPos));%matrix{i,uint32(Constants.SpectroYUpPos)};
-            x2 = observation.get(i,uint32(Constants.SpectroXUpPos));%matrix{i,uint32(Constants.SpectroXUpPos)};
+            y1 = obs.get(i,uint32(Constants.SpectroYPos));%matrix{i,uint32(Constants.SpectroYPos)};
+            x1 = obs.get(i,uint32(Constants.SpectroXPos));%matrix{i,uint32(Constants.SpectroXPos)};
+            y2 = obs.get(i,uint32(Constants.SpectroYUpPos));%matrix{i,uint32(Constants.SpectroYUpPos)};
+            x2 = obs.get(i,uint32(Constants.SpectroXUpPos));%matrix{i,uint32(Constants.SpectroXUpPos)};
 
             x1new = round(linspace(380,600,dsrate));
             x2new = round(linspace(380,600,dsrate));
@@ -348,9 +348,9 @@ function downSample(varargin)
             y1 = interp1(x1,y1,x1new);
             y2 = interp1(x2,y2,x2new);
 
-            plot(t,x1,observation.get(i,uint32(Constants.SpectroYPos)),'g');%matrix{i,uint32(Constants.SpectroYPos)},'g');
+            plot(t,x1,obs.get(i,uint32(Constants.SpectroYPos)),'g');%matrix{i,uint32(Constants.SpectroYPos)},'g');
             hold on
-            plot(t,x2,observation.get(i,uint32(Constants.SpectroYUpPos)),'g');%matrix{i,uint32(Constants.SpectroYUpPos)},'g');
+            plot(t,x2,obs.get(i,uint32(Constants.SpectroYUpPos)),'g');%matrix{i,uint32(Constants.SpectroYUpPos)},'g');
             plot(t,x1new,y1,'r');
             plot(t,x2new,y2,'b');
         end
@@ -358,12 +358,12 @@ function downSample(varargin)
     %%Interpolating Olfactory data 
     else
         for i=2:height
-            x1 = observation.get(i,uint32(Constants.OlfXPos));%matrix{i,uint32(Constants.OlfXPos)};
-            y1 = observation.get(i,uint32(Constants.OlfYPos));%matrix{i,uint32(Constants.OlfYPos)};
+            x1 = obs.get(i,uint32(Constants.OlfXPos));%matrix{i,uint32(Constants.OlfXPos)};
+            y1 = obs.get(i,uint32(Constants.OlfYPos));%matrix{i,uint32(Constants.OlfYPos)};
 
             x1new = linspace(min(x1),max(x1),dsrate);
             y1 = interp1(x1,y1,x1new);
-            plot(t,x1,observation.get(i,uint32(Constants.OlfYPos)),'g');%matrix{i,uint32(Constants.OlfYPos)},'g');
+            plot(t,x1,obs.get(i,uint32(Constants.OlfYPos)),'g');%matrix{i,uint32(Constants.OlfYPos)},'g');
             hold on
             plot(t,x1new,y1,'r');
         end

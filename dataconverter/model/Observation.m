@@ -139,7 +139,8 @@ classdef Observation < handle
             [h,w] = size(rows);
             row = cell(1,w);
             
-            for i=1:7
+            %Add the values that are not going to be averaged
+            for i=1:8
                 row{i} = rows{1,i};
             end
             

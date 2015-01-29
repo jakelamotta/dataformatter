@@ -47,8 +47,6 @@ classdef DataAdapter < handle
             for i=2:h
                 matrix{i,1} = flower;
                 matrix{i,2} = date_;
-                matrix{i,3 } = 0;
-                matrix{i,4} = 0;
                 matrix{i,3} = double(strcmp(negOrPos,'negative'));
                 matrix{i,4} = double(~strcmp(negOrPos,'negative'));
             end

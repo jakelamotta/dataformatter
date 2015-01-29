@@ -112,7 +112,7 @@ classdef SpectroDataAdapter < DataAdapter
                             x(k) = str2double(temp{k}(1));
                             val1 = temp{k}(2);
                             y(k) = val1{1};
-                        end                        
+                        end
                         
                         this.tempMatrix{2,2*obs+1} = x;
                         this.tempMatrix{2,2+2*obs} = y;
