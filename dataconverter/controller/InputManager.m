@@ -1,5 +1,6 @@
 classdef InputManager < handle
-    %INPUTMANAGER class deals with input and some organzing of data
+    %INPUTMANAGER class deals with input and some organzing of data. It
+    %creates the correct DataAdapter using the AdapterFactory-class. 
     
     %%Variables used by the InputManager class
     properties (Access = private)
@@ -21,6 +22,8 @@ classdef InputManager < handle
                         
             if ~isempty(varargin)
                 this.dataManager = varargin{1};
+            else
+                this.dataManager = NaN;
             end
         end
         
@@ -126,8 +129,8 @@ classdef InputManager < handle
         end
     end
     
-    methods (Access = private)
-        
+    %Methods that are not accessible from outside this class (file)
+    methods (Access = private)        
         %%A recursive folder search function, takes a path to a folder as
         %%an input and search for all occurences of the "type" in the
         %%subfolders
@@ -159,27 +162,25 @@ classdef InputManager < handle
         %%This is the function that copies files from one location to
         %another location.
         %Input: - sourcePath: the path to what is to be copied as a string
-        %       - targetPath: the relative path to the target folder
+        %       - targetPath: the path to the target folder
         function success = saveToDir(this,sourcePath, targetPath)
-            success = true;
+            success = true; %Function returns true if the saving was successfull
             
-            path = Utilities.getpath(targetPath);
+            path_ = Utilities.getpath(targetPath);
             
-            if ~exist(path,'dir')
-                [s,a,b] = mkdir(path);
-            else
-                s = true;
+            if ~exist(path_,'dir')
+                [success,uu1,uu2] = mkdir(path_);
             end
             
-            success = s & success;
+            
             
             if isdir(sourcePath)
                 indices = strfind(sourcePath,'\');
                 index = indices(end);
-                path = [path,'\',sourcePath(index+1:end)];
+                path_ = [path_,'\',sourcePath(index+1:end)];
             end
             
-            copyfile(sourcePath,path);
+            copyfile(sourcePath,path_);
         end
     end
 end

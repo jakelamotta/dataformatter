@@ -21,8 +21,8 @@ classdef DataManager < handle
         %%Function for importing an Observation matrix from file. Any
         %%existing data will be deleted.
         function this = importOldData(this,filename)
-            [~,~,data] = xlsread(filename);
-            this.observation.setMatrix(data);
+            [~,~,old] = xlsread(filename);
+            this.observation.setMatrix(old);
         end
         
         %%Default constructor, takes an instance of an InputManager and a
@@ -31,7 +31,7 @@ classdef DataManager < handle
             this.manager = inM;
             this.handler = inH;
             this.xlsWriter = XLSWriter();
-            this.unfilteredObs = Observation();
+            this.unfilteredObj = Observation();
             this.observation = Observation();
             
             %Initializes to 300 and 15000 respectively, once its set after this its final to not
@@ -206,11 +206,11 @@ classdef DataManager < handle
         end
         
         function this = setUnfObject(this,obj)
-            this.unfilteredObs = obj;
+            this.unfilteredObj = obj;
         end
         
         function obj = getUnfObject(this)
-            obj = this.unfilteredObs;
+            obj = this.unfilteredObj;
         end
         
         function handler = getHandler(this)

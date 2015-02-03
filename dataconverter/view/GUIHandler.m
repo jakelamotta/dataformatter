@@ -108,7 +108,6 @@ classdef GUIHandler < handle
         function this = importCallback(this,varargin)
             importInfo = importWindow();
             
-            profile on;
             if iscell(importInfo) && ~isnumeric(importInfo{1,2})
                 %type = importInfo{1,1};
                 types =importInfo{1,1};
@@ -215,15 +214,13 @@ classdef GUIHandler < handle
         
         %%Function that updates the datatable
         function this = updateGUI(this)
-           % this.dataTable = uitable(this.mainWindow,'data',this.dataManager.getObject().getMatrix(),'Position',this.tableSize,'units','normalized');
+           %this.dataTable = uitable(this.mainWindow,'data',this.dataManager.getObject().getMatrix(),'Position',this.tableSize,'units','normalized');
             set(this.dataTable,'Data',this.dataManager.getObject().getMatrix());
             drawnow(); 
         end
         
         function this = launchDialogue(this,id,varargin)
-            profile viewer;
             out_ = selectData(this.dataManager.getUnfObject(),id,this);
-            
             this = out_.handler;
             %this.getDataManager().getUnfObject().setMatrix(out_.data);
             this.getDataManager().setUnfObject(out_.data);
