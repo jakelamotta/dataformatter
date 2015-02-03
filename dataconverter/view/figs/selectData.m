@@ -220,25 +220,25 @@ function setTable(handles,obs)
     
     use1 = true;
     
-    %Color generating function
-    colorgen = @(color,text) ['<html><table border=0 width=400 bgcolor=',color,'><TR><TD>',text,'</TD></TR> </table></html>'];
-   
-    obs.set(2,1,colorgen('#FFFFCC',obs.get(2,1)));
-    
-    %Function to switch between colors when id changes
-    for i=3:obs.getNumRows()
-        if ~strcmp(obs.getIdAtRow(i),obs.getIdAtRow(i-1))
-            use1 = ~use1;
-        end
-        
-        if use1
-            obs.set(i,1,colorgen('#FFFFCC',obs.get(i,1)));
-        else
-            obs.set(i,1,colorgen('#99CCFF',obs.get(i,1)));
-        end
-    end
-    
-    data = obs.getMatrix();
+%     %Color generating function
+%     colorgen = @(color,text) ['<html><table border=0 width=400 bgcolor=',color,'><TR><TD>',text,'</TD></TR> </table></html>'];
+%    
+%     obs.set(2,1,colorgen('#FFFFCC',obs.get(2,1)));
+%     
+%     %Function to switch between colors when id changes
+%     for i=3:obs.getNumRows()
+%         if ~strcmp(obs.getIdAtRow(i),obs.getIdAtRow(i-1))
+%             use1 = ~use1;
+%         end
+%         
+%         if use1
+%             obs.set(i,1,colorgen('#FFFFCC',obs.get(i,1)));
+%         else
+%             obs.set(i,1,colorgen('#99CCFF',obs.get(i,1)));
+%         end
+%     end
+%     
+%     data = obs.getMatrix();
     
     set(t,'Data',[data(:,1:uint32(Constants.SpectroXPos)-1),data(:,uint32(Constants.OlfYPos)+1:end)]);
     
@@ -248,8 +248,6 @@ end
 
 function setGraph(h,obs,type)
     handle = h.figure1;
-    
-    %[height,w] = size(data);
     
     global colors;
     t = axes('units','normalized','Position',[.15 .25, .8 .25]);
@@ -261,19 +259,15 @@ function setGraph(h,obs,type)
     
     if strcmp(type,'Spectro')
 
-    legendList = cell(1,(height-1)*2);
-    
+    legendList = cell(1,(height-1)*2);    
     
     for i=2:height
-        %plot(t,[data{i,uint32(Constants.SpectroXPos)}],[data{i,uint32(Constants.SpectroYPos)}],colors{1,mod(i,length(colors))+1});
         plot(t,[obs.get(i,uint32(Constants.SpectroXPos))],[obs.get(i,uint32(Constants.SpectroYPos))],colors{1,mod(i,length(colors))+1});
 
         hold on;
-        %plot(t,[data{i,uint32(Constants.SpectroXUpPos)}],[data{i,uint32(Constants.SpectroYUpPos)}],colors{1,mod(i,length(colors))+1});
+        
         plot(t,[obs.get(i,uint32(Constants.SpectroXUpPos))],[obs.get(i,uint32(Constants.SpectroYUpPos))],colors{1,mod(i,length(colors))+1});
         
-%       legendList{index} = data{i,2};
-%       legendList{index+1} = [data{i,2},'up'];
         legendList{index+1} = [obs.get(i,2),'up'];
         legendList{index} = obs.get(i,2);
         index = index + 2;
