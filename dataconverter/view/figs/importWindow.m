@@ -22,7 +22,7 @@ function varargout = importWindow(varargin)
 
 % Edit the above text to modify the response to help importWindow
 
-% Last Modified by GUIDE v2.5 08-Jan-2015 14:12:18
+% Last Modified by GUIDE v2.5 05-Feb-2015 15:30:38
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -213,15 +213,14 @@ function figure1_CloseRequestFcn(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 % Hint: delete(hObject) closes the figure
-    if isequal(get(hObject, 'waitstatus'), 'waiting')
-        % The GUI is still in UIWAIT, us UIRESUME
-        uiresume(hObject);
-        guidata(hObject,handles);
-    else
-        % The GUI is no longer waiting, just close it
-        delete(hObject);
-    end
-
+if isequal(get(hObject, 'waitstatus'), 'waiting')
+    % The GUI is still in UIWAIT, us UIRESUME
+    uiresume(hObject);
+    guidata(hObject,handles);
+else
+    % The GUI is no longer waiting, just close it
+    delete(hObject);
+end
 
 % --- Executes on button press in loadrb.
 function loadrb_Callback(hObject, eventdata, handles)

@@ -15,7 +15,7 @@ classdef GUIHandler < handle
         menuBar;
         loadBtn;
         importBtn;
-        manageBtn;
+        manageMenuItem;
         exportBtn;
         file_;
         clear_;
@@ -203,12 +203,10 @@ classdef GUIHandler < handle
         %%relative to the screensize to make the application more flexible.
         function this = initGUI(this)
             sz = this.scrsz;
-                        
             this.mainWindow = figure('Name','PDManager','DockControls','off','NumberTitle','off','Position',[sz(3)/8 sz(4)/8 sz(3)/1.5 sz(4)/1.5],'MenuBar','None','ToolBar','None');
-            this.importBtn = uicontrol('parent', this.mainWindow, 'style', 'pushbutton', 'units', 'normalized', 'position', [0.14 0.8 0.1 0.1], 'string', 'Import data', 'fontunits', 'normalized', 'fontsize', 0.2, 'Callback',@this.loadCallback);
+            this.importBtn = uicontrol('parent', this.mainWindow, 'style', 'pushbutton', 'units', 'normalized', 'position', [0.14 0.8 0.1 0.1], 'string', 'Manage data', 'fontunits', 'normalized', 'fontsize', 0.2, 'Callback',@this.loadCallback);
             this.loadBtn = uicontrol('parent', this.mainWindow, 'style', 'pushbutton', 'units', 'normalized', 'position', [0.26 0.8 0.1 0.1], 'string', 'Load data', 'fontunits', 'normalized', 'fontsize', 0.2, 'Callback',@this.importCallback);
-            this.manageBtn = uicontrol('parent', this.mainWindow, 'style', 'pushbutton', 'units', 'normalized', 'position', [0.38 0.8 0.1 0.1], 'string', 'Manage data', 'fontunits', 'normalized', 'fontsize', 0.2,'Callback',@this.manageCallback );
-            this.exportBtn =  uicontrol('parent', this.mainWindow, 'style', 'pushbutton', 'units', 'normalized', 'position', [0.5 0.8 0.1 0.1], 'string', 'Export', 'fontunits', 'normalized', 'fontsize', 0.2,'Callback',@this.exportCallback);
+            this.exportBtn =  uicontrol('parent', this.mainWindow, 'style', 'pushbutton', 'units', 'normalized', 'position', [0.38 0.8 0.1 0.1], 'string', 'Export', 'fontunits', 'normalized', 'fontsize', 0.2,'Callback',@this.exportCallback);
             
             this.idText = uicontrol('parent',this.mainWindow,'style','text','Position',[0 300 70 30],'String','-');
             this.varText = uicontrol('parent',this.mainWindow,'style','text','String','-','Position',[500 500 70 20]);
@@ -221,6 +219,7 @@ classdef GUIHandler < handle
             this.file_ = uimenu(this.mainWindow,'Label','File');
             this.clear_ = uimenu(this.file_,'Label','Clear data','Callback',@this.clearCallback);
             this.metadata = uimenu(this.file_,'Label','Export metadata','Callback',@this.metadataCallback);
+            this.manageMenuItem = uimenu(this.file_,'Label','Add comment','Callback',@this.manageCallback );
             this.exit_ = uimenu(this.file_,'Label','Exit');
         end
         
