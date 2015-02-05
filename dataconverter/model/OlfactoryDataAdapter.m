@@ -21,7 +21,7 @@ classdef OlfactoryDataAdapter < DataAdapter
         %%Spectrophotometer data
         %%Input - Cell of paths
         %%Output - Observation object
-        function obj = getDataObject(this,paths)
+        function obj = getObservation(this,paths)
             tic;
             size_ = length(paths);
             

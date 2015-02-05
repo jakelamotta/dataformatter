@@ -13,8 +13,9 @@ classdef DataAdapter < handle
         mWaitbar;
     end
     
+    %Abstract method, methods that any subclass must implement
     methods (Abstract)
-        obj = getDataObject(this,paths)
+        obj = getObservation(this,paths)
     end
     
    

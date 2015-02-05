@@ -17,10 +17,10 @@ classdef AbioticDataAdapter < DataAdapter
         function this = addValues(this,p)
             this.tempMatrix = addValues@DataAdapter(this,p,this.tempMatrix);
         end
-%         
+         
         %%Function that takes a list of file paths and retrieve a data
         %%object with data from these files
-        function obj = getDataObject(this,paths)
+        function obj = getObservation(this,paths)
             len = length(paths);
             
             this.nrOfPaths = len;
@@ -28,12 +28,12 @@ classdef AbioticDataAdapter < DataAdapter
             for i=1:len
                 this.updateProgress(i); %Updates the waitbar
                 
-                path = paths{1,i};
+                path_ = paths{1,i};
                 
                 
-                id_ = DataAdapter.getIdFromPath(path);%Retrieves observation id from path         
+                id_ = DataAdapter.getIdFromPath(path_);%Retrieves observation id from path         
                 
-                rawData = this.fileReader(path); %Retrieve raw data from the file
+                rawData = this.fileReader(path_); %Retrieve raw data from the file
                 
                 temp = cellfun(@this.createObs,rawData,'UniformOutput',false);
                 
@@ -47,7 +47,7 @@ classdef AbioticDataAdapter < DataAdapter
                    end
                 end
                 
-                this = this.addValues(path);
+                this = this.addValues(path_);
                 this.dobj = this.dobj.setObservation(this.tempMatrix,id_);                    
                 this.tempMatrix = this.initMatrix;
             end
@@ -55,6 +55,7 @@ classdef AbioticDataAdapter < DataAdapter
             obj = this.dobj;
         end
         
+        %%For each cell element, parse data
         function temp = createObs(this, inRow)
             %Split around " ; ".
             row = regexp(inRow,[char(9),';',char(9)],'split');
@@ -67,14 +68,11 @@ classdef AbioticDataAdapter < DataAdapter
         %%this look in DataAdapter class
         function rawData = fileReader(this, path)
             rawData = fileReader@DataAdapter(this,path);
-        end
-        
+        end        
     end
     
     methods (Static)
-        
         function elem = handleRow(elem)
-            
             idx = strfind(elem,';');
             
             if ~isempty(idx)

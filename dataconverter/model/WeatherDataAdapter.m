@@ -15,9 +15,9 @@ classdef WeatherDataAdapter < DataAdapter
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         function this = WeatherDataAdapter()
             this.dobj = Observation();
-            %this.cell_ = {'/weatherTime','W_temp','W_humid','Pressure','Wind speed','Wind dir','Radiation'};
-            this.cell_ = {'/weatherTime','W_temp','W_humid','Pressure'};            
-            this.nrOfNewVariables = 0;
+            %this.cell_ = {'/weatherTime','W_temp','W_humid','Wind speed','Wind dir','Pressure','Radiation'};
+            this.cell_ = {'/weatherTime','W_temp','W_humid','Wind speed'};            
+            this.nrOfNewVariables = 0; %Change this to three when using the correct weatherfile
             this.tempMatrix = this.cell_;
         end
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -80,7 +80,7 @@ classdef WeatherDataAdapter < DataAdapter
         end
         
         %%Get a Observation with weather data
-        function obj = getDataObject(this,paths,varargin)
+        function obj = getObservation(this,paths,varargin)
             %time in format: multiple-20140821-104913
             length_ = length(paths);
             inObj = varargin{1};
@@ -129,7 +129,6 @@ classdef WeatherDataAdapter < DataAdapter
                     temp = cellfun(@this.createDob,rawData,'UniformOutput',false);
                     start = 1;
                     for j=start:length(temp)
-
                         if ~isempty(timeList)
                             t_temp = temp{1,j}(1,1:5);
 

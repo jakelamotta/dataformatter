@@ -10,7 +10,6 @@ classdef SpectroDataAdapter < DataAdapter
     methods (Access = public)
         
         function this = SpectroDataAdapter()
-            this.dobj = Observation();
             this.init = {'lux_flower','lux_up','SpectroX','SpectroY','SpectroXUp','SpectroYUp','/SpectroTime'};
             this.tempMatrix = this.init;
         end
@@ -45,7 +44,7 @@ classdef SpectroDataAdapter < DataAdapter
         %%Spectrophotometer data
         %%Input - Cell of paths
         %%Output - Observation object
-        function obj = getDataObject(this,paths)
+        function obj = getObservation(this,paths)
             
             s = length(paths);
             obj = Observation();
@@ -90,7 +89,7 @@ classdef SpectroDataAdapter < DataAdapter
                         idx = strfind(tempData,'}');
                         lastLux = idx(1);
                         
-                        luxValue = str2num(tempData(6:lastLux-1));
+                        luxValue = str2double(tempData(6:lastLux-1));
                         this.tempMatrix{2,obs} = luxValue;
                         
                         tempData = rawData{1}(wli(obs):last);
@@ -119,13 +118,13 @@ classdef SpectroDataAdapter < DataAdapter
                     end
                     
                     this = this.addValues(indices,paths{1,i});
-                    this.dobj = this.dobj.setObservation(this.tempMatrix,id_);
+                    obj.setObservation(this.tempMatrix,id_);
                     this.tempMatrix = this.init;
                 end
             end
             
             close(this.mWaitbar);
-            obj = this.dobj;
+            %obj = this.dobj;
         end
     end
     

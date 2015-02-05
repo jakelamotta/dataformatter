@@ -19,7 +19,7 @@ classdef ImageDataAdapter < DataAdapter
         %%Image data
         %%Input - Cell of paths
         %%Output - Observation object
-        function obj = getDataObject(this,paths,varargin)
+        function obj = getObservation(this,paths,varargin)
             tic;
             
             [h,w] = size(paths);

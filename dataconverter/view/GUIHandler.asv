@@ -31,8 +31,6 @@ classdef GUIHandler < handle
         sortDateBtn;
         sortIdBtn;
         metadata;
-        idText;
-        varText;
     end
     
     methods (Access = public)
@@ -129,7 +127,7 @@ classdef GUIHandler < handle
                     
                     
                     if strcmp(type,'load')
-                        [fname,pname,uu] = uigetfile('*.*');
+                        [fname,pname,nonImportant] = uigetfile('*.*');
                         this.dataManager.importOldData([pname,fname]);
                     else
                         this.inputManager = this.inputManager.splitPaths(p,type);
@@ -186,17 +184,8 @@ classdef GUIHandler < handle
         
         function this = tableCallback(this,varargin)
             index = varargin{2};
-            try
-                id = this.dataManager.getObject().get(index.Indices(1),2);
-                variable = this.dataManager.getObject().get(1,index.Indices(2));
-                set(this.idText,'String',id);
-                set(this.varText,'String',variable);
-                this.updateGUI();
-            catch e
-                set(this.idText,'String','No row selected');
-                set(this.varText,'String','No column selected');
-                this.updateGUI();
-            end
+            id = this.dataManager.getObject().get(index.Indices(1),2);
+            variable = this.dataManager.getObject().get(1,index.Indices(2));
         end
        
         %%Function that sets upp all the gui elements. Each position is
@@ -210,9 +199,8 @@ classdef GUIHandler < handle
             this.manageBtn = uicontrol('parent', this.mainWindow, 'style', 'pushbutton', 'units', 'normalized', 'position', [0.38 0.8 0.1 0.1], 'string', 'Manage data', 'fontunits', 'normalized', 'fontsize', 0.2,'Callback',@this.manageCallback );
             this.exportBtn =  uicontrol('parent', this.mainWindow, 'style', 'pushbutton', 'units', 'normalized', 'position', [0.5 0.8 0.1 0.1], 'string', 'Export', 'fontunits', 'normalized', 'fontsize', 0.2,'Callback',@this.exportCallback);
             
-            this.idText = uicontrol('parent',this.mainWindow,'style','text','Position',[0 300 70 30],'String','-');
-            this.varText = uicontrol('parent',this.mainWindow,'style','text','String','-','Position',[500 500 70 20]);
-            disp(get(this.idText,'Position'));
+            idText = uicontrol('parent',this.mainWindow,'style','text');s
+            
             this.sortDateBtn = uicontrol('parent', this.mainWindow, 'style', 'pushbutton', 'units', 'normalized', 'position', [0.93 0.64 0.06 0.05], 'string', 'Sort by date', 'fontunits', 'normalized', 'fontsize', 0.3,'Callback',@this.mergeCallback);
             this.sortIdBtn = uicontrol('parent', this.mainWindow, 'style', 'pushbutton', 'units', 'normalized', 'position', [0.93 0.58 0.06 0.05], 'string', 'Sort by id', 'fontunits', 'normalized', 'fontsize', 0.3,'Callback',@this.sortIdCallback);
             

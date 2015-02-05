@@ -40,7 +40,7 @@ classdef BehaviorDataAdapter < DataAdapter
         %%Behavior data
         %%Input - Cell of paths
         %%Output - Observation object
-        function obj = getDataObject(this,paths)
+        function obj = getObservation(this,paths)
             [h,w] = size(paths);
             
             this.nrOfPaths = w;
@@ -144,7 +144,6 @@ classdef BehaviorDataAdapter < DataAdapter
             
             toAppend = cell(length(idx),this.size_);
             this.tempMatrix = [this.tempMatrix;toAppend];
-            disp(length(idx))
             
             for i=1:length(idx)
                 

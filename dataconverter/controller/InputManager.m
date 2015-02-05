@@ -39,9 +39,9 @@ classdef InputManager < handle
                 errordlg('The data adapter could not be created, the adapterfactory did not return a valid object');
             else
                 if strcmp(adapterId,'Weather') || strcmp(adapterId,'Image')
-                    obj = this.adapter.getDataObject(paths,inObj,this);
+                    obj = this.adapter.getObservation(paths,inObj,this);
                 else
-                    obj = this.adapter.getDataObject(paths);
+                    obj = this.adapter.getObservation(paths);
                 end
             end
         end
@@ -77,10 +77,10 @@ classdef InputManager < handle
                             end
                         end
                         
-                        success = success & this.saveToDir(sources.(type).(file),[target,type]);
+                        success = this.saveToDir(sources.(type).(file),[target,type]);
                     end
                 else
-                    success = success & this.saveToDir(sources.(type),[target,type]);
+                    success = this.saveToDir(sources.(type),[target,type]);
                 end
                 
                 if strcmp(type,'Behavior') && noExcelFile
@@ -144,13 +144,12 @@ classdef InputManager < handle
             fs = strfind(path,'\');
             last = fs(end);
             
-            s = size(temp);
+            [h,w] = size(temp);
             
-            for i=3:s(1)
+            for i=3:h
                 if strcmp(path(last+1:end),type)
                     typeDir = dir(path);
-                    numFiles = size(typeDir);
-                    
+                    numFiles = size(typeDir);                    
                     this.paths{1,end+1} = [path,'\',typeDir(i).name];
                 else
                     this = this.recSearch([path,'\',temp(i).name],type);
@@ -181,6 +180,6 @@ classdef InputManager < handle
             end
             
             copyfile(sourcePath,path_);
-        end
+        end        
     end
 end

@@ -24,7 +24,9 @@ classdef XLSWriter
                 errordlg(e.getReport(),'Error');
             end
         end
-       
+        
+        %%Function for merging an observation with an already existing
+        %%excel document
         function success = appendXLS(this,fname,obj)
             toSave = obj;
             obj.sortById();

@@ -13,6 +13,7 @@ classdef DataManager < handle
         spectroDP; %Number of data points used for interpolation of Spectro data
         olfactoryDP; %Number of data points used for interpolation of Olfactory data
         handler; %GUIhandler object
+        sizeLimit;
     end
     
     %Public methods, accessible from other classes
@@ -25,9 +26,18 @@ classdef DataManager < handle
             this.observation.setMatrix(data);
         end
         
+        %Clean up function to make sure all objects are deleted after
+        %exiting the program. This code is automatically called when the
+        %object is no longer used (on program exit)
+        function delete(this)
+            delete@handle(this);
+        end
+        
         %%Default constructor, takes an instance of an InputManager and a
         %%an GUIHandler object respectively
         function this = DataManager(inM,inH)
+            this.sizeLimit = 90000000; %This is a limit on how many elements that can be stored in the 
+            %datatable. 
             this.manager = inM;
             this.handler = inH;
             this.xlsWriter = XLSWriter();
@@ -48,11 +58,63 @@ classdef DataManager < handle
         
         %%Adds a newly important Observation to the observation that is
         %%displayed
-        function this = addObject(this,id,path)
+        function obj = getObs(this,id,path)
             %Get new data from the input manager.
-            temp = this.manager.getObservation(id,path,this.getObject());
+            obj = this.manager.getObservation(id,path,this.getObject());
             
+%             current = this.getUnfObject();
+%             %temp = this.getUnfObject();
+%             tempMat = temp.getMatrix();
+%             
+%             rows = [2];
+%             
+%             [h_new,w_new] = size(tempMat);
+%             [h_old,w_old] = size(this.getObject().getMatrix());
+%             
+%             diff = w_old-w_new;
+%             
+%             if diff > 0
+%                 padding = cell(h_new,diff);
+%                 tempMat = [tempMat,padding];
+%                 
+%                 tempMat2 = this.getObject().getMatrix();
+%                 tempMat2 = tempMat2(1,:);
+%                 
+%                 current.setMatrix(tempMat2);
+%             end
+%             
+%             newMat = [current.getMatrix();tempMat(2:h_new,:)];
+%             current = current.setMatrix(newMat);
+%             
+%             if (current.getWidth()*current.getNumRows()) > this.sizeLimit
+%                 this.handler.clearCallback();
+%                 throw(MException('DataManager:Finalize','Too many elements in the display table, could not load'));
+%             end
+%             
+%             this = this.setUnfObject(current);
+        end
+        
+        %%Remove the HMTL encoding that was used to get differently colored rows in the
+        %%intermediate data handling step
+        function obj = stripFirstColumn(this,obj)
+            
+            for i=2:obj.getNumRows()
+                tempFlower = obj.get(i,1);
+                
+                start = strfind(tempFlower,'<TD>');
+                end_ = strfind(tempFlower,'</TD>');
+                
+                newFlower = tempFlower(start+4:end_-1);
+                obj.set(i,1,newFlower);
+            end
+            
+        end
+        
+        %%
+        function this = finalize(this,id,temp)
             current = this.getUnfObject();
+            %temp = this.getUnfObject();
+            
             tempMat = temp.getMatrix();
             
             rows = [2];
@@ -75,30 +137,16 @@ classdef DataManager < handle
             newMat = [current.getMatrix();tempMat(2:h_new,:)];
             current = current.setMatrix(newMat);
             
-            this = this.setUnfObject(current);
-        end
-        
-        %%Remove the HMTL encoding that was used to get differently colored rows in the
-        %%intermediate data handling step
-        function obj = stripFirstRow(this,obj)
-            
-            for i=2:obj.getNumRows()
-                tempFlower = obj.get(i,1);
-                
-                start = strfind(tempFlower,'<TD>');
-                end_ = strfind(tempFlower,'</TD>');
-                
-                newFlower = tempFlower(start+4:end_-1);
-                obj.set(i,1,newFlower);
+            if (current.getWidth()*current.getNumRows()) > this.sizeLimit
+                this.handler.clearCallback();
+                throw(MException('DataManager:Finalize','Too many elements in the display table, could not load'));
             end
             
-        end
-        
-        %%
-        function this = finalize(this,id)
-            obj = this.getUnfObject();
+            this = this.setUnfObject(current);            
+            obj = current;
+            %obj = this.getUnfObject();
             
-            obj = this.stripFirstRow(obj);
+            obj = this.stripFirstColumn(obj);
             
             %Interpolate and expnd the spectrum points to their own columns
             if strcmp(id,'Spectro')

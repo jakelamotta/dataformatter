@@ -52,6 +52,7 @@ function selectData_OpeningFcn(hObject, eventdata, handles, varargin)
 % handles    structure with handles and user data (see GUIDATA)
 % varargin   command line arguments to selectData (see VARARGIN)
 obj = varargin{1};
+
 handler = varargin{3};
 %data = obj.getMatrix();
 % spectro = obj.getSpectroData();
@@ -220,25 +221,25 @@ function setTable(handles,obs)
     
     use1 = true;
     
-%     %Color generating function
-%     colorgen = @(color,text) ['<html><table border=0 width=400 bgcolor=',color,'><TR><TD>',text,'</TD></TR> </table></html>'];
-%    
-%     obs.set(2,1,colorgen('#FFFFCC',obs.get(2,1)));
-%     
-%     %Function to switch between colors when id changes
-%     for i=3:obs.getNumRows()
-%         if ~strcmp(obs.getIdAtRow(i),obs.getIdAtRow(i-1))
-%             use1 = ~use1;
-%         end
-%         
-%         if use1
-%             obs.set(i,1,colorgen('#FFFFCC',obs.get(i,1)));
-%         else
-%             obs.set(i,1,colorgen('#99CCFF',obs.get(i,1)));
-%         end
-%     end
-%     
-%     data = obs.getMatrix();
+    %Color generating function
+    colorgen = @(color,text) ['<html><table border=0 width=400 bgcolor=',color,'><TR><TD>',text,'</TD></TR> </table></html>'];
+   
+    obs.set(2,1,colorgen('#FFFFCC',obs.get(2,1)));
+    
+    %Function to switch between colors when id changes
+    for i=3:obs.getNumRows()
+        if ~strcmp(obs.getIdAtRow(i),obs.getIdAtRow(i-1))
+            use1 = ~use1;
+        end
+        
+        if use1
+            obs.set(i,1,colorgen('#FFFFCC',obs.get(i,1)));
+        else
+            obs.set(i,1,colorgen('#99CCFF',obs.get(i,1)));
+        end
+    end
+    
+    data = obs.getMatrix();
     
     set(t,'Data',[data(:,1:uint32(Constants.SpectroXPos)-1),data(:,uint32(Constants.OlfYPos)+1:end)]);
     
@@ -312,7 +313,6 @@ function setGraph(h,obs,type)
     end
 
     button = uicontrol(handle,'Style','pushbutton','Position',[20 190 100 20],'String','Interpolate','Callback',{@downSample,toSend,t,handle,type});
-    disp(get(button,'Position'));
 end
 
 %%Function for interpolating Spectro and Olfactory data

@@ -5,7 +5,7 @@ clear classes;
 
 setGlobalVariables();
 
-GUIHandler();
+handler = GUIHandler();
 
 end
 
@@ -13,9 +13,7 @@ end
 function setGlobalVariables()
     global matrixColumns; %
     global colors;  %A cell containing colors for plotting
-    global varmap;
-
-    
+    global varmap;    
         
     %varMap is a hash table for creating variable names for behavior data...
     varmap = containers.Map();
