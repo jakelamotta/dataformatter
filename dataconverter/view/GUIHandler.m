@@ -9,6 +9,8 @@ classdef GUIHandler < handle
         inputManager;
         updater;
         organizer;
+        displayData;
+        showOlf;
         
         %%GUI elements
         mainWindow;
@@ -33,6 +35,8 @@ classdef GUIHandler < handle
         metadata;
         idText;
         varText;
+        settings;
+        toggleOlf;
     end
     
     methods (Access = public)
@@ -42,6 +46,7 @@ classdef GUIHandler < handle
             sz = this.scrsz;
             this.tableSize = [sz(3)/27.4286 sz(4)/12.0 sz(3)/1.7588 sz(4)/2.6091];
             
+            this.showOlf = true;
             this.inputManager = InputManager();
             this.dataManager = DataManager(this.inputManager,this);
             this.inputManager.setDataManager(this.dataManager);
@@ -62,16 +67,11 @@ classdef GUIHandler < handle
             manager = this.dataManager;
         end
         
-        function time_ = getTime(this,id)
-            time_ = weatherQuest(id);
-            time_ = ['multiple-',time_];
-        end
-        
         %%Callback functin called when the user presses the "Clear data"
         %%option in the file menu
         function this = clearCallback(this,varargin)
             this.dataManager = this.dataManager.clearAll();
-            this = this.updateGUI();
+            this = this.notifyChange();
         end
     end
     
@@ -80,9 +80,9 @@ classdef GUIHandler < handle
         %%Callback function called when the user presses the import data
         %%button
         function this = loadCallback(this,varargin)
-            this.organizer = this.organizer.launchGUI();
+            this.organizer.launchGUI();
             
-            success = this.inputManager.organize(this.organizer.sources,this.organizer.target);
+            this.inputManager.organize(this.organizer.sources,this.organizer.target);
         end
         
         %%Callback function called when the user presses the "Export"
@@ -109,7 +109,7 @@ classdef GUIHandler < handle
                 this.dataManager = this.dataManager.addComment(userdata.row,userdata.comment);
             end
             
-            this.updateGUI();
+            this.notifyChange();
         end
         
         %%Callback functin called when the user presses the "Load data"
@@ -159,7 +159,7 @@ classdef GUIHandler < handle
                         end
                     end
                     
-                    this = this.updateGUI();
+                    this = this.notifyChange();
                 end
             end
         end
@@ -169,7 +169,7 @@ classdef GUIHandler < handle
         function this = mergeCallback(this,varargin)
             %this.dataManager.getObject().mergeObservations(2,3);
             this.dataManager.getObject().sortByDate();
-            this = this.updateGUI();
+            this = this.notifyChange();
         end
         
         %%Callback functin called when the user presses the "Sort by id"
@@ -177,13 +177,17 @@ classdef GUIHandler < handle
         function this = sortIdCallback(this,varargin)
             %this.dataManager.getObject().mergeObservations(2,3);
             this.dataManager.getObject().sortById();
-            this = this.updateGUI();
+            this = this.notifyChange();
         end
         
+        %%Callback for the "Export metadata" menu item. Starts writing the
+        %%metadata to a word document. 
         function this = metadataCallback(this,varargin)
             this.inputManager.writeMetaDatatoFile();
         end
         
+        %%Callback for cell selection in the uitable. Displays selected row
+        %%and column to the user. 
         function this = tableCallback(this,varargin)
             index = varargin{2};
             try
@@ -191,12 +195,42 @@ classdef GUIHandler < handle
                 variable = this.dataManager.getObject().get(1,index.Indices(2));
                 set(this.idText,'String',id);
                 set(this.varText,'String',variable);
-                this.updateGUI();
+                this.notifyChange();
             catch e
                 set(this.idText,'String','No row selected');
                 set(this.varText,'String','No column selected');
-                this.updateGUI();
+                this.notifyChange();
             end
+        end
+        
+        %%Turns "show Olfactory" on and off. 
+        function this = toggleOlfactory(this,varargin)
+            if strcmp(get(this.toggleOlf,'Checked'),'on')
+               set(this.toggleOlf,'Checked','off');
+               this.showOlf = false;
+            else
+                set(this.toggleOlf,'Checked','on');
+                this.showOlf = true;
+            end
+            
+            this.notifyChange(); %Update GUI
+        end
+        
+        %%Call this whenever the underlying data is changed so that the change is also
+        %%propagates into the GUI
+        function this = notifyChange(this)
+           obj = this.dataManager.getObject();
+           
+           %500 is an arbitrary number and will show a few of the olfactory
+           %columns. The point is to reduce the amount of cells in the
+           %table though.
+           if (obj.getWidth() > 500) && ~this.showOlf
+                this.displayData = obj.getSection(1,obj.getNumRows,1,600);
+           else
+                this.displayData = obj.getMatrix();
+           end
+           
+           this.updateGui();
         end
        
         %%Function that sets upp all the gui elements. Each position is
@@ -204,16 +238,14 @@ classdef GUIHandler < handle
         function this = initGUI(this)
             sz = this.scrsz;
             this.mainWindow = figure('Name','PDManager','DockControls','off','NumberTitle','off','Position',[sz(3)/8 sz(4)/8 sz(3)/1.5 sz(4)/1.5],'MenuBar','None','ToolBar','None');
-            this.importBtn = uicontrol('parent', this.mainWindow, 'style', 'pushbutton', 'units', 'normalized', 'position', [0.14 0.8 0.1 0.1], 'string', 'Manage data', 'fontunits', 'normalized', 'fontsize', 0.2, 'Callback',@this.loadCallback);
-            this.loadBtn = uicontrol('parent', this.mainWindow, 'style', 'pushbutton', 'units', 'normalized', 'position', [0.26 0.8 0.1 0.1], 'string', 'Load data', 'fontunits', 'normalized', 'fontsize', 0.2, 'Callback',@this.importCallback);
+            this.importBtn = uicontrol('parent', this.mainWindow, 'style', 'pushbutton', 'units', 'normalized', 'position', [0.14 0.8 0.1 0.1], 'string', 'Load data', 'fontunits', 'normalized', 'fontsize', 0.2, 'Callback',@this.loadCallback);
+            this.loadBtn = uicontrol('parent', this.mainWindow, 'style', 'pushbutton', 'units', 'normalized', 'position', [0.26 0.8 0.1 0.1], 'string', 'Manage data', 'fontunits', 'normalized', 'fontsize', 0.2, 'Callback',@this.importCallback);
             this.exportBtn =  uicontrol('parent', this.mainWindow, 'style', 'pushbutton', 'units', 'normalized', 'position', [0.38 0.8 0.1 0.1], 'string', 'Export', 'fontunits', 'normalized', 'fontsize', 0.2,'Callback',@this.exportCallback);
             
             this.idText = uicontrol('parent',this.mainWindow,'style','text','Position',[0 300 70 30],'String','-');
             this.varText = uicontrol('parent',this.mainWindow,'style','text','String','-','Position',[500 500 70 20]);
-            disp(get(this.idText,'Position'));
             this.sortDateBtn = uicontrol('parent', this.mainWindow, 'style', 'pushbutton', 'units', 'normalized', 'position', [0.93 0.64 0.06 0.05], 'string', 'Sort by date', 'fontunits', 'normalized', 'fontsize', 0.3,'Callback',@this.mergeCallback);
             this.sortIdBtn = uicontrol('parent', this.mainWindow, 'style', 'pushbutton', 'units', 'normalized', 'position', [0.93 0.58 0.06 0.05], 'string', 'Sort by id', 'fontunits', 'normalized', 'fontsize', 0.3,'Callback',@this.sortIdCallback);
-            
             this.dataTable = uitable(this.mainWindow,'Position',this.tableSize,'units','normalized','CellSelectionCallback',@this.tableCallback);
             
             this.file_ = uimenu(this.mainWindow,'Label','File');
@@ -221,15 +253,18 @@ classdef GUIHandler < handle
             this.metadata = uimenu(this.file_,'Label','Export metadata','Callback',@this.metadataCallback);
             this.manageMenuItem = uimenu(this.file_,'Label','Add comment','Callback',@this.manageCallback );
             this.exit_ = uimenu(this.file_,'Label','Exit');
+            
+            this.settings = uimenu(this.mainWindow,'Label', 'Settings');
+            this.toggleOlf = uimenu(this.settings,'Label','Display Olfactory data','Checked','on','Callback',@this.toggleOlfactory);
         end
         
         %%Function that updates the datatable
-        function this = updateGUI(this)
+        function this = updateGui(this)
            %this.dataTable = uitable(this.mainWindow,'data',this.dataManager.getObject().getMatrix(),'Position',this.tableSize,'units','normalized');
-            set(this.dataTable,'Data',this.dataManager.getObject().getMatrix());
+            %set(this.dataTable,'Data',this.dataManager.getObject().getMatrix());
+            set(this.dataTable,'Data',this.displayData);
             drawnow(); 
-        end
-        
+        end        
         
         function this = launchDialogue(this,id,obj)
             out_ = selectData(obj,id,this);

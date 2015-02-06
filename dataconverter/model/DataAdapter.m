@@ -12,32 +12,36 @@ classdef DataAdapter < handle
         nrOfPaths;
         mWaitbar;
     end
-    
-    %Abstract method, methods that any subclass must implement
-    methods (Abstract)
-        obj = getObservation(this,paths)
-    end
-    
-   
-    
+        
     methods (Access = public)
         
+        %%Function for updating the waitbar.
         function this = updateProgress(this,nrOfSolved)
             this.mWaitbar = waitbar(nrOfSolved/this.nrOfPaths);
         end
         
+        function name = toString(this)
+           name = [strrep(class(this),'DataAdapter',''),' data']; 
+        end
+        
         function this = DataAdapter()
             this.genData = {'Flower','Date','Negative','Positive';};
+            
+            %When loading image data the user do not need to see a waitbar
+            %as the user is involved in the process anyway
             if ~isa(this,'ImageDataAdapter')
-                this.mWaitbar = waitbar(0,'Please wait while data is loaded...','Name',class(this));
+                this.mWaitbar = waitbar(0,'Please wait while data is loaded...','Name',this.toString());%class(this));
             end
         end
         
+        %%Adds values for Flower, Date and whether or not the flower is
+        %%negative or positive. This is common for all datatypes.
         function matrix = addValues(this,path,matrix)
             [h,w] = size(matrix);
             
             g = [{'Flower','Date','Negative','Positive'};cell(h-1,4)];
             
+            %Use the path to retrieve the information
             parts = regexp(path,'\', 'split');            
             
             matrix = [g,matrix];
@@ -70,14 +74,13 @@ classdef DataAdapter < handle
                 end
                 
                 fclose(fid);                
-            catch
-                errordlg('Could not load source-file');
+            catch e
+                errordlg(['Could not load source-file: ',e.getReport()]);
             end
         end
     end
     
-    methods (Static)
-       
+    methods (Static)       
         %%Function that retrieves id from a search path
         function id = getIdFromPath(path)
             

@@ -61,37 +61,6 @@ classdef DataManager < handle
         function obj = getObs(this,id,path)
             %Get new data from the input manager.
             obj = this.manager.getObservation(id,path,this.getObject());
-            
-%             current = this.getUnfObject();
-%             %temp = this.getUnfObject();
-%             tempMat = temp.getMatrix();
-%             
-%             rows = [2];
-%             
-%             [h_new,w_new] = size(tempMat);
-%             [h_old,w_old] = size(this.getObject().getMatrix());
-%             
-%             diff = w_old-w_new;
-%             
-%             if diff > 0
-%                 padding = cell(h_new,diff);
-%                 tempMat = [tempMat,padding];
-%                 
-%                 tempMat2 = this.getObject().getMatrix();
-%                 tempMat2 = tempMat2(1,:);
-%                 
-%                 current.setMatrix(tempMat2);
-%             end
-%             
-%             newMat = [current.getMatrix();tempMat(2:h_new,:)];
-%             current = current.setMatrix(newMat);
-%             
-%             if (current.getWidth()*current.getNumRows()) > this.sizeLimit
-%                 this.handler.clearCallback();
-%                 throw(MException('DataManager:Finalize','Too many elements in the display table, could not load'));
-%             end
-%             
-%             this = this.setUnfObject(current);
         end
         
         %%Remove the HMTL encoding that was used to get differently colored rows in the
@@ -218,27 +187,16 @@ classdef DataManager < handle
         
         %%Adds a comment to the comment column
         function this = addComment(this,row,comment)
-            obj = this.getObject();
-            d = obj.getMatrix();
+            obs = this.getObject();
             
-            size_ = size(d);
-            for i=2:size_(2)
-                if strcmp(d{1,i},'Comment') || strcmp(d{1,i},'comment')
-                    d{row,i} = [d{row,i},' ',comment];
-                    col_ = i;
+            for i=2:this.getObject().getWidth()
+                if strcmp(obs.get(1,i),'Comment') || strcmp(obs.get(1,i),'comment')
+                    obs.set(row,i,comment);
                     break;
                 end
             end
             
-            obj.setMatrix(d);
-            id_ = d{row,2};
-            
-            obj = this.objList(id_);
-            objMat = obj.getMatrix();
-            objMat{2,col_} = comment;
-            
-            obj.setMatrix(objMat);
-            this.setObject(obj);
+            this.setObject(obs);
         end
         
         %%
@@ -274,8 +232,7 @@ classdef DataManager < handle
         end
         
         function this = setNrOfOlfactoryDP(this,dp)
-            %The value can only be changed once, from it's original value
-            
+            %The value can only be changed once, from it's original value            
             if ischar(dp)
                 dp = str2double(dp);
             end
@@ -287,7 +244,7 @@ classdef DataManager < handle
         
         function this = setNrOfSpectroDP(this,dp)
             %The value can only be changed once, from it's original value
-            if this.spectroDP == 300
+            if this.spectroDP == 220
                 this.spectroDP = dp;
             end
         end

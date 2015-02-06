@@ -1,0 +1,17 @@
+1. Create a new DataAdapter for the given data
+	* It does not need to have a specific name but following the convetion will probably make it easier for future changes
+	* It does need to have certain code parts
+		- Extend DataAdapter class (see row 1 in any of the other data type adapters)
+		- have a method called getObservation(this,paths) that returns a Observation object (again see how the other classes does it)	
+
+2. Update the GUI to provide user input for loading and managing
+	* Add case statement in loaddatastep2-->updateSource function
+	* Add new button and text in loaddatastep2 for new data, also callback for button
+	* Add new radiobutton and corresponding callback function in ImportWindow
+	* Add a if-statement for the new type in ímportWindow --> okBtn_callback and update length of types in the same function
+
+3. Register the new DataAdapter in AdapterFactory by following the pattern for the other datatypes
+
+4. Add all the new variables to behavior_variables
+
+5. Change Constants accordingly

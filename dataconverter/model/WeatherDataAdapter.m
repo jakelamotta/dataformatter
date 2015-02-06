@@ -17,7 +17,7 @@ classdef WeatherDataAdapter < DataAdapter
             this.dobj = Observation();
             %this.cell_ = {'/weatherTime','W_temp','W_humid','Wind speed','Wind dir','Pressure','Radiation'};
             this.cell_ = {'/weatherTime','W_temp','W_humid','Wind speed'};            
-            this.nrOfNewVariables = 0; %Change this to three when using the correct weatherfile
+            this.nrOfNewVariables = 0; %Change this to 3 when using the correct weatherfile
             this.tempMatrix = this.cell_;
         end
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

@@ -58,6 +58,7 @@ handler = varargin{3};
 % spectro = obj.getSpectroData();
 % olfactory = obj.getOlfactoryData();
 id = varargin{2};
+set(hObject,'Name',[id,' data']);
 % Choose default command line output for selectData
 handles.output = hObject;
 
@@ -219,26 +220,43 @@ function setTable(handles,obs)
     set(t,'Rowname','numbered');
     set(t,'Columnname','numbered');
     
-    use1 = true;
+%     color1 = true; %Boolean used for switching between colors
+%     
+%     %Color generating function
+%     colorgen = @(color,text) ['<html><table border=0 width=400 bgcolor=',color,'><TR><TD>',text,'</TD></TR> </table></html>'];
+%    
+%     obs.set(2,1,colorgen('#FFFFCC',obs.get(2,1)));
+%     
+%     %Function to switch between colors when id changes
+%     for i=3:obs.getNumRows()
+%         if ~strcmp(obs.getIdAtRow(i),obs.getIdAtRow(i-1))
+%             color1 = ~color1;
+%         end
+%         
+%         if color1
+%             obs.set(i,1,colorgen('#FFFFCC',obs.get(i,1)));
+%         else
+%             obs.set(i,1,colorgen('#99CCFF',obs.get(i,1)));
+%         end
+%     end
+%     
+    colors = {'#FFFFCC','#99CCFF'};
+    choice = 1;
     
     %Color generating function
     colorgen = @(color,text) ['<html><table border=0 width=400 bgcolor=',color,'><TR><TD>',text,'</TD></TR> </table></html>'];
-   
-    obs.set(2,1,colorgen('#FFFFCC',obs.get(2,1)));
+    obs.set(2,1,colorgen(colors{choice},obs.get(2,1)));
     
     %Function to switch between colors when id changes
     for i=3:obs.getNumRows()
         if ~strcmp(obs.getIdAtRow(i),obs.getIdAtRow(i-1))
-            use1 = ~use1;
+            choice = mod(choice,2)+1; %Flipping between 1 and 2
         end
         
-        if use1
-            obs.set(i,1,colorgen('#FFFFCC',obs.get(i,1)));
-        else
-            obs.set(i,1,colorgen('#99CCFF',obs.get(i,1)));
-        end
+        obs.set(i,1,colorgen(colors{choice},obs.get(i,1)));
     end
     
+
     data = obs.getMatrix();
     
     set(t,'Data',[data(:,1:uint32(Constants.SpectroXPos)-1),data(:,uint32(Constants.OlfYPos)+1:end)]);
@@ -255,7 +273,7 @@ function setGraph(h,obs,type)
 
     index = 1;
     
-    data = obs.getMatrix();
+    %data = obs.getMatrix();
     height = obs.getNumRows();
     
     if strcmp(type,'Spectro')
@@ -279,7 +297,7 @@ function setGraph(h,obs,type)
 
         for i=2:height
             %plot(t,[data{i,uint32(Constants.OlfXPos)}],[data{i,uint32(Constants.OlfYPos)}],colors{1,mod(i,length(colors))+1});
-            plot(t,[obs.get(i,uint32(Constants.OlfXPos))],[obs.get(i,uint32(Constants.OlfYPos))],colors{1,mod(i,length(colors))+1});
+            plot(t,obs.get(i,uint32(Constants.OlfXPos)),obs.get(i,uint32(Constants.OlfYPos)),colors{1,mod(i,length(colors))+1});
             
             hold on;
             legendList{index} = obs.get(i,2);
@@ -304,12 +322,12 @@ function setGraph(h,obs,type)
     edit_ = uicontrol(handle,'Style','edit','Tag','sampleedit','String',dp,'Position',[20 240 40 20]);
     uicontrol(handle,'Style','text','String','Nr of datapoints used','Position',[65 240 110 20]);
 
-    if dp ~= 200 && strcmp(userdata.type,'Spectro')
-        set(edit_,'Enable','off')
+    if dp ~= 220 && strcmp(userdata.type,'Spectro')
+        set(edit_,'Enable','off');
     end
 
     if dp ~= 15000 && strcmp(userdata.type,'Olfactory')
-        set(edit_,'Enable','off')
+        set(edit_,'Enable','off');
     end
 
     button = uicontrol(handle,'Style','pushbutton','Position',[20 190 100 20],'String','Interpolate','Callback',{@downSample,toSend,t,handle,type});

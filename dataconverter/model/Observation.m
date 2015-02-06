@@ -140,7 +140,7 @@ classdef Observation < handle
             row = cell(1,w);
             
             %Add the values that are not going to be averaged
-            for i=1:8
+            for i=1:9
                 row{i} = rows{1,i};
             end
             
@@ -210,7 +210,7 @@ classdef Observation < handle
                     matrix{i,y1pos} = y1;
                     matrix{i,y2pos} = y2;
                     matrix{i,x1newpos} = x1new;
-                    matrix{i,x2newpos} = x2new;1
+                    matrix{i,x2newpos} = x2new;
                 end
             else
                 y1pos = uint32(Constants.OlfYPos);

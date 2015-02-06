@@ -59,7 +59,7 @@ handles.output = hObject;
 guidata(hObject, handles);
 
 [noMultiFiles, hasMultiFiles] = findDuplicates(varargin{1});
-
+set(hObject,'Name','Abiotic data');
 set(hObject,'UserData',noMultiFiles);
 set(handles.lbFiles,'String',hasMultiFiles);
 

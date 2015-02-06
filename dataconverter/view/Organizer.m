@@ -1,4 +1,4 @@
-classdef Organizer
+classdef Organizer < handle
     %ORGANIZER Summary of this class goes here
     %   Detailed explanation goes here
     

@@ -1,6 +1,7 @@
 classdef FolderTree < handle
     %FolderTree. Simple data structure that is organized as a hierarchy
-    %tree. 
+    %tree. Only used for keepin track of metadata for writing to word.
+    %Should never need to be changed.
     
     properties (Access = private)
         parent; %FolderTree - parent of current object, if null current is root
