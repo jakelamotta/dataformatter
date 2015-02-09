@@ -56,10 +56,8 @@ classdef ImageDataAdapter < DataAdapter
             nrOfFnames = length(fnames);
             
             for i=1:nrOfFnames
-                
                 fname = images.(fnames{i});
                 [ims,mcontinue] = handler.getCroppedImage(fname,fnames{i});
-                
                 if ~mcontinue
                     break;
                 end

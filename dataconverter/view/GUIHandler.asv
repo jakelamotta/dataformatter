@@ -37,7 +37,7 @@ classdef GUIHandler < handle
         varText;
         settings;
         toggleOlf;
-        helpBtn;
+        helpBtn
     end
     
     methods (Access = public)
@@ -269,8 +269,7 @@ classdef GUIHandler < handle
                 'fontunits', 'normalized', 'fontsize', 0.3,'Callback',@this.sortIdCallback);
             
             this.helpBtn = uicontrol('parent',this.mainWindow,'style','pushbutton',...
-                'string','Help','position',[.95 .95 .04 .04],'units','normalized',...
-                'Callback',@this.helpCallback);
+                'position',[.9 .9 .1 .1],'units','normalized','Callback',@this.helpCallback);
             
             this.dataTable = uitable(this.mainWindow,'Position',this.tableSize,...
                 'units','normalized','CellSelectionCallback',@this.tableCallback);

@@ -106,12 +106,9 @@ classdef BehaviorDataAdapter < DataAdapter
             if ~isnumeric(time)
                 time = str2double(time);
             end
-            
             sec = mod(time,1);
             min_ = time-sec;
-            
-            sec = sec/.6;
-             
+            sec = sec/.6; 
             time = min_+sec;            
         end
         
@@ -119,7 +116,6 @@ classdef BehaviorDataAdapter < DataAdapter
         %%Input: Rawdata - data from excel file
         function this = parse(this,rawData)
             nrOfRows = size(rawData);
-            
             
             for i=1:nrOfRows(1)
                 if isnan(rawData{i,6})

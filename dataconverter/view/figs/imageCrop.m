@@ -63,19 +63,11 @@ p = varargin{2};
 set(handles.text1,'String',p);
 s = size(imageList);
 
-%keeps = cell(1,s(2));
-% 
-% for i=1:s(2)
-%     imageList{i} = false;
-% end
-
 set(handles.figure1,'UserData',imageList);
 set(handles.popupmenu1,'UserData',imageList);
 set(handles.popupmenu1,'String',imageList(2,:));
 set(handles.okBtn,'UserData',false);
 set(handles.axes1,'UserData',imageList{1,1});
-
-%set(handles.keepbox,'UserData',keeps);
 
 setImages(handles,imageList{1,1});
 
@@ -93,10 +85,8 @@ function varargout = imageCrop_OutputFcn(hObject, eventdata, handles)
 % Get default command line output from handles structure
 varargout{1} = '';
 
-if get(handles.okBtn,'UserData')
-    
+if get(handles.okBtn,'UserData')    
     varargout{1} = get(handles.popupmenu1,'UserData');
-
 else
     varargout{1} = 'kill';
 end
@@ -163,15 +153,13 @@ function setImages(handles,im)
 S.h = handles;
 S.fH = handles.figure1;
 S.aH = handles.axes1;
-%S.fH = figure('menubar','none');
-%im = imread( 'C:\Users\Public\Pictures\Sample Pictures\Chrysanthemum.jpg' );
+
 y_min = NaN;
 y_max = NaN;
 x_min = NaN;
 x_max = NaN;
 imageSize = size(im);
 
-% S.aH = axes;
 tempImage = get(handles.axes1,'UserData');
 
 S.iH = imshow(im,'Parent',S.aH); 
@@ -249,38 +237,6 @@ set(S.fH, 'WindowButtonUpFcn', @stopDragFcn);
             plot([x_max,x_max],[y_min,y_max]);
             
             tempImage = squarify(im,y_min,y_max,x_min,x_max);
-%             tempImage = im(floor(y_min):floor(y_max),floor(x_min):floor(x_max),:);
-% %             tempSize = size(tempImage);
-% %             
-% %             if tempSize(1) ~= tempSize(2)
-% %                avg = (tempSize(1)+tempSize(2))/2;
-% %                
-% %                if avg+floor(y_min) > tempSize(1)
-% %                    avg = tempSize(1);
-% %                end
-% %                
-% %                if avg+floor(x_min) > tempSize(2)
-% %                    avg = tempSize(2);
-% %                end
-% %                    
-% %                tempImage = im(floor(y_min):floor(y_min)+floor(avg),floor(x_min):floor(x_min)+floor(avg),:);
-% %             end
-% 
-%             [h,w] = size(tempImage);
-%             
-%             if h ~= w
-%                avg = (h+w)/2;
-%                
-%                if avg+floor(y_min) > h
-%                    avg = h;
-%                end
-%                
-%                if avg+floor(x_min) > w
-%                    avg = w;
-%                end
-%                    
-%                tempImage = im(floor(y_min):floor(y_min)+floor(avg),floor(x_min):floor(x_min)+floor(avg),:);
-%             end
             
             if ndims(tempImage) == 3
                 set(S.aH,'UserData',rgb2gray(tempImage));
@@ -350,8 +306,6 @@ function popupmenu1_Callback(hObject, eventdata, handles)
     
     set(handles.axes1,'UserData',imageList{1,index});
     
-    %keeps = get(handles.keepbox,'UserData');
-    %set(handles.keepbox,'Value',keeps{index});
     set(handles.keepbox,'Value',list{3,index});    
 end
 
