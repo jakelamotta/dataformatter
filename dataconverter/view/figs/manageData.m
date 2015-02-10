@@ -56,17 +56,18 @@ function manageData_OpeningFcn(hObject, eventdata, handles, varargin)
 handles.output = hObject;
 
 if ~isempty(varargin)
-    obj = varargin{1};
+    obs = varargin{1};
 end
 
-matrix = obj.getMatrix();
-s = size(matrix);
-ids = cell(1,s(1)-1);
+matrix = obs.getMatrix();
+%s = size(matrix);
+ids = cell(1,obs.getNumRows()-1);%s(1)-1);
 
-for i=2:s(1)
+for i=2:obs.getNumRows()%s(1)
     ids{1,i-1} = matrix{i,2};
 end
 
+set(hObject,'Name','Add a comment');
 set(handles.popupmenu1,'String',ids);
 
 
@@ -74,6 +75,7 @@ set(handles.popupmenu1,'String',ids);
 guidata(hObject, handles);
 userdata = struct;
 userdata.save = false;
+userdata.obs = obs;
 set(handles.figure1,'UserData',userdata);
 
 % UIWAIT makes manageData wait for user response (see UIRESUME)
@@ -166,7 +168,12 @@ function popupmenu1_Callback(hObject, eventdata, handles)
 
 % Hints: contents = cellstr(get(hObject,'String')) returns popupmenu1 contents as cell array
 %        contents{get(hObject,'Value')} returns selected item from popupmenu1
-
+    userdata = get(handles.figure1,'UserData');
+    obs = userdata.obs;
+    id = get(hObject,'Value');
+    disp(id);
+    comment = obs.getCommentFromId(id);
+    set(handles.edit1,'String',comment);
 
 % --- Executes during object creation, after setting all properties.
 function popupmenu1_CreateFcn(hObject, eventdata, handles)

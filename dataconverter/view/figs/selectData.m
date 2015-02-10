@@ -69,10 +69,6 @@ userdata = struct;
 userdata.handler = handler;
 userdata.data = obj;
 userdata.type = id;
-% userdata.spectro =spectro;
-% userdata.olfactory = olfactory;
-
-%data = myTable(handles.figure1,data);
 
 if strcmp(id,'Spectro')
     userdata.dp = handler.getDataManager().getNrOfSpectroDP();
@@ -220,26 +216,6 @@ function setTable(handles,obs)
     set(t,'Rowname','numbered');
     set(t,'Columnname','numbered');
     
-%     color1 = true; %Boolean used for switching between colors
-%     
-%     %Color generating function
-%     colorgen = @(color,text) ['<html><table border=0 width=400 bgcolor=',color,'><TR><TD>',text,'</TD></TR> </table></html>'];
-%    
-%     obs.set(2,1,colorgen('#FFFFCC',obs.get(2,1)));
-%     
-%     %Function to switch between colors when id changes
-%     for i=3:obs.getNumRows()
-%         if ~strcmp(obs.getIdAtRow(i),obs.getIdAtRow(i-1))
-%             color1 = ~color1;
-%         end
-%         
-%         if color1
-%             obs.set(i,1,colorgen('#FFFFCC',obs.get(i,1)));
-%         else
-%             obs.set(i,1,colorgen('#99CCFF',obs.get(i,1)));
-%         end
-%     end
-%     
     colors = {'#FFFFCC','#99CCFF'};
     choice = 1;
     
@@ -296,7 +272,6 @@ function setGraph(h,obs,type)
         legendList = cell(1,(height-1));
 
         for i=2:height
-            %plot(t,[data{i,uint32(Constants.OlfXPos)}],[data{i,uint32(Constants.OlfYPos)}],colors{1,mod(i,length(colors))+1});
             plot(t,obs.get(i,uint32(Constants.OlfXPos)),obs.get(i,uint32(Constants.OlfYPos)),colors{1,mod(i,length(colors))+1});
             
             hold on;
@@ -321,7 +296,11 @@ function setGraph(h,obs,type)
 
     edit_ = uicontrol(handle,'Style','edit','Tag','sampleedit','String',dp,'Position',[20 240 40 20]);
     uicontrol(handle,'Style','text','String','Nr of datapoints used','Position',[65 240 110 20]);
-
+    
+    if ischar(dp)
+        dp = str2double(dp);
+    end
+    
     if dp ~= 220 && strcmp(userdata.type,'Spectro')
         set(edit_,'Enable','off');
     end
@@ -384,7 +363,7 @@ function downSample(varargin)
     userdata = get(hfig,'UserData');    
     mHandler = userdata.handler;
     
-    mHandler.getDataManager().setNrOfSpectroDP(userdata.dp); 
+    %mHandler.getDataManager().setNrOfSpectroDP(userdata.dp); 
         
     userdata.handler = mHandler;
     userdata.dp = dsrate;
@@ -423,12 +402,13 @@ function deleteRow(varargin)
     set(handle.figure1,'UserData',userdata);
 end
 
+%%Function for validating the output of selectdata. The Observation cell is
+%%valid if no observation occurs more than one time.
 function out_ = validateData(obs)
     out_ = true;
-    %s = size(data);
     temp = obs.get(2,2);
-    %temp = data{2,2};
     height = obs.getNumRows();
+    
     for i=3:height
         if strcmp(temp,obs.get(i,2))%data{i,2})
             out_ = false;

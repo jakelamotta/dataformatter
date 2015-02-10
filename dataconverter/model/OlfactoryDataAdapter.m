@@ -1,5 +1,6 @@
 classdef OlfactoryDataAdapter < DataAdapter
-    %OLFACTORYDATAADAPTER Adapter for reading olfactory data 
+%Class that works as an adapter between the raw Olfactory data and the
+%Observation object. The data must be a csv or excel file.
     
     properties
         initMatrix;

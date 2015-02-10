@@ -10,7 +10,7 @@ classdef Observation < handle
     
     methods (Access = public)
         
-        %%Constructor. 
+        %%Constructor. Initializes the object
         function this = Observation()
             global matrixColumns;
             this.xlsMatrix = [matrixColumns,{'lux_flower','lux_up','SpectroX','SpectroY','SpectroXUp','SpectroYUp','OlfX','OlfY'}];
@@ -34,25 +34,6 @@ classdef Observation < handle
                     end
                 end
             end
-        end
-        
-        %%
-        function this = mergeObservations(this,rowNr1,rowNr2)
-            this.getWidth();
-            mergeable = true;
-            
-            for i=3:this.getWidth()
-                mergeable = mergeable & (this.xlsMatrix{rowNr1,i} == this.xlsMatrix{rowNr2,i});
-                if ~mergeable
-                    break;
-                end
-            end
-            
-            if mergeable
-                this.xlsMatrix{rowNr1,5} = [this.xlsMatrix{rowNr1,5},' ',this.xlsMatrix{rowNr2,5}];
-            end
-            
-            this.deleteRowFromID(this.xlsMatrix(rowNr2,uint32(Constants.IdPos)));
         end
         
         %%Boolean function that checks if there are multiples of any id in
@@ -145,20 +126,17 @@ classdef Observation < handle
             end
             
             for i=colStart:w
-%                row{i} = sum(cell2mat(rows(:,8)))/(this.getNumRows()-1);
                 temp = 0;
                 counter = 0;
                 
-                for j=1:h
-                    
+                for j=1:h                    
                     if isnumeric(rows{j,i})
                         if ~isempty(rows{j,i})
                             if rows{j,i} ~= 0
                                 temp = temp+rows{j,i};
                                 counter = counter+1;
                             end
-                        end
-                        
+                        end                        
                     else
                         if ~isnan(str2double(rows{j,i}))
                             v = str2double(rows{j,i});
@@ -169,6 +147,7 @@ classdef Observation < handle
                         end
                     end
                 end
+                
                 if isnumeric(temp)
                     if ~isempty(temp)
                         if temp ~= 0
@@ -193,6 +172,10 @@ classdef Observation < handle
             
             matrix = this.getMatrix();
             height = this.getNumRows();
+            
+            if ischar(dsrate)
+                dsrate = str2double(dsrate);
+            end
             
             if strcmp(type,'Spectro')
                 for i=2:height
@@ -233,6 +216,7 @@ classdef Observation < handle
             this.setMatrix(matrix);
         end
         
+        %%
         function this = expandSpectrumPoints(this,type)
             matrix = this.getMatrix();
             height = this.getNumRows();
@@ -264,10 +248,8 @@ classdef Observation < handle
                     end
                 end
                 
-            else
-                
-                y1 = matrix{2,uint32(Constants.OlfXPos)};
-                
+            else                
+                y1 = matrix{2,uint32(Constants.OlfXPos)};                
                 appendee = cell(height,length(y1));
                 
                 for j=2:height
@@ -290,14 +272,10 @@ classdef Observation < handle
         %%Sorts the observations by date
         function this = sortByDate(this)
             matrix = this.getMatrix();
-            
             data = matrix(2:end,:);
             topRow = matrix(1,:);
-            
             data = sortrows(data,3);
-            
             matrix = [topRow;data];
-            
             this.setMatrix(matrix);
         end
                 
@@ -343,26 +321,7 @@ classdef Observation < handle
                 end
             end
         end
-        
-        %%Function that returns a single row corresponding to the input ID
-        function row = getRowFromID(this,id)
-            
-            height = this.getNumRows();
-            width = this.getWidth();
-            row = [];
-            
-            for i=2:height
-                for j=1:width
-                    if strcmp(this.xlsMatrix{1,j},'ID')
-                        if strcmp(strrep(this.xlsMatrix{i,j},'.',''),strrep(id,'.',''))
-                            row = [this.xlsMatrix(1,:);this.xlsMatrix(i,:)];
-                            break;
-                        end
-                    end
-                end
-            end
-        end
-        
+                
         %%Function that deletes a single row corresponding to the input ID
         function this = deleteRowFromID(this,id)
             mat = this.getMatrix();
@@ -477,8 +436,32 @@ classdef Observation < handle
             this.xlsMatrix{h,w} = value;
         end
         
-        function section = getSection(this,h1,h2,w1,w2)
-           section = this.xlsMatrix(h1:h2,w1:w2); 
+        function section = getSection(this,varargin)
+           if length(varargin) == 4
+               h1 = varargin{1};
+               h2= varargin{2};
+               w1= varargin{3};
+               w2 = varargin{4};
+               section = this.xlsMatrix(h1:h2,w1:w2);
+           end
+        end
+        
+        function row = getRowFromID(this,id)
+            
+            height = this.getNumRows();
+            width = this.getWidth();
+            row = [];
+            
+            for i=2:height
+                for j=1:width
+                    if strcmp(this.xlsMatrix{1,j},'ID')
+                        if strcmp(strrep(this.xlsMatrix{i,j},'.',''),strrep(id,'.',''))
+                            row = [this.xlsMatrix(1,:);this.xlsMatrix(i,:)];
+                            break;
+                        end
+                    end
+                end
+            end
         end
         
         function matrix = getMatrix(this)
@@ -496,6 +479,11 @@ classdef Observation < handle
         function this = setID(this,id)
             height = this.getNumRows();
             this.xlsMatrix{height+1,2} = id;
+        end
+        
+        function comment = getCommentFromId(this,id)
+           row = this.getRowFromID(id);
+           comment = row{4};
         end
     end
 end

@@ -57,14 +57,9 @@ handles.output = hObject;
 
 % Update handles structure
 guidata(hObject, handles);
+set(hObject,'Name','Import data step 2/2');
 
-%if ~isempty(varargin)
-%    tempStruct = varargin{1};
-%else
-    tempStruct = struct;
-%end
-
-
+tempStruct = struct;
 
 if exist('config.mat','file')
     load('config.mat');

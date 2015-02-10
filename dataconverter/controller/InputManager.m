@@ -5,11 +5,80 @@ classdef InputManager < handle
     %%Variables used by the InputManager class
     properties (Access = private)
         adapterFactory;
-        dataObject;
-        objList;
         paths;
         dataManager;
         adapter;
+    end
+    
+    %Methods that are not accessible from outside this class (file)
+    methods (Access = private)
+        
+        %%A recursive folder search function, takes a path to a folder as
+        %%an input and search for all occurences of the "type" in the
+        %%subfolders
+        function this = recSearch(this,path,type)            
+%             if strcmp(type,'Spectro')
+%                 type = 'metadata';
+%             end
+%             
+%             temp = dir(path);
+%             fs = strfind(path,'\');
+%             last = fs(end);
+%             
+%             [h,w] = size(temp);
+%             
+%             for i=3:h
+%                 if strcmp(path(last+1:end),type)
+%                     typeDir = dir(path);
+%                     numFiles = size(typeDir);                    
+%                     this.paths{1,end+1} = [path,'\',typeDir(i).name];
+%                 else
+%                     this = this.recSearch([path,'\',temp(i).name],type);
+%                 end
+%             end
+
+            if strcmp(type,'Spectro')
+                type = 'metadata';
+            end
+            
+            temp = dir(path);
+            pathParts = regexp(path,'\','split');
+            last = pathParts{end};
+            
+            [h,w] = size(temp);
+            
+            for i=3:h
+                if strcmp(pathParts{end},type)
+                    typeDir = dir(path);
+                    numFiles = size(typeDir);                    
+                    this.paths{1,end+1} = fullfile(path,'\',typeDir(i).name);
+                else
+                    this = this.recSearch(fullfile(path,'\',temp(i).name),type);
+                end
+            end
+        end        
+        
+        %%This is the function that copies files from one location to
+        %another location.
+        %Input: - sourcePath: the path to what is to be copied as a string
+        %       - targetPath: the path to the target folder
+        function success = saveToDir(this,sourcePath, targetPath)
+            success = true; %Function returns true if the saving was successfull
+            
+            path_ = Utilities.getpath(targetPath);
+            
+            if ~exist(path_,'dir')
+                [success,uu1,uu2] = mkdir(path_);
+            end
+            
+            if isdir(sourcePath)
+                indices = strfind(sourcePath,'\');
+                index = indices(end);
+                path_ = [path_,'\',sourcePath(index+1:end)];
+            end
+            
+            copyfile(sourcePath,path_);
+        end        
     end
     
     %Public methods, accessible from other classes
@@ -55,46 +124,49 @@ classdef InputManager < handle
         
         %%Function for organizing data into folders
         function success = organize(this,sources,target)
+            %Function returns true or false depending on if the operation
+            %was successfull or not
             success = true;
-            types = fieldnames(sources);
             
-            for i=1:numel(types)
-                type = char(types(i));
+            dataTypes = fieldnames(sources);
+            
+            for i=1:numel(dataTypes)
+                dataType = char(dataTypes(i));
                 
                 noExcelFile = true;
                 
-                if ~ischar(sources.(type))
+                if ~ischar(sources.(dataType))
                     
-                    files = fieldnames(sources.(type));
+                    files = fieldnames(sources.(dataType));
                     
                     for j=1:numel(files)
                         file = char(files(j));
                         
-                        if strcmp(type,'Behavior')
-                            bFile = sources.(type).(file);
-                            if strcmp(bFile(end-3:end),'xlsx')
+                        if strcmp(dataType,'Behavior')
+                            behaviorFile = sources.(dataType).(file);
+                            if strcmp(behaviorFile(end-3:end),'xlsx')
                                 noExcelFile = false;
                             end
                         end
                         
-                        success = this.saveToDir(sources.(type).(file),[target,type]);
+                        success = this.saveToDir(sources.(dataType).(file),[target,dataType]);
                     end
                 else
-                    success = this.saveToDir(sources.(type),[target,type]);
+                    success = this.saveToDir(sources.(dataType),[target,dataType]);
                 end
                 
-                if strcmp(type,'Behavior') && noExcelFile
-                    this.saveToDir(Utilities.getpath('template.xlsx'),[target,type]);
+                if strcmp(dataType,'Behavior') && noExcelFile
+                    this.saveToDir(Utilities.getpath('template.xlsx'),[target,dataType]);
                 end
             end
         end
         
         %%Function that writes metadata to a word document
         function writeMetaDatatoFile(this)
-            rootTree = FolderTree('data');
+            root = FolderTree('data');
             path = Utilities.getpath('');
-            this.getMetaData(path,rootTree);
-            WriteToWordFromMatlab(Utilities.getpath('metadata.doc'),rootTree);
+            this.getMetaData(path,root);
+            WriteToWordFromMatlab(Utilities.getpath('metadata.doc'),root);
         end
         
         %%
@@ -129,57 +201,5 @@ classdef InputManager < handle
         end
     end
     
-    %Methods that are not accessible from outside this class (file)
-    methods (Access = private)        
-        %%A recursive folder search function, takes a path to a folder as
-        %%an input and search for all occurences of the "type" in the
-        %%subfolders
-        function this = recSearch(this,path,type)
-            
-            if strcmp(type,'Spectro')
-                type = 'metadata';
-            end
-            
-            temp = dir(path);
-            fs = strfind(path,'\');
-            last = fs(end);
-            
-            [h,w] = size(temp);
-            
-            for i=3:h
-                if strcmp(path(last+1:end),type)
-                    typeDir = dir(path);
-                    numFiles = size(typeDir);                    
-                    this.paths{1,end+1} = [path,'\',typeDir(i).name];
-                else
-                    this = this.recSearch([path,'\',temp(i).name],type);
-                end
-            end
-        end
-        
-        
-        %%This is the function that copies files from one location to
-        %another location.
-        %Input: - sourcePath: the path to what is to be copied as a string
-        %       - targetPath: the path to the target folder
-        function success = saveToDir(this,sourcePath, targetPath)
-            success = true; %Function returns true if the saving was successfull
-            
-            path_ = Utilities.getpath(targetPath);
-            
-            if ~exist(path_,'dir')
-                [success,uu1,uu2] = mkdir(path_);
-            end
-            
-            
-            
-            if isdir(sourcePath)
-                indices = strfind(sourcePath,'\');
-                index = indices(end);
-                path_ = [path_,'\',sourcePath(index+1:end)];
-            end
-            
-            copyfile(sourcePath,path_);
-        end        
-    end
+    
 end

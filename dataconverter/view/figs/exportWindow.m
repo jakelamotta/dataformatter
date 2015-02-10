@@ -57,7 +57,7 @@ handles.output = hObject;
 
 % Update handles structure
 guidata(hObject, handles);
-
+set(hObject,'Name','Choose file to export to');
 % UIWAIT makes exportWindow wait for user response (see UIRESUME)
 uiwait(handles.figure1);
 

@@ -25,7 +25,7 @@ classdef DataAdapter < handle
         end
         
         function this = DataAdapter()
-            this.genData = {'Flower','Date','Negative','Positive';};
+            this.genData = {'Flower','/Date','Negative','Positive';};
             
             %When loading image data the user do not need to see a waitbar
             %as the user is involved in the process anyway
@@ -39,7 +39,7 @@ classdef DataAdapter < handle
         function matrix = addValues(this,path,matrix)
             [h,w] = size(matrix);
             
-            g = [{'Flower','Date','Negative','Positive'};cell(h-1,4)];
+            g = [{'Flower','/Date','Negative','Positive'};cell(h-1,4)];
             
             %Use the path to retrieve the information
             parts = regexp(path,'\', 'split');            

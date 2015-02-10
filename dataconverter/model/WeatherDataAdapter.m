@@ -1,5 +1,10 @@
 classdef WeatherDataAdapter < DataAdapter
+%%%Class that works as an adapter between the raw WeatherData and the
+%%%Observation object. WeatherData must be a txt file with lines in the
+%%%format: 
+%%%yyyy  m d h min  var1  var2 var3...
     
+    %%
     properties (Access = private)
         cell_;
         nrOfNewVariables;
@@ -68,8 +73,7 @@ classdef WeatherDataAdapter < DataAdapter
         %%Compare the day of two time stamps, returns true if they are the
         %%same
         function found = compareDay(this,actualTime,row)
-            
-           for i=1:length(row)
+            for i=1:length(row)
                row{1,i} = str2double(row{1,i});
            end
            
@@ -88,6 +92,7 @@ classdef WeatherDataAdapter < DataAdapter
             for i=1:length_
                 %Retrieve id from the path
                 this.updateProgress(i);
+                
                 id_ = DataAdapter.getIdFromPath(paths{1,i});
                 
                 %Use spectro time as a way to find the correct weather data
@@ -112,7 +117,6 @@ classdef WeatherDataAdapter < DataAdapter
                     %%The correct weather data is fetched from the list by
                     %%using the input time and comparing it to the weather data
                     %%time. 
-                    %day = paths{1,i}(strfind(paths{1,i},'data\')+5:strfind(paths{1,i},'data\')+12);
                     parts = regexp(paths{1,i},'\', 'split');            
                     day = parts{end-5};
                     
@@ -124,6 +128,7 @@ classdef WeatherDataAdapter < DataAdapter
 
                     temp = cellfun(@this.createDob,rawData,'UniformOutput',false);
                     start = 1;
+                    
                     for j=start:length(temp)
                         if ~isempty(timeList)
                             t_temp = temp{1,j}(1,1:5);
@@ -192,7 +197,6 @@ classdef WeatherDataAdapter < DataAdapter
                 end
                 
                 this = this.addValues(paths{1,i});
-                
                 this.dobj = this.dobj.setObservation(this.tempMatrix,id_);
                 this.tempMatrix = this.cell_;
             end

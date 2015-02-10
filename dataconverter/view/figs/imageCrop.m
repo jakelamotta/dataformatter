@@ -63,6 +63,7 @@ p = varargin{2};
 set(handles.text1,'String',p);
 s = size(imageList);
 
+set(hObject,'Name','Choose images to load');
 set(handles.figure1,'UserData',imageList);
 set(handles.popupmenu1,'UserData',imageList);
 set(handles.popupmenu1,'String',imageList(2,:));

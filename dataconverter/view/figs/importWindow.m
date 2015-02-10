@@ -57,7 +57,7 @@ handles.output = hObject;
 
 % Update handles structure
 guidata(hObject, handles);
-
+set(hObject,'Name','Choose data types to load');
 set(handles.okBtn,'UserData',NaN);
 % UIWAIT makes importWindow wait for user response (see UIRESUME)
 uiwait(handles.figure1);

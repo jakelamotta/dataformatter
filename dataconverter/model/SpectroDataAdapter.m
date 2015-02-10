@@ -1,12 +1,12 @@
 classdef SpectroDataAdapter < DataAdapter
-    %SPECTRODATAADAPTER Summary of this class goes here
-    %   Detailed explanation goes here
+%%%Class that works as an adapter between the raw Spectrophotometer data and the
+%%%Observation object.
     
     properties
         init;
-    end
+    end    
     
-    
+    %Public methods, accessible from outside the class aswell.
     methods (Access = public)
         
         function this = SpectroDataAdapter()
@@ -21,7 +21,7 @@ classdef SpectroDataAdapter < DataAdapter
         function this = addValues(this,idx,path)
             matrix = this.tempMatrix;
             [h,w] = size(matrix);
-            g = [{'Flower','DATE','Negative','Positive'};cell(h-1,4)];
+            g = [{'Flower','/Date','Negative','Positive'};cell(h-1,4)];
             
             matrix = [g,matrix];
             

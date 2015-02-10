@@ -58,6 +58,8 @@ handles.output = hObject;
 % Update handles structure
 guidata(hObject, handles);
 
+set(hObject,'Name','Import data step 1/2');
+
 %Set output to the Organizer object passed to the function
 initGuiElements(handles,varargin);
 

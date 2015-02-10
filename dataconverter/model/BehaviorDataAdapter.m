@@ -10,20 +10,21 @@ classdef BehaviorDataAdapter < DataAdapter
     
     methods (Access = public)
         
-        function this = BehaviorDataAdapter()
-            %Call to superclass constructor
-            this@DataAdapter();
-            
+        %%BehaviorDataAdapter constructor. Execution starts here when the
+        %%object is initialized.
+        function this = BehaviorDataAdapter()            
             global matrixColumns;
             this.cols = matrixColumns;
             this.tempMatrix = [this.genData,this.cols];
             this.dobj = Observation();
+            
             global varmap;
             this.varMap = varmap;
             [h,w] = size(this.tempMatrix);
             this.size_ = w;            
         end
         
+        %%Read the a excel file and return the ouput
         function rawData = fileReader(this,path)
             try
                 [~,~,rawData] = xlsread(path);
@@ -96,6 +97,7 @@ classdef BehaviorDataAdapter < DataAdapter
     end
     
     methods (Access = private)        
+        
         %%Extract the time of the video clip from the behavior file, will
         %%return a list if there are multiple observations in one file. 
         function time = findTotTime(this,rawData)
