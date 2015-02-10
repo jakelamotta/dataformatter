@@ -30,6 +30,7 @@ classdef XLSWriter
         function success = appendXLS(this,fname,obj)
             toSave = obj;
             obj.sortById();
+            
             try
                 if exist([fname,'.xlsx'],'file');
                     [~,~,old] = xlsread(fname);
@@ -46,7 +47,7 @@ classdef XLSWriter
 
                     toAppend = toAppend(temp,:);
 
-                    toSave = toSave.setMatrix([old;toAppend]);
+                    toSave.setMatrix([old;toAppend]);
                 end
             catch e
                 errordlg(e.getReport(),'Error!');

@@ -60,10 +60,9 @@ if ~isempty(varargin)
 end
 
 matrix = obs.getMatrix();
-%s = size(matrix);
-ids = cell(1,obs.getNumRows()-1);%s(1)-1);
+ids = cell(1,obs.getNumRows()-1);
 
-for i=2:obs.getNumRows()%s(1)
+for i=2:obs.getNumRows()
     ids{1,i-1} = matrix{i,2};
 end
 
@@ -78,6 +77,7 @@ userdata.save = false;
 userdata.obs = obs;
 set(handles.figure1,'UserData',userdata);
 
+popupmenu1_Callback(handles.popupmenu1, eventdata, handles);
 % UIWAIT makes manageData wait for user response (see UIRESUME)
 uiwait(handles.figure1);
 
@@ -94,6 +94,7 @@ function varargout = manageData_OutputFcn(hObject, eventdata, handles)
 
 userdata = get(handles.figure1,'UserData');
 userdata.row = get(handles.popupmenu1,'Value')+1;
+
 if userdata.save
     varargout{1} = userdata;
 else
@@ -118,8 +119,7 @@ function pushbutton2_Callback(hObject, eventdata, handles)
 % hObject    handle to pushbutton2 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-    close();
-
+    delete(handles.figure1);
 
 function edit1_Callback(hObject, eventdata, handles)
 % hObject    handle to edit1 (see GCBO)
@@ -128,7 +128,6 @@ function edit1_Callback(hObject, eventdata, handles)
 
 % Hints: get(hObject,'String') returns contents of edit1 as text
 %        str2double(get(hObject,'String')) returns contents of edit1 as a double
-
 
 % --- Executes during object creation, after setting all properties.
 function edit1_CreateFcn(hObject, eventdata, handles)
@@ -142,6 +141,37 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
     set(hObject,'BackgroundColor','white');
 end
 
+% --- Executes on selection change in popupmenu1.
+function popupmenu1_Callback(hObject, eventdata, handles)
+% hObject    handle to popupmenu1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu1 contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from popupmenu1
+    userdata = get(handles.figure1,'UserData');
+    obs = userdata.obs;
+    ids = get(hObject,'String');
+    id = ids{get(hObject,'Value')};
+    
+    comment = obs.getCommentFromId(id);
+    if ~isempty(comment)
+        set(handles.edit1,'String',comment);
+    else
+        set(handles.edit1,'String','Write comment here');
+    end
+    
+% --- Executes during object creation, after setting all properties.
+function popupmenu1_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to popupmenu1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: popupmenu controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
 
 % --- Executes when user attempts to close figure1.
 function figure1_CloseRequestFcn(hObject, eventdata, handles)
@@ -157,32 +187,4 @@ if isequal(get(hObject, 'waitstatus'), 'waiting')
 else
     % The GUI is no longer waiting, just close it
     delete(hObject);
-end
-
-
-% --- Executes on selection change in popupmenu1.
-function popupmenu1_Callback(hObject, eventdata, handles)
-% hObject    handle to popupmenu1 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu1 contents as cell array
-%        contents{get(hObject,'Value')} returns selected item from popupmenu1
-    userdata = get(handles.figure1,'UserData');
-    obs = userdata.obs;
-    id = get(hObject,'Value');
-    disp(id);
-    comment = obs.getCommentFromId(id);
-    set(handles.edit1,'String',comment);
-
-% --- Executes during object creation, after setting all properties.
-function popupmenu1_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to popupmenu1 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: popupmenu controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
 end

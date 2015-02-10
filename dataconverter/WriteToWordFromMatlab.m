@@ -12,7 +12,8 @@ function WriteToWordFromMatlab(path,rootTree)
 % 051122  AK  Modification of 'save2word' in Mathworks File Exchange   
 % 060204  AK  Updated with WordSymbol, WordCreateTable and "Flying Start" section 
 % 060214  AK  Pagenumber, font color and TOC added
-% 130115  Kristian  Removed most stuff so it would fit our purposes
+
+% 130115  Kristian  Removed most stuff and made changes to fit our purposes
 % -------------------------------------------------------------------
     
     if exist(path,'file')
@@ -56,7 +57,6 @@ function WriteToWordFromMatlab(path,rootTree)
             while flower.hasChildren()
                 negOrPos = flower.popChild();
                 
-                %Style='Normal';
                 TextString=negOrPos.getName();
                 WordText(ActXWord,TextString,Style,[0,1]);
                 

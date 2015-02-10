@@ -5,6 +5,8 @@ classdef Observation < handle
     %written to the final excel-file.
     
     properties (Access = private)
+        %The xlsMatrix is what hold all data when it has been loaded in to
+        %the program. 
         xlsMatrix;
     end
     
@@ -370,8 +372,6 @@ classdef Observation < handle
             this.xlsMatrix = [this.xlsMatrix;appendCell(2:end,:)];
         end
         
-        
-        %%
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         %%%%%%%%%%%%%%%%%%%%%GETTERS AND SETTERS%%%%%%%%%%%%%%%%%%%%%%%%%%%
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -447,7 +447,6 @@ classdef Observation < handle
         end
         
         function row = getRowFromID(this,id)
-            
             height = this.getNumRows();
             width = this.getWidth();
             row = [];
@@ -483,7 +482,7 @@ classdef Observation < handle
         
         function comment = getCommentFromId(this,id)
            row = this.getRowFromID(id);
-           comment = row{4};
+           comment = row{2,4};
         end
     end
 end

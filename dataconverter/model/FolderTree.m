@@ -64,10 +64,8 @@ classdef FolderTree < handle
         %%Function for adding a child to a tree.
         function this = addChild(this,child)
            this.children = [this.children,{child}]; 
-        end
+        end        
         
-        
-        %%
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         %%%%%%%%%%%%%%%%%%%%%GETTERS AND SETTERS%%%%%%%%%%%%%%%%%%%%%%%%%%%
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%        

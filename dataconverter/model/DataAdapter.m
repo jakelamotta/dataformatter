@@ -81,7 +81,8 @@ classdef DataAdapter < handle
     end
     
     methods (Static)       
-        %%Function that retrieves id from a search path
+        
+        %%Function that retrieves id from a file path
         function id = getIdFromPath(path)
             
             parts = regexp(path,'\', 'split');
