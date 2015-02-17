@@ -44,7 +44,8 @@ classdef Utilities
         
         function monthNr = getMonthFromString(month)
            months = containers.Map({'jan','feb','mar','apr','may','jun','jul',...
-               'aug','sep','oct','nov','dec'},{1,2,3,4,5,6,7,8,9,10,11,12});
+               'aug','sep','oct','nov','dec'},{'1','2','3','4','5','6',...
+               '7','8','9','10','11','12'});
            
            monthNr = months(month);
         end

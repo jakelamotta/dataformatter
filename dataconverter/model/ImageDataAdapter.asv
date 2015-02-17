@@ -89,12 +89,10 @@ classdef ImageDataAdapter < DataAdapter
                             im = im(d:end-d-1,:);
                         end
                         
-                        %Waitbar for letting the user know calculation is
-                        %progressing
                         imWaitbar = waitbar(0,'Please wait while image parameters are calculated...',...
                             'Name',this.toString());
                         
-                        nrOfSteps = 4;
+                        nrOfSteps = 6;
                         
                         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
                         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%Olga script below%%%%%%%%%%%%%%%%%%%%%%
@@ -111,14 +109,13 @@ classdef ImageDataAdapter < DataAdapter
                         stats = graycoprops(k,{'contrast','homogeneity','Correlation','Energy'});
                         ent = entropy(im);
                         
-                        waitbar(1/nrOfSteps); %Display progress for user
+                        waitbar(1/nrOfSteps);
                         
                         [M N] = size(im);
                         imfft = fftshift(fft2(im));
                         imabs = abs(imfft);
                         
                         abs_av=rotavg(imabs);
-                        waitbar(2/nrOfSteps);%Display progress for user
                         
                         freq2=0:N/2;
                         
@@ -129,7 +126,7 @@ classdef ImageDataAdapter < DataAdapter
                             xx=log(freq2(10:10^2));
                             yy=log(abs_av(freq2(10:10^2)));
                         end
-                        waitbar(3/nrOfSteps);%Display progress for user
+                        
                         p=polyfit(xx',yy,1);
                         alpha=(-1)*p(1);
                         
@@ -140,8 +137,7 @@ classdef ImageDataAdapter < DataAdapter
                         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
                         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%Olga script above%%%%%%%%%%%%%%%%%%
                         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%here%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-                        waitbar(4/nrOfSteps);%Display progress for user
-                        close(imWaitbar);
+                        
                         
                         this.tempMatrix = [this.tempMatrix;parameters];
                         

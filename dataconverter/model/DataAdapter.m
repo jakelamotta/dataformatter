@@ -29,9 +29,7 @@ classdef DataAdapter < handle
             
             %When loading image data the user do not need to see a waitbar
             %as the user is involved in the process anyway
-            if ~isa(this,'ImageDataAdapter')
-                this.mWaitbar = waitbar(0,'Please wait while data is loaded...','Name',this.toString());%class(this));
-            end
+            this.mWaitbar = waitbar(0,'Please wait while data is loaded...','Name',this.toString());%class(this));
         end
         
         %%Adds values for Flower, Date and whether or not the flower is

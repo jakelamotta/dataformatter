@@ -286,7 +286,6 @@ classdef GUIHandler < handle
                         this.loadNewData(startSearchPath,dataType);
                     end
                 end
-                
                 this.notifyChange();
             end
         end

@@ -188,8 +188,8 @@ set(S.fH, 'WindowButtonUpFcn', @stopDragFcn);
     function draggingFcn(varargin)
         S.iH = imshow( im ); hold on
         
-        set(S.aH,'ButtonDownFcn',@startDragFcn)
-        set(S.iH,'ButtonDownFcn',@startDragFcn)
+        set(S.aH,'ButtonDownFcn',@startDragFcn);
+        set(S.iH,'ButtonDownFcn',@startDragFcn);
         set(S.fH, 'WindowButtonUpFcn', @stopDragFcn);
         
         pt = get(S.aH, 'CurrentPoint');
@@ -201,7 +201,7 @@ set(S.fH, 'WindowButtonUpFcn', @stopDragFcn);
             X = [X x];
             Y = [Y y];
 
-            size(im)
+            size(im);
             if isnan(x_min)
                 x_min = x;
                 x_max = x;

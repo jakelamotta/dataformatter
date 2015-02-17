@@ -15,6 +15,7 @@ function setGlobalVariables()
     global colors;  %A cell containing colors for plotting
     global varmap;
     
+    colors = {'blue','red','black','green'};
     %varMap is a hash table for creating variable names for behavior data...
     varmap = containers.Map();
     
@@ -51,6 +52,4 @@ function setGlobalVariables()
     behaveCols{end} = 'nofly';
     
     matrixColumns = [data,behaveCols];
-    
-    colors = {'black','blue','yellow','green'};
 end

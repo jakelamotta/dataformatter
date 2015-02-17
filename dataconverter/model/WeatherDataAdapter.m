@@ -40,13 +40,23 @@ classdef WeatherDataAdapter < DataAdapter
             time = time(start(1):end);
             time = strrep(time,'-','');
             timeList = struct;
-            timeList.year = str2double(time(1:4));
-            timeList.month = str2double(time(5:6));
-            timeList.day = str2double(time(7:8));
+            timeList.year = time(1:4);
+            
+            if strcmp(time(5),'0')
+                timeList.month = time(6);
+            else
+                timeList.month = time(5:6);
+            end
+            
+            if strcmp(time(7),'0')
+                timeList.day = time(8);
+            else
+                timeList.day = time(7:8);
+            end
             
             if length(time) >= 10
-                timeList.hour = str2double(time(09:10));
-                timeList.min = str2double(time(11:12));
+                timeList.hour = time(09:10);
+                timeList.min = time(11:12);
             end
         end
         
@@ -68,7 +78,9 @@ classdef WeatherDataAdapter < DataAdapter
                 timeParts = this.splitTime(date_);
                 
                 for k=1:length(months)
-                    if Utilities.getMonthFromString(months{k}) ==timeParts.month
+                    month = Utilities.getMonthFromString(months{k});
+                                        
+                    if strcmp(month,timeParts.month)
                         path_ = [Utilities.getpath('weatherPath\'),weatherPaths(1).name];
                         stop = true;
                         break;
@@ -92,24 +104,40 @@ classdef WeatherDataAdapter < DataAdapter
         function found = compareTime(this,actualTime,row)
             deltaTime = 5.1;
             
-            for i=1:length(row)
-                row{1,i} = str2double(row{1,i});
+            if ~(strcmp(actualTime.year,row{1,1}))
+                found = false;
+                return;
             end
             
-            found = (actualTime.year == row{1,1}) & (actualTime.month == row{1,2});
-            found = (actualTime.day == row{1,3}) & found;
-            found = found & (abs(actualTime.hour+actualTime.min/60 - (row{1,4}+row{1,5}/60)) <= deltaTime/60.);
+            if ~(strcmp(actualTime.month,row{1,2}))
+                found = false;
+                return;
+            end
+            
+            if ~(strcmp(actualTime.day,row{1,3}))
+                found = false;
+                return;
+            end
+            
+            found = (abs(str2double(actualTime.hour)+str2double(actualTime.min)/60 -...
+                (str2double(row{1,4})+str2double(row{1,5})/60)) <= deltaTime/60.);
         end
         
         %%Compare the day of two time stamps, returns true if they are the
         %%same
         function found = compareDay(this,actualTime,row)
-            for i=1:length(row)
-                row{1,i} = str2double(row{1,i});
+            
+            found = (actualTime.year == row{1,1});
+            if ~found
+                return;
             end
             
-            found = (actualTime.year == row{1,1}) & (actualTime.month == row{1,2});
-            found = (actualTime.day == row{1,3}) & found;
+            found = (actualTime.month == row{1,2});
+            if ~found
+                return;
+            end            
+            
+            found = (actualTime.day == row{1,3});
         end
         
         %%Get a Observation with weather data
@@ -136,20 +164,17 @@ classdef WeatherDataAdapter < DataAdapter
                 [p,f,ext] = fileparts(pathToWeather);
                 
                 if ~strcmp(pathToWeather,'')
+                    
                     if isKey(loadedFiles,f)
-                        %rawData = loadedFiles(f);     
-                        temp = loadedFiles(f);%cellfun(@this.createDob,rawData,'UniformOutput',false);
-
+                        temp = loadedFiles(f);
                     else
                         rawData = this.fileReader(pathToWeather);
                         rawData = strrep(rawData,'   ',' ');
                         rawData = strrep(rawData,'  ',' ');
-                        %loadedFiles(f) = rawData;
-
-                        temp = cellfun(@this.createDob,rawData,'UniformOutput',false);
+                        
+                        temp = cellfun(@this.getFormattedWeatherRow,rawData,'UniformOutput',false);
                         loadedFiles(f) = temp;
                     end
-
                     %Use spectro time as a way to find the correct weather data
                     spectroTime = inObj.getSpectroTime(id_);
 
@@ -169,13 +194,15 @@ classdef WeatherDataAdapter < DataAdapter
                     %used for narrowing down the number of potential
                     %measurements.
                     if strcmp('',time)
+                        
                         %%The correct weather data is fetched from the list by
                         %%using the input time and comparing it to the weather data
                         %%time.
                         timeList = this.splitTime(obsInfoMatrix{2,2});
-                        
 
                         start = 1;
+                        
+                        counter = 0;
 
                         for j=start:length(temp)
                             if ~isempty(timeList)
@@ -183,40 +210,50 @@ classdef WeatherDataAdapter < DataAdapter
 
                                 if this.compareDay(timeList,t_temp)
                                     weatherDate = temp{1,j}(1:5);
-                                    weatherDate = ['/',weatherDate{1},'-',weatherDate{2},'-',weatherDate{3},'-',weatherDate{4},'-',weatherDate{5}];
+                                    weatherDate = ['/',num2str(weatherDate{1}),'-',...
+                                        num2str(weatherDate{2}),'-',num2str(weatherDate{3}),...
+                                        '-',num2str(weatherDate{4}),'-',num2str(weatherDate{5})];
                                     temp{1,j}(5) = {weatherDate};
-                                    this.tempMatrix = [this.tempMatrix;temp{1,j}(5:8+this.nrOfNewVariables)];
+                                    this.tempMatrix = [this.tempMatrix;...
+                                        temp{1,j}(5:8+this.nrOfNewVariables)];
+                                    
+                                counter = counter+1;    
+                                    
+                                %There are 144 possible rows for one day
+                                %with sampling at 10 minute rate
+                                if counter > 143
+                                   break; 
+                                end
+                                    
                                 end
                             end
                         end
                     else
                         timeList = this.splitTime(time);
 
-                       %temp = cellfun(@this.createDob,rawData,'UniformOutput',false);
-
                         t_temp = temp{1,1};
 
-                        %%Finds the optimal starting point to minimize search time
-                        if ~isempty(timeList)
-                            if timeList.month == str2double(t_temp{1,2})
-                                start = 1;
-                            else
-                                start = (length(temp)/2);%-500;
-                            end
-
-                            %Heuristic to find starting point of search
-                            dayDiff = timeList.day-str2double(t_temp{1,3});
-
-                            %144 is the number of 10 minutes interval per day
-                            start = start+dayDiff*144;
-
-                            %Safety mesure to not miss the day due to missing data
-                            %points etc. The number is somewhat arbitrary
-                            start = start-50;
-                        else
-                            start = 1;
-                        end
-
+%                         %%Finds the optimal starting point to minimize search time
+%                         if ~isempty(timeList)
+%                             if strcmp(timeList.month,t_temp{1,2})
+%                                 start = 1;
+%                             else
+%                                 start = (length(temp)/2);%-500;
+%                             end
+% 
+%                             %Heuristic to find starting point of search
+%                             dayDiff = timeList.day-t_temp{1,3};
+% 
+%                             %144 is the number of 10 minutes interval per day
+%                             start = start+dayDiff*144;
+% 
+%                             %Safety mesure to not miss the day due to missing data
+%                             %points etc. The number is somewhat arbitrary
+%                             start = start-50;
+%                         else
+%                             start = 1;
+%                         end
+                        start = 1;
                         %%The correct weather data is fetched from the list by
                         %%using the input time and comparing it to the weather data
                         %%time.
@@ -241,7 +278,6 @@ classdef WeatherDataAdapter < DataAdapter
                     end
 
                     this.addValues(paths{1,i});
-    %                this.tempMatrix = [this.tempMatrix,obsInfoMatrix];
                     this.dobj = this.dobj.setObservation(this.tempMatrix,id_);
                     this.tempMatrix = this.cell_;
                 end
@@ -260,9 +296,10 @@ classdef WeatherDataAdapter < DataAdapter
     %Methods only accesible within the class
     methods (Access = private)
         
-        function temp = createDob(this, inRow)
+        function row = getFormattedWeatherRow(this, inRow)
             row = regexp(inRow,' ','split');
-            temp = row;
+            data = cellfun(@str2double,row(6:end),'UniformOutput',false);
+            row(6:end) = data;
         end
         
         function this = addObject(this)
