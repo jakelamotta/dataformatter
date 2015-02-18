@@ -14,8 +14,8 @@ classdef BehaviorDataAdapter < DataAdapter
         %%object is initialized.
         function this = BehaviorDataAdapter()            
             global matrixColumns;
-            this.cols = matrixColumns;
-            this.tempMatrix = [this.genData,this.cols];
+            this.cols = matrixColumns(1,25:end);
+            this.tempMatrix = this.cols;
             this.dobj = Observation();
             
             global varmap;
@@ -88,7 +88,7 @@ classdef BehaviorDataAdapter < DataAdapter
                 this = this.addValues(paths{1,i});
                 
                 obj = this.dobj.setObservation(this.tempMatrix,id_);
-                this.tempMatrix = [this.genData,this.cols];
+                this.tempMatrix = this.cols;
                 end
                 
             end

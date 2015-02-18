@@ -1,8 +1,10 @@
 classdef WeatherDataAdapter < DataAdapter
     %%%Class that works as an adapter between the raw WeatherData and the
-    %%%Observation object. WeatherData must be a txt file with lines in the
+    %%%Observation object. WeatherData must be a txt/dat file with lines in the
     %%%format:
     %%%yyyy m d h min  var1  var2 var3...
+    %%%The rows must be sorted in ascending order, if not some of the
+    %%%optimazation heuristics will not work.
     
     %%
     properties (Access = private)
@@ -68,6 +70,9 @@ classdef WeatherDataAdapter < DataAdapter
             months = parts(2:end);
         end
         
+        %%Using the path to the placeholder file for a given Observation
+        %%this function finds the corresponding weather file in the
+        %%general weather path.
         function path_ = findWeateherFileFromDate(this,weatherPaths,date_)
             stop = false;
             path_ = '';
@@ -104,11 +109,6 @@ classdef WeatherDataAdapter < DataAdapter
         function found = compareTime(this,actualTime,row)
             deltaTime = 5.1;
             
-            if ~(strcmp(actualTime.year,row{1,1}))
-                found = false;
-                return;
-            end
-            
             if ~(strcmp(actualTime.month,row{1,2}))
                 found = false;
                 return;
@@ -126,24 +126,18 @@ classdef WeatherDataAdapter < DataAdapter
         %%Compare the day of two time stamps, returns true if they are the
         %%same
         function found = compareDay(this,actualTime,row)
+            found = strcmp(actualTime.month,row{1,2});%(actualTime.month == row{1,2});
             
-            found = (actualTime.year == row{1,1});
-            if ~found
-                return;
-            end
-            
-            found = (actualTime.month == row{1,2});
             if ~found
                 return;
             end            
             
-            found = (actualTime.day == row{1,3});
+            found = strcmp(actualTime.day,row{1,3});
         end
         
         %%Get a Observation with weather data
         function obj = getObservation(this,paths,varargin)
             %time in format: multiple-20140821-104913
-            profile on;
             length_ = length(paths);
             inObj = varargin{1};
             weatherPaths = Utilities.getpath('weatherPath');
@@ -175,10 +169,12 @@ classdef WeatherDataAdapter < DataAdapter
                         temp = cellfun(@this.getFormattedWeatherRow,rawData,'UniformOutput',false);
                         loadedFiles(f) = temp;
                     end
+                    
                     %Use spectro time as a way to find the correct weather data
                     spectroTime = inObj.getSpectroTime(id_);
 
-                    %%If there is no spectro time check if there is a abiotic.
+                    %%If there is no spectro time check if there is a
+                    %%abiotic. 
                     if isempty(spectroTime)
                         abioticTime = inObj.getAbioticTime(id_);
                         if isempty(abioticTime)
@@ -190,9 +186,9 @@ classdef WeatherDataAdapter < DataAdapter
                         time = spectroTime;
                     end
 
-                    %If there is no time to use to find weather data the day is
-                    %used for narrowing down the number of potential
-                    %measurements.
+                    %If there is no time stamp to use to find weather data the day
+                    %from the observation date is used for narrowing down 
+                    %the number of potential measurements.
                     if strcmp('',time)
                         
                         %%The correct weather data is fetched from the list by
@@ -202,58 +198,64 @@ classdef WeatherDataAdapter < DataAdapter
 
                         start = 1;
                         
-                        counter = 0;
-
-                        for j=start:length(temp)
+                        %144 is the number of rows for one day as the data
+                        %is sampled at a 10 minute rate. No need to compare
+                        %every row but only every 144th row.
+                        for j=start:144:length(temp)
                             if ~isempty(timeList)
                                 t_temp = temp{1,j}(1,1:5);
 
                                 if this.compareDay(timeList,t_temp)
-                                    weatherDate = temp{1,j}(1:5);
-                                    weatherDate = ['/',num2str(weatherDate{1}),'-',...
-                                        num2str(weatherDate{2}),'-',num2str(weatherDate{3}),...
-                                        '-',num2str(weatherDate{4}),'-',num2str(weatherDate{5})];
-                                    temp{1,j}(5) = {weatherDate};
-                                    this.tempMatrix = [this.tempMatrix;...
-                                        temp{1,j}(5:8+this.nrOfNewVariables)];
-                                    
-                                counter = counter+1;    
-                                    
-                                %There are 144 possible rows for one day
-                                %with sampling at 10 minute rate
-                                if counter > 143
-                                   break; 
-                                end
-                                    
+                                    for rowIndex=j:j+144
+                                        weatherDate = temp{1,rowIndex}(1:5);
+                                        
+                                        weatherDate = ['/',weatherDate{1},'-',...
+                                        weatherDate{2},'-',weatherDate{3},...
+                                        '-',weatherDate{4},'-',weatherDate{5}];
+                                        
+                                        temp{1,rowIndex}(5) = {weatherDate};
+                                        
+                                        this.tempMatrix = [this.tempMatrix;...
+                                        temp{1,rowIndex}(5:8+this.nrOfNewVariables)];
+                                    end
+                                    break;
                                 end
                             end
                         end
                     else
                         timeList = this.splitTime(time);
-
                         t_temp = temp{1,1};
-
-%                         %%Finds the optimal starting point to minimize search time
-%                         if ~isempty(timeList)
-%                             if strcmp(timeList.month,t_temp{1,2})
-%                                 start = 1;
-%                             else
-%                                 start = (length(temp)/2);%-500;
-%                             end
-% 
-%                             %Heuristic to find starting point of search
-%                             dayDiff = timeList.day-t_temp{1,3};
-% 
-%                             %144 is the number of 10 minutes interval per day
-%                             start = start+dayDiff*144;
-% 
-%                             %Safety mesure to not miss the day due to missing data
-%                             %points etc. The number is somewhat arbitrary
-%                             start = start-50;
-%                         else
-%                             start = 1;
-%                         end
                         start = 1;
+                        
+                        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+                        %%Finds the optimal starting point to minimize search time
+                        %%%%%%%%%%%%Code purely for optimzation%%%%%%%%%%%%
+                        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+                        %Heuristic to find starting point of search, since
+                        %the weather file consists of two months sorted in
+                        %order of ascending time it means that if the input
+                        %time does not correspond to the first month the
+                        %algortihm can start the search from the middle
+                        if ~isempty(timeList)
+                            if strcmp(timeList.month,t_temp{1,2})
+                                start = 1;
+                            else
+                                start = (length(temp)/2)-1;
+                            end
+
+                            dayDiff = timeList.day-t_temp{1,3};
+
+                            %144 is the number of 10 minutes interval per day
+                            start = start+dayDiff*144;
+
+                            %Safety mesure to not miss the day due to missing data
+                            %points etc. The number is somewhat arbitrary
+                            start = start-50;
+                        end
+                        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+                        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+                        
+                        
                         %%The correct weather data is fetched from the list by
                         %%using the input time and comparing it to the weather data
                         %%time.
@@ -277,14 +279,14 @@ classdef WeatherDataAdapter < DataAdapter
                         end
                     end
 
-                    this.addValues(paths{1,i});
+                    this.tempMatrix = this.addValues(paths{1,i});
                     this.dobj = this.dobj.setObservation(this.tempMatrix,id_);
                     this.tempMatrix = this.cell_;
                 end
             end
+            
             close(this.mWaitbar);
             obj = this.dobj;
-            profile viewer;
         end
         
         %%Uses the generic filreader of the parent class.
@@ -308,126 +310,3 @@ classdef WeatherDataAdapter < DataAdapter
         end
     end
 end
-
-% %%Get a Observation with weather data
-%         function obj = getObservation(this,paths,varargin)
-%             %time in format: multiple-20140821-104913
-%             length_ = length(paths);
-%             inObj = varargin{1};
-%
-%             this.nrOfPaths = length_;
-%
-%             for i=1:length_
-%                 %Retrieve id from the path
-%                 this.updateProgress(i);
-%
-%                 id_ = DataAdapter.getIdFromPath(paths{1,i});
-%
-%                 %Use spectro time as a way to find the correct weather data
-%                 spectroTime = inObj.getSpectroTime(id_);
-%
-%                 %%If there is no spectro time check if there is a abiotic.
-%                 if isempty(spectroTime)
-%                     abioticTime = inObj.getAbioticTime(id_);
-%                     if isempty(abioticTime)
-%                         time = '';
-%                     else
-%                         time = abioticTime;
-%                     end
-%                 else
-%                     time = spectroTime;
-%                 end
-%
-%                 %If there is no time to use to find weather data the day is
-%                 %used for narrowing down the number of potential
-%                 %measurements.
-%                 if strcmp('',time)
-%                     %%The correct weather data is fetched from the list by
-%                     %%using the input time and comparing it to the weather data
-%                     %%time.
-%                     parts = regexp(paths{1,i},'\', 'split');
-%                     day = parts{end-5};
-%
-%                     timeList = this.splitTime(day);
-%
-%                     rawData = this.fileReader(paths{1,i});
-%                     rawData = strrep(rawData,'   ',' ');
-%                     rawData = strrep(rawData,'  ',' ');
-%
-%                     temp = cellfun(@this.createDob,rawData,'UniformOutput',false);
-%                     start = 1;
-%
-%                     for j=start:length(temp)
-%                         if ~isempty(timeList)
-%                             t_temp = temp{1,j}(1,1:5);
-%
-%                             if this.compareDay(timeList,t_temp)
-%                                 weatherDate = temp{1,j}(1:5);
-%                                 weatherDate = ['/',weatherDate{1},'-',weatherDate{2},'-',weatherDate{3},'-',weatherDate{4},'-',weatherDate{5}];
-%                                 temp{1,j}(5) = {weatherDate};
-%                                 this.tempMatrix = [this.tempMatrix;temp{1,j}(5:8+this.nrOfNewVariables)];
-%                             end
-%                         end
-%                     end
-%                 else
-%                     timeList = this.splitTime(time);
-%
-%                     rawData = this.fileReader(paths{1,i});
-%                     rawData = strrep(rawData,'   ',' ');
-%                     rawData = strrep(rawData,'  ',' ');
-%
-%                     temp = cellfun(@this.createDob,rawData,'UniformOutput',false);
-%
-%                     t_temp = temp{1,1};
-%
-%                     %%Finds the optimal starting point to minimize search time
-%                     if ~isempty(timeList)
-%                         if timeList{1,2} == str2double(t_temp{1,2})
-%                             start = 1;
-%                         else
-%                             start = (length(temp)/2);%-500;
-%                         end
-%
-%                         %Heuristic to find starting point of search
-%                         dayDiff = timeList{1,3}-str2double(t_temp{1,3});
-%
-%                         %144 is the number of 10 minutes interval per day
-%                         start = start+dayDiff*144;
-%
-%                         %Safety mesure to not miss the day due to missing data
-%                         %points etc. The number is somewhat arbitrary
-%                         start = start-50;
-%                     else
-%                         start = 1;
-%                     end
-%
-%                     %%The correct weather data is fetched from the list by
-%                     %%using the input time and comparing it to the weather data
-%                     %%time.
-%                     for j=start:length(temp)
-%                         if ~isempty(timeList)
-%                             t_temp = temp{1,j}(1,1:5);
-%
-%                             if this.compareTime(timeList,t_temp)
-%                                 weatherDate = temp{1,j}(1:5);
-%                                 weatherDate = ['/',weatherDate{1},'-',weatherDate{2},'-',weatherDate{3},'-',weatherDate{4},'-',weatherDate{5}];
-%                                 temp{1,j}(5) = {weatherDate};
-%                                 this.tempMatrix = [this.tempMatrix;temp{1,j}(5:8+this.nrOfNewVariables)];
-%                                 break;
-%                             end
-%                         else
-%                             weatherDate = temp{1,j}(1:5);
-%                             weatherDate = ['/',weatherDate{1},'-',weatherDate{2},'-',weatherDate{3},'-',weatherDate{4},'-',weatherDate{5}];
-%                             temp{1,j}(5) = {weatherDate};
-%                             this.tempMatrix = [this.tempMatrix;temp{1,j}(5:8+this.nrOfNewVariables)];
-%                         end
-%                     end
-%                 end
-%
-%                 this = this.addValues(paths{1,i});
-%                 this.dobj = this.dobj.setObservation(this.tempMatrix,id_);
-%                 this.tempMatrix = this.cell_;
-%             end
-%             close(this.mWaitbar);
-%             obj = this.dobj;
-%         end

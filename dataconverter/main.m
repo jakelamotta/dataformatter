@@ -41,8 +41,11 @@ function setGlobalVariables()
 
     %Build up variable names from the insect names
     for i=1:nrOfInsects
-        varmap([strrep(flies{i},char([13,10]),''),'d']) = [Utilities.padString(strrep(flies{i},char([13,10]),''),'_',5),'_dur'];
-        varmap([strrep(flies{i},char([13,10]),''),'f']) = [Utilities.padString(strrep(flies{i},char([13,10]),''),'_',5),'_fre'];
+        varmap([strrep(flies{i},char([13,10]),''),'d']) =...
+            [Utilities.padString(strrep(flies{i},char([13,10]),''),'_',5),'_dur'];
+        varmap([strrep(flies{i},char([13,10]),''),'f']) =...
+            [Utilities.padString(strrep(flies{i},char([13,10]),''),'_',5),'_fre'];
+        
         behaveCols{2*i-1} = [Utilities.padString(strrep(flies{i},char([13,10]),''),'_',5),'_fre'];
         behaveCols{2*i} = [Utilities.padString(strrep(flies{i},char([13,10]),''),'_',5),'_dur'];
     end

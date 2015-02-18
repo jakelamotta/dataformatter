@@ -301,7 +301,7 @@ function setGraph(h,obs,type)
         dp = str2double(dp);
     end
     
-    if dp ~= 220 && strcmp(userdata.type,'Spectro')
+    if dp ~= 221 && strcmp(userdata.type,'Spectro')
         set(edit_,'Enable','off');
     end
 

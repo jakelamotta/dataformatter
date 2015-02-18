@@ -206,6 +206,7 @@ classdef GUIHandler < handle
         function this = loadNewData(this, path_,dataType)
             this.inputManager = this.inputManager.splitPaths(path_,dataType);
             paths_ = this.inputManager.getPaths();
+            cancelled = false;
             
             if isempty(paths_)
                 errordlg(['There are no ', dataType,...
@@ -214,16 +215,21 @@ classdef GUIHandler < handle
             
             if strcmp(dataType,'Abiotic')
                 paths_ = fileChoice(paths_);
+                if ischar(paths_)
+                    cancelled = true;
+                end                
             end
             
-            observation = this.dataManager.getObs(dataType,paths_);
-            
-            if observation.hasMultiples() || strcmp(dataType,'Spectro')...
-                    || strcmp(dataType,'Olfactory')
-                
-                this.launchDialogue(dataType,observation);
-            else
-                this.dataManager.finalize(dataType,observation);
+            if ~cancelled
+                observation = this.dataManager.getObs(dataType,paths_);
+
+                if observation.hasMultiples() || strcmp(dataType,'Spectro')...
+                        || strcmp(dataType,'Olfactory')
+
+                    this.launchDialogue(dataType,observation);
+                else
+                    this.dataManager.finalize(dataType,observation);
+                end
             end
         end
         

@@ -180,7 +180,7 @@ function pushbutton2_Callback(hObject, eventdata, handles)
 % hObject    handle to pushbutton2 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-    updateSource(handles,'Weather');
+    updateSource(handles,'Weather',Utilities.getpath('placeholder.txt'));
 
 % --- Executes on button press in pushbutton3.
 function pushbutton3_Callback(hObject, eventdata, handles)
@@ -260,7 +260,8 @@ function updateSource(handles,type,varargin)
         tempStruct.(type) = source;
         set(handles.output,'UserData',tempStruct);
         
-        fname = 'template.xlsx';        
+        [p,fname,ext] = fileparts(fname);
+        fname = [fname,ext];%'template.xlsx';        
     else
         if strcmp(type,'Spectro')
             pname = uigetdir(Utilities.getpath(''));

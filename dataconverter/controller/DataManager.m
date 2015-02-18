@@ -46,7 +46,7 @@ classdef DataManager < handle
             
             %Initializes to 300 and 15000 respectively, once its set after this its final to not
             %create inconcistensies between observations
-            this.spectroDP = 220;
+            this.spectroDP = 221;
             this.olfactoryDP = 15000;
         end
         
@@ -73,8 +73,10 @@ classdef DataManager < handle
                 start = strfind(tempFlower,'<TD>');
                 end_ = strfind(tempFlower,'</TD>');
                 
-                newFlower = tempFlower(start+4:end_-1);
-                obj.set(i,1,newFlower);
+                if ~isempty(start)
+                    newFlower = tempFlower(start+4:end_-1);
+                    obj.set(i,1,newFlower);
+                end
             end
             
         end
@@ -113,7 +115,6 @@ classdef DataManager < handle
             
             this = this.setUnfObject(current);            
             obj = current;
-            %obj = this.getUnfObject();
             
             obj = this.stripFirstColumn(obj);
             

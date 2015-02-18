@@ -62,6 +62,7 @@ guidata(hObject, handles);
 set(hObject,'Name','Abiotic data');
 set(hObject,'UserData',noMultiFiles);
 set(handles.lbFiles,'String',hasMultiFiles);
+set(handles.okBtn,'UserData',false);
 
 % UIWAIT makes fileChoice wait for user response (see UIRESUME)
  uiwait(handles.figure1);
@@ -75,8 +76,11 @@ function varargout = fileChoice_OutputFcn(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 % Get default command line output from handles structure
-    varargout{1} = [get(handles.figure1,'UserData'),transpose(get(handles.lbFiles,'String'))];
-
+    if get(handles.okBtn,'UserData')
+        varargout{1} = [get(handles.figure1,'UserData'),transpose(get(handles.lbFiles,'String'))];
+    else
+        varargout{1} = '';
+    end
     delete(hObject);
 end
 % --- Executes on selection change in lbFiles.
@@ -107,6 +111,7 @@ function okBtn_Callback(hObject, eventdata, handles)
 % hObject    handle to okBtn (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+    set(hObject,'UserData',true);
     close();
 end
 % --- Executes on button press in cancelBtn.
@@ -114,6 +119,7 @@ function cancelBtn_Callback(hObject, eventdata, handles)
 % hObject    handle to cancelBtn (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+    close(handles.figure1);
 end
 
 % --- Executes on button press in delBtn.
