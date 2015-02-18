@@ -1,5 +1,6 @@
 classdef ImageDataAdapter < DataAdapter
-    %IMAGEDATAADAPTER Class for adapting images to an Observation object
+    %IMAGEDATAADAPTER Class for adapting images to an Observation object.
+    %Image must be in the format of a squared pixel matrix in grayscale
     
     properties
         init;
@@ -7,6 +8,7 @@ classdef ImageDataAdapter < DataAdapter
     
     methods (Access = public)
         
+        %%Constructor
         function this = ImageDataAdapter()
             this.init = {'Im_Contrast','Im_Correlation','Im_Energy','Im_Homogenity','Im_Entropy','Im_rms_contr','Im_Alpha'};
             this.tempMatrix = this.init;
@@ -159,6 +161,7 @@ classdef ImageDataAdapter < DataAdapter
             toc
         end
         
+        %%See DataAdapter for fileReader implementation
         function rawData = fileReader(this,path)
             rawData = imread(path); % load image
         end

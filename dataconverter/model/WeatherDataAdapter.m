@@ -4,7 +4,7 @@ classdef WeatherDataAdapter < DataAdapter
     %%%format:
     %%%yyyy m d h min  var1  var2 var3...
     %%%The rows must be sorted in ascending order, if not some of the
-    %%%optimazation heuristics will not work.
+    %%%optimization heuristics will not work.
     
     %%
     properties (Access = private)
@@ -229,7 +229,7 @@ classdef WeatherDataAdapter < DataAdapter
                         
                         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
                         %%Finds the optimal starting point to minimize search time
-                        %%%%%%%%%%%%Code purely for optimzation%%%%%%%%%%%%
+                        %%%%%%%%%%%%Code purely for optimization%%%%%%%%%%%
                         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
                         %Heuristic to find starting point of search, since
                         %the weather file consists of two months sorted in
@@ -253,8 +253,7 @@ classdef WeatherDataAdapter < DataAdapter
                             start = start-50;
                         end
                         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-                        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-                        
+                        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%                        
                         
                         %%The correct weather data is fetched from the list by
                         %%using the input time and comparing it to the weather data

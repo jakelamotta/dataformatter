@@ -1,6 +1,11 @@
 classdef AbioticDataAdapter < DataAdapter
-    %ABIOTICDATAADAPTER Summary of this class goes here
-    %   Detailed explanation goes here
+    %ABIOTICDATAADAPTER Class that adapts raw Abiotic data to a generic
+    %%%observation object.
+    %%%Accepeted file type is:
+    %%% - txt-file
+    %%%
+    %%%Format for one row needs to be (for example):
+    %%%2014-09-19_16_22_39	;	437,17;ppm	;	26,41;°C	;	39,29;%
     
     properties
         initMatrix

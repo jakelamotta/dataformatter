@@ -163,13 +163,32 @@ classdef InputManager < handle
         
         %%Function that writes metadata to a word document
         function writeMetaDatatoFile(this)
-            root = FolderTree('data');
+            node = FolderTree('data');
             path_ = uigetdir(Utilities.getpath(''));
             
             if ischar(path_)
-                this.getMetaData(path_,root);
-                WriteToWordFromMatlab(Utilities.getpath('metadata.doc'),root);
-            end
+                this.getMetaData(path_,node);
+%                 
+%                 depth = node.getDepth();
+%                 startingNodes = {};
+%                 
+%                 if depth > 4
+%                     cont = true;
+%                     
+%                     while cont
+%                         while node.hasChildren()
+%                             tempNode = node.popChild();
+%                             depth = tempNode.getDepth();
+%                             
+%                             if depth == 4
+%                                 cont = false;
+%                                 startingNodes{end+1} = tempNode;
+%                             else
+%                         end
+%                     end
+%                 end
+                WriteToWordFromMatlab(Utilities.getpath('metadata.doc'),node);
+        end
         end
         
         %%

@@ -50,14 +50,12 @@ function WriteToWordFromMatlab(path,rootTree)
             %Fetch and remove first child
             flower = date_.popChild();
             
-            Style='Heading 3';
-            TextString=[flower.getName(),' - '];    
-            WordText(ActXWord,TextString,Style,[0,0]);
+            
             
             while flower.hasChildren()
                 negOrPos = flower.popChild();
-                
-                TextString=negOrPos.getName();
+                Style='Heading 3';
+                TextString= [flower.getName(),' - ',negOrPos.getName()];
                 WordText(ActXWord,TextString,Style,[0,1]);
                 
                 while negOrPos.hasChildren()

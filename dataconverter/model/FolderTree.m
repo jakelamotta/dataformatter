@@ -12,6 +12,7 @@ classdef FolderTree < handle
     end
     
     methods (Access = public)
+       
         
         %%Constructor. Called with a name and an option for passing a
         %%FolderTree object as parent. The root tree is the only one that
@@ -71,6 +72,15 @@ classdef FolderTree < handle
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%        
         function p = getParent(this)
             p = this.parent;
+        end
+        
+        function depth = getDepth(this)            
+            node = this;            
+            depth = 0;
+            while node.hasChildren()
+                depth = depth + 1;
+                node = node.popChild();
+            end
         end
         
         function n = getName(this)
