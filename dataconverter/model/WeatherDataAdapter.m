@@ -206,7 +206,7 @@ classdef WeatherDataAdapter < DataAdapter
                                 t_temp = temp{1,j}(1,1:5);
 
                                 if this.compareDay(timeList,t_temp)
-                                    for rowIndex=j:j+144
+                                    for rowIndex=jj:j+144
                                         weatherDate = temp{1,rowIndex}(1:5);
                                         
                                         weatherDate = ['/',weatherDate{1},'-',...
