@@ -22,7 +22,7 @@ function varargout = importWindow(varargin)
 
 % Edit the above text to modify the response to help importWindow
 
-% Last Modified by GUIDE v2.5 06-Feb-2015 11:48:09
+% Last Modified by GUIDE v2.5 24-Feb-2015 15:20:16
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -232,3 +232,12 @@ function loadrb_Callback(hObject, eventdata, handles)
     if get(hObject,'value')
         updateRadio(handles,hObject);
     end
+
+
+% --- Executes on button press in radiobutton9.
+function radiobutton9_Callback(hObject, eventdata, handles)
+% hObject    handle to radiobutton9 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of radiobutton9

@@ -57,8 +57,15 @@ handles.output = hObject;
 
 % Update handles structure
 guidata(hObject, handles);
+paths = varargin{1};
 
-[noMultiFiles, hasMultiFiles] = findDuplicates(varargin{1});
+if length(paths) > 1
+    [noMultiFiles, hasMultiFiles] = findDuplicates(paths);
+else
+    noMultiFiles = paths;
+    hasMultiFiles = {};
+end
+
 set(hObject,'Name','Abiotic data');
 set(hObject,'UserData',noMultiFiles);
 set(handles.lbFiles,'String',hasMultiFiles);

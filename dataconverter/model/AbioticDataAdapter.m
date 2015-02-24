@@ -63,10 +63,8 @@ classdef AbioticDataAdapter < DataAdapter
         %%For each cell element, parse data
         function temp = createObs(this, inRow)
             %Split around " ; ".
-            row = regexp(inRow,[char(9),';',char(9)],'split');
-            
+            row = regexp(inRow,[char(9),';',char(9)],'split');            
             temp = cellfun(@AbioticDataAdapter.handleRow,row,'UniformOutput',false);
-            %temp = cellfun(@str2num,row,'UniformOutput',false);%[this.tempMatrix;cellfun(@str2num,row,'UniformOutput',false)];
         end
         
         %%Filereader that uses the parent class filereader, for debugging

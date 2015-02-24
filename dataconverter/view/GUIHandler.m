@@ -43,7 +43,7 @@ classdef GUIHandler < handle
             this.scrsz = get(0,'ScreenSize');
             sz = this.scrsz;
             
-            this.tableSize = [sz(3)/27.4286 sz(4)/12.0 sz(3)/1.7588 sz(4)/2.6091];
+            this.tableSize = [sz(3)/16.4000 sz(4)/12.0 sz(3)/1.8588 sz(4)/2.6091];
             
             load('config.mat');
             
@@ -145,7 +145,7 @@ classdef GUIHandler < handle
             %%%%%%%%%%%%%%%%%%%%%TEXTFIELD INITIALIZATION%%%%%%%%%%%%%%%%%%
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
             this.idText = uicontrol('parent',this.mainWindow,'style','text',...
-                'units', 'normalized','Position',[0 0.5 0.06 .04],'String','-');
+                'units', 'normalized','Position',[0.005 0.5 0.08 .04],'String','-');
             
             this.varText = uicontrol('parent',this.mainWindow,'style','text',...
                 'units', 'normalized','String','-','Position',[0.45 .7 .1 .02]);

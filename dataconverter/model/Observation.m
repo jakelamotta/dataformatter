@@ -8,14 +8,21 @@ classdef Observation < handle
         %The xlsMatrix is what hold all data when it has been loaded in to
         %the program. 
         xlsMatrix;
+        numOfStandardVariables;
     end
     
     methods (Access = public)
         
         %%Constructor. Initializes the object
-        function this = Observation()
+        function this = Observation(varargin)
             global matrixColumns;
-            this.xlsMatrix = [matrixColumns,{'lux_flower','lux_up','SpectroX','SpectroY','SpectroXUp','SpectroYUp','OlfX','OlfY'}];
+            if isempty(varargin)
+                this.xlsMatrix = [matrixColumns,{'lux_flower','lux_up','SpectroX','SpectroY','SpectroXUp','SpectroYUp','OlfX','OlfY'}];
+                this.numOfStandardVariables = uint32(Constants.StandardVarsPos);
+            else
+                this.xlsMatrix = varargin{1};
+                this.numOfStandardVariables = varargin{2};
+            end
         end
         
         %%Adding an observation to another, it doesnt consider copies or
@@ -65,12 +72,18 @@ classdef Observation < handle
             this.setMatrix(matrix);
         end
         
-        %%Calculates average for each observation
+        %%Calculates average for each observation.
         function this = doAverage(this,colStart)
+            %First sort by id so that each obs is gathered within a span of
+            %rows
             this.sortById();
+            
             matrix = this.getMatrix();
             
+            %Just remove the row with column names
             firstRow = matrix(1,:);
+            
+            %A temporary matrix without column names
             matrix = matrix(2:end,:);
             
             height = this.getNumRows()-1;
@@ -78,6 +91,9 @@ classdef Observation < handle
             indices = [1,0];
             temp = matrix{1,2};
             
+            %For each row compare id with the previous, this way the rows
+            %where a new observation starts can be found. They are placed
+            %in "indices"
             for k=1:height
                 if ~strcmp(temp,matrix{k,2})
                     indices(end) = k-1;
@@ -86,7 +102,7 @@ classdef Observation < handle
                 end
             end
             
-            indices(end) = height;
+            indices(end,end) = height;
             
             [h,w] = size(indices);
             
@@ -123,7 +139,7 @@ classdef Observation < handle
             row = cell(1,w);
             
             %Add the values that are not going to be averaged
-            for i=1:9
+            for i=1:this.numOfStandardVariables
                 row{i} = rows{1,i};
             end
             
@@ -134,15 +150,15 @@ classdef Observation < handle
                 for j=1:h                    
                     if isnumeric(rows{j,i})
                         if ~isempty(rows{j,i})
-                            if rows{j,i} ~= 0
+%                            if rows{j,i} ~= 0
                                 temp = temp+rows{j,i};
                                 counter = counter+1;
-                            end
+%                            end
                         end                        
                     else
                         if ~isnan(str2double(rows{j,i}))
                             v = str2double(rows{j,i});
-                            if v ~= 0 && ~isempty(v)
+                            if ~isempty(v) && v ~= 0
                                 temp = temp+v;
                                 counter = counter+1;
                             end

@@ -190,14 +190,16 @@ classdef SpectroDataAdapter < DataAdapter
             %how to read it
             rawData = this.fileReader(path,'jaz');
             
-            W = rawData(19:end,1);
-            S = rawData(19:end,4);
+            W = rawData(19,1);
+            S = rawData(19,4);
             
             w = cellfun(@str2double,W,'UniformOutput',false);
             s = cellfun(@str2double,S,'UniformOutput',false);
             
-            this.tempMatrix{2,3} = [w{1:end-1}];
-            this.tempMatrix{2,4} = [s{1:end-1}];
+            
+            
+            this.tempMatrix{2,3} = ;
+            this.tempMatrix{2,4} = ;
             
             this = this.addValues(NaN,path_,'jaz');
             this.obs.setObservation(this.tempMatrix,id_);

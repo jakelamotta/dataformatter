@@ -1,4 +1,4 @@
-function main()
+function pdm()
 
 clear all;
 clear classes;

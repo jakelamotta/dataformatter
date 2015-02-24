@@ -9,6 +9,12 @@ classdef Constants < uint32
        %%Column position of "ID"
        IdPos (2)
        
+       %These are variables that wont be averaged as these are "standard"
+       %variables and not variables fetched from data but from the folder
+       %structre. Such as Flower, id, date, positive, negative. All strings
+       %should be within this limit aswell.
+       StandardVarsPos (9);
+       
        %%Column position of Spectro arrays
        SpectroXPos (49)
        SpectroYPos (50)

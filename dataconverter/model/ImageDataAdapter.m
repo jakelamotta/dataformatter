@@ -148,7 +148,7 @@ classdef ImageDataAdapter < DataAdapter
                         
                         this.tempMatrix = [this.tempMatrix;parameters];
                         
-                        this = this.addValues(paths{1,i});
+                        this = this.addValues([folders{1,i},'\t']);
                         
                         this.dobj.setObservation(this.tempMatrix,strrep(fnames{i},'__','.'));
                         this.tempMatrix = this.init;
