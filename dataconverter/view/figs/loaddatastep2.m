@@ -22,7 +22,7 @@ function varargout = loaddatastep2(varargin)
 
 % Edit the above text to modify the response to help loaddatastep2
 
-% Last Modified by GUIDE v2.5 06-Feb-2015 11:49:06
+% Last Modified by GUIDE v2.5 24-Feb-2015 15:41:39
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -320,6 +320,8 @@ function updateSource(handles,type,varargin)
             set(handles.abioText,'String',fname);
         case 'Olfactory'
             set(handles.olfText,'String',fname);
+        case 'SpectroJaz'
+            set(handles.text9,'String',fname);
     end
 
 % --- Executes when user attempts to close figure1.
@@ -345,3 +347,11 @@ function templateBtn_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
     updateSource(handles,'Behavior',Utilities.getpath('template.xlsx'));
     
+
+
+% --- Executes on button press in pushbutton11.
+function pushbutton11_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton11 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+    updateSource(handles,'SpectroJaz');

@@ -83,7 +83,7 @@ function okBtn_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
     data = cell(1,2);
-    types = {'','','','','',''};
+    types = {'','','','','','',''};
     type = '';
     
     if get(handles.radiobutton1,'value')
@@ -108,6 +108,10 @@ function okBtn_Callback(hObject, eventdata, handles)
     
     if get(handles.radiobutton6,'value')
         types{4} = 'Olfactory';
+    end
+    
+    if get(handles.radiobutton9,'value')
+       types{7} = 'SpectroJaz'; 
     end
     
     if get(handles.loadrb,'value')
