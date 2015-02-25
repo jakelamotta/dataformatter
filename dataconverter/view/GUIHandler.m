@@ -224,7 +224,7 @@ classdef GUIHandler < handle
                 observation = this.dataManager.getObs(dataType,paths_);
 
                 if observation.hasMultiples() || strcmp(dataType,'Spectro')...
-                        || strcmp(dataType,'Olfactory')
+                        || strcmp(dataType,'Olfactory') || strcmp(dataType,'SpectroJaz')
 
                     this.launchDialogue(dataType,observation);
                 else

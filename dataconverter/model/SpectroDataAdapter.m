@@ -2,8 +2,8 @@ classdef SpectroDataAdapter < DataAdapter
     %%%Class that works as an adapter between the raw Spectrophotometer data and the
     %%%Observation object. Raw data is accepted in two different format.
     %%%Either in a textfile which is the output of the custom Iphone
-    %%%spectrophotometer. 
-    %%%The other option is a xlsx-file which is more straightforward.   
+    %%%spectrophotometer.
+    %%%The other option is a xlsx-file which is more straightforward.
     
     properties
         init;
@@ -19,42 +19,30 @@ classdef SpectroDataAdapter < DataAdapter
             this.obs = Observation();
         end
         
-        function rawData = fileReader(this,path,fileType)
-            if strcmp(fileType,'txt')
-                rawData = fileReader@DataAdapter(this,path);
-            else
-                try
-                    [a,b,rawData] = xlsread(path);
-                catch e
-                    errordlg('File could not be read!','Incorrect fileformat');
-                end
-            end
+        %%See DataAdapter for implementation
+        function rawData = fileReader(this,path)
+            rawData = fileReader@DataAdapter(this,path);
         end
-        
-        function this = addValues(this,idx,path,fileType)
+
+        %%Add the values extrapolated from the path to the observation
+        function this = addValues(this,idx,path)
             
-            matrix = {};
+            matrix = this.tempMatrix;
+            [h,w] = size(matrix);
+            g = [{'Flower','/Date','Negative','Positive'};cell(h-1,4)];
             
-            if strcmp(fileType,'txt')
-                matrix = this.tempMatrix;
-                [h,w] = size(matrix);
-                g = [{'Flower','/Date','Negative','Positive'};cell(h-1,4)];
-                
-                matrix = [g,matrix];
-                
-                date_ = path(idx(end-7):idx(end-6));
-                
-                flower = path(idx(end-6):idx(end-5));
-                negOrPos = path(idx(end-5):idx(end-4));
-                
-                for i=2:h
-                    matrix{i,1} = flower(2:end-1);
-                    matrix{i,2} = date_(2:end-1);
-                    matrix{i,3} = double(strcmp(negOrPos(2:end-1),'negative'));
-                    matrix{i,4} = double(~strcmp(negOrPos(2:end-1),'negative'));
-                end
-            elseif strcmp(fileType,'jaz')
-                matrix = addValues@DataAdapter(this,path,this.tempMatrix);
+            matrix = [g,matrix];
+            
+            date_ = path(idx(end-7):idx(end-6));
+            
+            flower = path(idx(end-6):idx(end-5));
+            negOrPos = path(idx(end-5):idx(end-4));
+            
+            for i=2:h
+                matrix{i,1} = flower(2:end-1);
+                matrix{i,2} = date_(2:end-1);
+                matrix{i,3} = double(strcmp(negOrPos(2:end-1),'negative'));
+                matrix{i,4} = double(~strcmp(negOrPos(2:end-1),'negative'));
             end
             
             this.tempMatrix = matrix;
@@ -66,19 +54,12 @@ classdef SpectroDataAdapter < DataAdapter
         %%Output - Observation object
         function obj = getObservation(this,paths)
             
-            s = length(paths);
+            len = length(paths);
+            this.nrOfPaths = len;
             
-            this.nrOfPaths = s;
-            for i=1:s
-                [uu1,uu2,ext] = fileparts(paths{1,i});
-                
+            for i=1:len
                 this.updateProgress(i);
-                
-                if strcmp('.txt',ext)
-                    this.getObsFromTxt(paths{1,i});
-                elseif strcmp('.xlsx',ext)
-                    this.getObsFromJaz(paths{1,i});
-                end
+                this.getObsFromTxt(paths{1,i});
             end
             
             close(this.mWaitbar);
@@ -122,7 +103,7 @@ classdef SpectroDataAdapter < DataAdapter
                     errordlg(['Incorrect path was passed to the file reader. Matlab error: ',e.message]);
                 end
                 
-                rawData = this.fileReader(path_,'txt');
+                rawData = this.fileReader(path_);
                 
                 wli = strfind(rawData,'spectrumPoints');
                 wli = wli{1};
@@ -168,40 +149,40 @@ classdef SpectroDataAdapter < DataAdapter
                     this.tempMatrix{2,2+2*obs_} = y;
                 end
                 
-                this = this.addValues(indices,path_,'txt');
+                this = this.addValues(indices,path_);
                 this.obs.setObservation(this.tempMatrix,id_);
                 this.tempMatrix = this.init;
             end
             
         end
         
-        %%Called when the file is a xlsx-file. 
-        function this = getObsFromJaz(this,path_)       
-            
-            try
-                id_ = DataAdapter.getIdFromPath(path_);
-            catch e
-                errordlg(['Incorrect path was passed to the file reader. Matlab error: ',e.message]);
-            end
-            
-            path = path_;
-            
-            %Needs to be called with filetype so that the file reader know
-            %how to read it
-            rawData = this.fileReader(path,'jaz');
-            
-            W = rawData(19:end,1);
-            S = rawData(19:end,4);
-            
-            w = cellfun(@str2double,W,'UniformOutput',false);
-            s = cellfun(@str2double,S,'UniformOutput',false);
-            
-            this.tempMatrix{2,3} = [w{1:end-1}];
-            this.tempMatrix{2,4} = [s{1:end-1}];
-            
-            this = this.addValues(NaN,path_,'jaz');
-            this.obs.setObservation(this.tempMatrix,id_);
-            this.tempMatrix = this.init;
-        end
+        %         %%Called when the file is a xlsx-file.
+        %         function this = getObsFromJaz(this,path_)
+        %
+        %             try
+        %                 id_ = DataAdapter.getIdFromPath(path_);
+        %             catch e
+        %                 errordlg(['Incorrect path was passed to the file reader. Matlab error: ',e.message]);
+        %             end
+        %
+        %             path = path_;
+        %
+        %             %Needs to be called with filetype so that the file reader know
+        %             %how to read it
+        %             rawData = this.fileReader(path,'jaz');
+        %
+        %             W = rawData(19:end,1);
+        %             S = rawData(19:end,4);
+        %
+        %             w = cellfun(@str2double,W,'UniformOutput',false);
+        %             s = cellfun(@str2double,S,'UniformOutput',false);
+        %
+        %             this.tempMatrix{2,3} = [w{1:end-1}];
+        %             this.tempMatrix{2,4} = [s{1:end-1}];
+        %
+        %             this = this.addValues(NaN,path_,'jaz');
+        %             this.obs.setObservation(this.tempMatrix,id_);
+        %             this.tempMatrix = this.init;
+        %         end
     end
 end

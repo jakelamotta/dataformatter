@@ -16,7 +16,7 @@ classdef AdapterFactory
             this.adapters('Image') = @() ImageDataAdapter();
             this.adapters('Behavior') = @() BehaviorDataAdapter();
             this.adapters('Olfactory') = @() OlfactoryDataAdapter();
-            this.adapters('SpectroJaz') = @() SpectroJazAdapter();
+            this.adapters('SpectroJaz') = @() SpectroJazDataAdapter();
         end
         
         %%Create 

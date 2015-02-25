@@ -270,22 +270,24 @@ function squaredImage = squarify(image_,varargin)
         x_max = varargin{4};
         
         squaredImage = image_(floor(y_min):floor(y_max),floor(x_min):floor(x_max),:);
+        %squaredImage = image_(floor(x_min):floor(x_max),floor(y_min):floor(y_max),:);
     end
-    [h,w] = size(squaredImage);
-
-    if h ~= w
-        avg = (h+w)/2;
-
-        if avg+floor(y_min) > h
-            avg = h;
-        end
-
-        if avg+floor(x_min) > w
-            avg = w;
-        end
-
-        squaredImage = image_(floor(y_min):floor(y_min)+floor(avg),floor(x_min):floor(x_min)+floor(avg),:);
-    end
+%     [h,w] = size(squaredImage);
+% 
+%     if h ~= w
+%         avg = (h+w)/2;
+% 
+%         if avg+floor(y_min) > h
+%             avg = h;
+%         end
+% 
+%         if avg+floor(x_min) > w
+%             avg = w;
+%         end
+% 
+%         %squaredImage = image_(floor(x_min):floor(x_min)+floor(avg),floor(y_min):floor(y_min)+floor(avg),:);
+%         squaredImage = image_(floor(y_min):floor(y_min)+floor(avg),floor(x_min):floor(x_min)+floor(avg),:);
+%     end
 end
 
 % --- Executes on selection change in popupmenu1.

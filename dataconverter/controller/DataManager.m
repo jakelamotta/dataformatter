@@ -120,14 +120,14 @@ classdef DataManager < handle
             obj = this.stripFirstColumn(obj);
             
             %Interpolate and expnd the spectrum points to their own columns
-            if strcmp(id,'Spectro')
+            if strcmp(id,'Spectro') || strcmp(id,'SpectroJaz')
                 obj.downSample(this.getNrOfSpectroDP(),id);
-                obj.expandSpectrumPoints(id);
+                obj.inflateSpectrumPoints(id);
             end
             
             if strcmp(id,'Olfactory')
                 obj.downSample(this.getNrOfOlfactoryDP(),id);
-                obj.expandSpectrumPoints(id);
+                obj.inflateSpectrumPoints(id);
             end
             
             %Remove the temporary columns for storing the arrays which

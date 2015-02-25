@@ -162,8 +162,10 @@ classdef Observation < handle
                 for j=1:h                    
                     if isnumeric(rows{j,i})
                         if ~isempty(rows{j,i})
+%                            if rows{j,i} ~= 0
                                 temp = temp+rows{j,i};
                                 counter = counter+1;
+%                            end
                         end                        
                     else
                         if ~isnan(str2double(rows{j,i}))
@@ -205,7 +207,7 @@ classdef Observation < handle
                 dsrate = str2double(dsrate);
             end
             
-            %Use a different interpolation method for different data types
+            %%Use a diffe
             if strcmp(type,'Spectro')
                 for i=2:height
                     y1 = matrix{i,y1pos};
@@ -259,8 +261,8 @@ classdef Observation < handle
             this.setMatrix(matrix);
         end
         
-        %%Function for 
-        function this = inflateSpectrumPoints(this,type)
+        %%
+        function this = expandSpectrumPoints(this,type)
             matrix = this.getMatrix();
             height = this.getNumRows();
             

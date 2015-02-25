@@ -70,7 +70,7 @@ userdata.handler = handler;
 userdata.data = obj;
 userdata.type = id;
 
-if strcmp(id,'Spectro')
+if strcmp(id,'Spectro') || strcmp(id,'SpectroJaz')
     userdata.dp = handler.getDataManager().getNrOfSpectroDP();
     %set(hObject,'UserData',userdata);
 %     setGraph(handles,spectro);
@@ -252,7 +252,7 @@ function setGraph(h,obs,type)
     %data = obs.getMatrix();
     height = obs.getNumRows();
     
-    if strcmp(type,'Spectro')
+    if strcmp(type,'Spectro') || strcmp(type,'SpectroJaz')
 
     legendList = cell(1,(height-1)*2);    
     
@@ -288,7 +288,7 @@ function setGraph(h,obs,type)
     userdata = get(handle,'UserData');
     handler = userdata.handler;
 
-    if strcmp(userdata.type,'Spectro')
+    if strcmp(userdata.type,'Spectro') || strcmp(userdata.type,'SpectroJaz')
         dp = handler.getDataManager().getNrOfSpectroDP();
     else
         dp = handler.getDataManager().getNrOfOlfactoryDP();
@@ -301,7 +301,7 @@ function setGraph(h,obs,type)
         dp = str2double(dp);
     end
     
-    if dp ~= 221 && strcmp(userdata.type,'Spectro')
+    if dp ~= 221 && strcmp(userdata.type,'Spectro') && strcmp(userdata.type,'SpectroJaz')
         set(edit_,'Enable','off');
     end
 
@@ -326,7 +326,7 @@ function downSample(varargin)
     dsrate = str2double(rate);
     
     %%Interpolating Spectro data 
-    if strcmp(type,'Spectro')
+    if strcmp(type,'Spectro') || strcmp(type,'SpectroJaz')
         for i=2:height
             y1 = obs.get(i,uint32(Constants.SpectroYPos));
             x1 = obs.get(i,uint32(Constants.SpectroXPos));
@@ -426,10 +426,10 @@ function out_ = validateData(obs)
     height = obs.getNumRows();
     
     for i=3:height
-        if strcmp(temp,obs.get(i,2))%data{i,2})
+        if strcmp(temp,obs.get(i,2))
             out_ = false;
             break;
         end
-        temp = obs.get(i,2);%data{i,2};
+        temp = obs.get(i,2);
     end
 end

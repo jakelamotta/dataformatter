@@ -30,11 +30,11 @@ classdef AbioticDataAdapter < DataAdapter
             
             this.nrOfPaths = len;
             
+            %For
             for i=1:len
                 this.updateProgress(i); %Updates the waitbar
                 
                 path_ = paths{1,i};
-                
                 
                 id_ = DataAdapter.getIdFromPath(path_);%Retrieves observation id from path         
                 
@@ -45,10 +45,16 @@ classdef AbioticDataAdapter < DataAdapter
                 for k=1:length(temp)
                    [h,w] = size(temp{1,k});
                    
+                   %Only perform row operations if the length is 4, the
+                   %last line of the file will sometimes be an empty line
+                   %which otherwise will make the program to crash
                    if w == 4
                        row = temp{1,k};
+                       
+                       %The dash at the end is added to let excel know it
+                       %should be treated as a string. the rest are removed
+                       %for functional purposes
                        row{1} = [strrep(strrep(row{1},'-',''),'_',''),'_'];
-                       %row{1} = [strrep(row{1},['-','_'],''),'_'];
                        this.tempMatrix = [this.tempMatrix;row];
                    end
                 end

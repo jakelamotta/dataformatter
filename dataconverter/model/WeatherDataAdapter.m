@@ -250,7 +250,11 @@ classdef WeatherDataAdapter < DataAdapter
 
                             %Safety mesure to not miss the day due to missing data
                             %points etc. The number is somewhat arbitrary
-                            start = start-50;
+                            if start > 50
+                                start = start-50;
+                            else
+                                start = 1;
+                            end
                         end
                         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
                         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%                        
