@@ -24,6 +24,7 @@ classdef DataManager < handle
         function this = importOldData(this,filename)
             [~,~,data] = xlsread(filename);
             this.observation.setMatrix(data);
+            this.observation.removeNaN();
         end
         
         %Clean up function to make sure all objects are deleted after
@@ -170,7 +171,7 @@ classdef DataManager < handle
             end
             
             this = this.setUnfObject(Observation());
-            
+                        
         end
         
         %%Write to persistant storage

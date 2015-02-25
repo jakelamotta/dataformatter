@@ -47,7 +47,8 @@ classdef AbioticDataAdapter < DataAdapter
                    
                    if w == 4
                        row = temp{1,k};
-                       row{1} = strrep(strrep(row{1},'-',''),'_','');
+                       row{1} = [strrep(strrep(row{1},'-',''),'_',''),'_'];
+                       %row{1} = [strrep(row{1},['-','_'],''),'_'];
                        this.tempMatrix = [this.tempMatrix;row];
                    end
                 end

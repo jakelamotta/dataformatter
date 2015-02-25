@@ -34,6 +34,16 @@ classdef Observation < handle
             this.setMatrix([this.xlsMatrix;matrix(2:end,:)]);
         end
         
+        function this = removeNaN(this)
+           for h=2:this.getNumRows()
+               for w=1:this.getWidth()
+                   if isnan(this.get(h,w))
+                       this.set(h,w,[]);
+                   end
+               end
+           end
+        end
+        
         %%Adds zeroes to any empty cell in the Observation cell array
         function this = fillWithZeros(this)
             for i=4:this.getWidth()
