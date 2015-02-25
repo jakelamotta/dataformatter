@@ -145,27 +145,25 @@ function showCroppedImage(handles)
     
     image_ = get(handles.axes1,'UserData');
     
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%SQUARE THE IMAGE%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %%%%%%%%%%%%%%%%%%%%%
+    
     [h,w] = size(image_);
     
     if h~=w
         
         squareSize = min(h,w);
-       
+%       
         center_vertical = round(h/2);
             center_horizontal = round(w/2);
-            h1 = center_vertical-floor(squareSize/2)+1;
+            h1 = center_vertical-floor(squareSize/2);
             h2 = center_vertical+floor(squareSize/2);
-            w1 = center_horizontal-floor(squareSize/2)+1;
+            w1 = center_horizontal-floor(squareSize/2);
             w2 = center_horizontal+floor(squareSize/2);
             
-        squaredImage = image_(h1:h2,w1:w2,:);
+        squaredImage = image_(h1:h2,1,w1:w2,:);
     end
     image_ = squaredImage;
     %%%%%%%%%%%%%%%%%%%%%%
-    
     imshow(image_,'Parent',axesCroppedHandle);
     hold on;
     axis image;
@@ -274,7 +272,6 @@ set(S.fH, 'WindowButtonUpFcn', @stopDragFcn);
             else
                 images{1,get(S.h.popupmenu1,'Value')} = tempImage; 
             end
-            
             set(S.h.popupmenu1,'UserData',images);
         end
         
@@ -293,7 +290,7 @@ function squaredImage = squarify(image_,varargin)
         x_min = varargin{3};
         x_max = varargin{4};
         
-        [h,w] = size(image_);
+        [h,w,z] = size(image_);
         
         squaredImage = image_(max(floor(y_min),1):min(floor(y_max),h),...
             max(floor(x_min),1):min(floor(x_max),w),:);
