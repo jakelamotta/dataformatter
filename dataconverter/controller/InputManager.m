@@ -16,27 +16,7 @@ classdef InputManager < handle
         %%A recursive folder search function, takes a path to a folder as
         %%an input and search for all occurences of the "type" in the
         %%subfolders
-        function this = recSearch(this,path,type)            
-%             if strcmp(type,'Spectro')
-%                 type = 'metadata';
-%             end
-%             
-%             temp = dir(path);
-%             fs = strfind(path,'\');
-%             last = fs(end);
-%             
-%             [h,w] = size(temp);
-%             
-%             for i=3:h
-%                 if strcmp(path(last+1:end),type)
-%                     typeDir = dir(path);
-%                     numFiles = size(typeDir);                    
-%                     this.paths{1,end+1} = [path,'\',typeDir(i).name];
-%                 else
-%                     this = this.recSearch([path,'\',temp(i).name],type);
-%                 end
-%             end
-
+        function this = recSearch(this,path,type)
             if strcmp(type,'Spectro')
                 type = 'metadata';
             end
@@ -127,7 +107,6 @@ classdef InputManager < handle
             %Function returns true or false depending on if the operation
             %was successfull or not
             success = true;
-            
             dataTypes = fieldnames(sources);
             
             for i=1:numel(dataTypes)
@@ -168,27 +147,8 @@ classdef InputManager < handle
             
             if ischar(path_)
                 this.getMetaData(path_,node);
-%                 
-%                 depth = node.getDepth();
-%                 startingNodes = {};
-%                 
-%                 if depth > 4
-%                     cont = true;
-%                     
-%                     while cont
-%                         while node.hasChildren()
-%                             tempNode = node.popChild();
-%                             depth = tempNode.getDepth();
-%                             
-%                             if depth == 4
-%                                 cont = false;
-%                                 startingNodes{end+1} = tempNode;
-%                             else
-%                         end
-%                     end
-%                 end
                 WriteToWordFromMatlab(Utilities.getpath('metadata.doc'),node);
-        end
+            end
         end
         
         %%
@@ -222,6 +182,4 @@ classdef InputManager < handle
             end
         end
     end
-    
-    
 end

@@ -174,7 +174,7 @@ classdef DataManager < handle
                         
         end
         
-        %%Write to persistant storage
+        %%Write the observation cell to excel-file
         function success = store(this,path)
             obj = this.getObservation();
             success = this.xlsWriter.appendXLS(path,obj);

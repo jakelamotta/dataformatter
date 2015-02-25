@@ -13,7 +13,7 @@ function WriteToWordFromMatlab(path,rootTree)
 % 060204  AK  Updated with WordSymbol, WordCreateTable and "Flying Start" section 
 % 060214  AK  Pagenumber, font color and TOC added
 
-% 130115  Kristian  Removed most stuff and made changes to fit our purposes
+% 130115  Kristian Johansson Removed most stuff and made changes to fit our purposes
 % -------------------------------------------------------------------
     
     if exist(path,'file')
@@ -24,26 +24,20 @@ function WriteToWordFromMatlab(path,rootTree)
 	%CurDir=pwd;
 	%FileSpec = fullfile(CurDir,WordFileName);
 	[ActXWord,WordHandle]=StartWord(path);
-    %delete(path);
+    
     fprintf('Document will be saved in %s\n',path);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%    
 %Section 1
     %%create header in word        
      %NOTE! if you are NOT using an English version of MSWord you get
-    % an error here. For Swedish installations use 'Rubrik 1'. 
-    style='Heading 2';
-    text='Table of Contents';
-    WordText(ActXWord,text,style,[1,1]);%enter before and after text 
-    WordCreateTOC(ActXWord,1,3);
-    ActXWord.Selection.InsertBreak; %pagebreak
-    
+    % an error here. For Swedish installations use 'Rubrik 1'.    
     while rootTree.hasChildren()
         
         date_ = rootTree.popChild();
         
         Style='Heading 1';
         TextString=date_.getName();
-        WordText(ActXWord,TextString,Style,[0,2]);%two enters after text
+        WordText(ActXWord,TextString,Style,[0,1]);%two enters after text
     
         %%Iterate through the foldertree, see documentation for FolderTree
         while date_.hasChildren()
@@ -56,7 +50,7 @@ function WriteToWordFromMatlab(path,rootTree)
                 negOrPos = flower.popChild();
                 Style='Heading 3';
                 TextString= [flower.getName(),' - ',negOrPos.getName()];
-                WordText(ActXWord,TextString,Style,[0,1]);
+                WordText(ActXWord,TextString,Style,[0,0]);
                 
                 while negOrPos.hasChildren()
                     
@@ -64,10 +58,10 @@ function WriteToWordFromMatlab(path,rootTree)
                     
                     Style='No spacing';
                     TextString=id.getName();    
-                    WordText(ActXWord,TextString,Style,[0,1]);
+                    WordText(ActXWord,TextString,Style,[1,1]);
                     
                     while id.hasChildren()
-                        
+                        8
                         type = id.popChild();
                         
                         first = true;
@@ -85,111 +79,20 @@ function WriteToWordFromMatlab(path,rootTree)
                             
                             if ~type.hasChildren()
                                 TextString='';    
-                                WordText(ActXWord,TextString,Style,[0,2]);
+                                WordText(ActXWord,TextString,Style,[0,1]);
                             end
                         end                        
                     end
                 end                
-            end
-            
-        end
-        %enter after text
-%     TextString='Updated a sunny day, in February 2006, with -10 ';
-%     WordText(ActXWord,TextString,Style,[0,0]);%no enter
-%     WordSymbol(ActXWord,176);%176 is the degree-symbol
-%     TextString='C. ';
-%     WordText(ActXWord,TextString,Style,[0,1]);%enter after text
+            end            
+        end        
     end
-%     TextString='The script will just insert a table and two figures into this document. ';
-%     WordText(ActXWord,TextString,Style,[0,0]);%no enter
-%     TextString='Last section is a short introduction for the interested users out there. ';
-%     WordText(ActXWord,TextString,Style,[0,1]);%enter after text
-%     
-%     TextString='My intention with this demo is to encourage you to let your powerful computer do the';
-%     WordText(ActXWord,TextString,Style,[0,0]);%no enter
-%     TextString=' "monkey-job" such as inserting figures into MS-Word and writing standard reports. ';
-%     WordText(ActXWord,TextString,Style,[0,0]);%no enter
-%     TextString='Hopefully these simple lines will help you getting more time for funny coding';
-%     WordText(ActXWord,TextString,Style,[0,0]);%no enter
-%     TextString=' and problem solving, increasing productivity in other words ';
-%     WordText(ActXWord,TextString,Style,[0,0]);%no enter
-%     TextString='by spending less time in Microsoft Office programs. ';
-%     WordText(ActXWord,TextString,Style,[0,0]);%no enter
-% 
-%     TextString='Happy coding!';
-%     WordText(ActXWord,TextString,Style,[1,1]);%enter before and after text    
-%     ActXWord.Selection.InsertBreak; %pagebreak
-% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%    
- %Section 3
-
-%     
-% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%    
-% %Section 3
-%     style='Heading 1';
-%     text='Data From Matlab';
-%     WordText(ActXWord,text,style,[1,1]);%enter before and after text 
-%     
-%     Style='Heading 2';
-%     TextString='The Self-Explaining Table';
-%     WordText(ActXWord,TextString,Style,[0,1]);%enter after text
-%     %the obvious data
-%     DataCell={'Test 1', num2str(0.3) ,'Pass';
-%               'Test 2', num2str(1.8) ,'Fail'};
-%     [NoRows,NoCols]=size(DataCell);          
-%     %create table with data from DataCell
-%     WordCreateTable(ActXWord,NoRows,NoCols,DataCell,1);%enter before table
-% 
-% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% %Section 4
-%     figure;plot([1:10]);title('Figure 1');xlabel('Time [s]');ylabel('Amplitude [A]')     
-%     %insert the figure
-%     TextString='First figure';
-%     WordText(ActXWord,TextString,Style,[0,1]);%enter after text
-%     FigureIntoWord(ActXWord); 
-%     
-%     TextString='Second figure';
-%     WordText(ActXWord,TextString,Style,[0,1]);%enter after text  
-%     figure;plot([1:19],[1:10,9:-1:1]);title('Figure 2');xlabel('Time [s]');ylabel('Amplitude [A]');legend('Signal 1',2)
-%     FigureIntoWord(ActXWord); 
-%     ActXWord.Selection.InsertBreak; %pagebreak
-%     
-% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%    
-% %Section 5
-%     Style='Heading 1';
-%     TextString='Flying Start';
-%     WordText(ActXWord,TextString,Style,[0,1]);%enter after text
-%     Style='Normal';
-%     TextString='Find out how to do new things in MS-Word by using the "Record Macro"-function ';
-%     WordText(ActXWord,TextString,Style,[0,0]);%no enter
-%     TextString='and look at the Visual Basic commands used.';
-%     WordText(ActXWord,TextString,Style,[0,1]);%enter after text
-%     
-%     TextString='In Matlab you find the available properties by using get(ActXWord), for top interface,';
-%     WordText(ActXWord,TextString,Style,[0,0]);%no enter
-%     TextString=' and further on with for example get(ActXWord.Selection).';     
-%     WordText(ActXWord,TextString,Style,[0,1]);%enter after text
-%     
-%     TextString='Then find the methods usable from Matlab by using the invoke-function in Matlab '; 
-%     WordText(ActXWord,TextString,Style,[0,0]);%no enter
-%     TextString='e.g. invoke(ActXWord.Selection). See the output of that call below. ';     
-%     WordText(ActXWord,TextString,Style,[0,1]);%enter after text
-% 
-%     TextString='Set a breakpoint here and play around with these commands...'; 
-%     WordText(ActXWord,TextString,Style,[0,1],'wdColorRed');%red text and enter after text
-% 
-%     %Make a long list of some of the methods available in MS-Word
-%     Category='Selection'; % Category='ActiveDocument';
-%     PrintMethods(ActXWord,Category)
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%        
-%add pagenumbers (0=not on first page)
-    %WordPageNumbers(ActXWord,'wdAlignPageNumberRight');
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%        
     %Last thing is to replace the Table of Contents so all headings are
     %included.
     %Selection.GoTo What:=wdGoToField, Which:=wdGoToPrevious, Count:=1, Name:= "TOC"
     WordGoTo(ActXWord,7,3,1,'TOC',1);%%last 1 to delete the object
-    WordCreateTOC(ActXWord,1,3);
+    %WordCreateTOC(ActXWord,1,3);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%        
     CloseWord(ActXWord,WordHandle,path);    
     %close all;
